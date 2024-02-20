@@ -1,0 +1,9 @@
+MenuItemID,IngredientID,Quantity,Units
+1,1,1,Pieces
+1,2,2,Slices
+1,3,1,Slices
+2,1,1,Pieces
+2,4,1,Heads
+2,5,1,Slice
+3,1,2,Pieces
+3,3,2,Slices

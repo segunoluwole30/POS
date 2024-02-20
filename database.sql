@@ -42,3 +42,11 @@ CREATE TABLE MenuItemIngredients (
     FOREIGN KEY (MenuItemID) REFERENCES MenuItems(MenuItemID),
     FOREIGN KEY (IngredientID) REFERENCES IngredientsInventory(IngredientID)
 );
+
+\copy MenuItems FROM '../project-2-315/menuitems.csv' DELIMITER ',' CSV HEADER;
+
+\copy IngredientsInventory FROM '../project-2-315/ingredients.csv' DELIMITER ',' CSV HEADER;
+
+\copy MenuItemIngredients FROM '../project-2-315/menuitemingredients.csv' DELIMITER ',' CSV HEADER;
+
+

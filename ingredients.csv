@@ -1,2 +1,34 @@
-id, name, stock, maxstock, units
-1, buns, 2000, 50000, lbs
+IngredientID,Name,Stock,MaxStock,Units
+1,Beef Patties,100,200,Pieces
+2,Bacon,50,100,Slices
+3,Cheddar Cheese,40,80,Slices
+4,Lettuce,20,40,Heads
+5,Tomato,30,60,Slices
+6,Onion,25,50,Slices
+7,Pickles,15,30,Slices
+8,Burger Buns,100,200,Pieces
+9,Ketchup,10,20,Bottles
+10,Mustard,10,20,Bottles
+11,Rye Bread,50,100,Slices
+12,Swiss Cheese,40,80,Slices
+13,Black Beans,10,20,Cans
+14,Avocado,20,40,Pieces
+15,Vegan Mayo,5,10,Jars
+16,Chicken Breast,60,120,Pieces
+17,Spicy Mayo,5,10,Jars
+18,Cornmeal,10,20,Bags
+19,Hot Dogs,50,100,Pieces
+20,Hot Dog Buns,50,100,Pieces
+21,Breading Mix,10,20,Bags
+22,Cooking Oil,20,40,Liters
+23,Potatoes,30,60,Pounds
+24,Ice Cream,50,100,Pints
+25,Milk,20,40,Gallons
+26,Flavor Syrup,10,20,Bottles
+27,Chocolate Chip Cookies,30,60,Packets
+28,Chocolate Syrup,5,10,Bottles
+29,Whipped Cream,10,20,Cans
+30,Root Beer,20,40,Bottles
+31,Carbonated Water,50,100,Liters
+32,Flavor Syrup for Drinks,10,20,Bottles
+33,Water,100,200,Bottles

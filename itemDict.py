@@ -136,7 +136,7 @@ menu_item_ingredients = [
     {"MenuItemName": "Bacon Cheeseburger",
         "IngredientName": "Napkins", "Quantity": 2, "Units": "Napkins"},
     {"MenuItemName": "Bacon Cheeseburger",
-        "IngredientName": "Untensil Sets", "Quantity": 1, "Units": "Sets"},
+        "IngredientName": "Utensil Sets", "Quantity": 1, "Units": "Sets"},
 
     # Ingredients for Classic Hamburger
     {"MenuItemName": "Classic Hamburger", 
@@ -156,7 +156,7 @@ menu_item_ingredients = [
     {"MenuItemName": "Classic Hamburger",
         "IngredientName": "Napkins", "Quantity": 2, "Units": "Napkins"},
     {"MenuItemName": "Classic Hamburger",
-        "IngredientName": "Untensil Sets", "Quantity": 1, "Units": "Sets"},
+        "IngredientName": "Utensil Sets", "Quantity": 1, "Units": "Sets"},
 
     # Ingredients for Double Stack Burger
     {"MenuItemName": "Double Stack Burger",
@@ -170,7 +170,7 @@ menu_item_ingredients = [
     {"MenuItemName": "Double Stack Burger",
         "IngredientName": "Napkins", "Quantity": 2, "Units": "Napkins"},
     {"MenuItemName": "Double Stack Burger",
-        "IngredientName": "Untensil Sets", "Quantity": 1, "Units": "Sets"},
+        "IngredientName": "Utensil Sets", "Quantity": 1, "Units": "Sets"},
 
     # Ingredients for Patty Melt
     {"MenuItemName": "Gig Em Patty Melt", 
@@ -190,7 +190,7 @@ menu_item_ingredients = [
     {"MenuItemName": "Gig Em Patty Melt",
         "IngredientName": "Napkins", "Quantity": 2, "Units": "Napkins"},
     {"MenuItemName": "Gig Em Patty Melt",
-        "IngredientName": "Untensil Sets", "Quantity": 1, "Units": "Sets"},
+        "IngredientName": "Utensil Sets", "Quantity": 1, "Units": "Sets"},
 
     # Ingredients for Black Bean Burger
     {"MenuItemName": "Black Bean Burger", 
@@ -210,7 +210,7 @@ menu_item_ingredients = [
     {"MenuItemName": "Black Bean Burger",
         "IngredientName": "Napkins", "Quantity": 2, "Units": "Napkins"},
     {"MenuItemName": "Black Bean Burger",
-        "IngredientName": "Untensil Sets", "Quantity": 1, "Units": "Sets"},
+        "IngredientName": "Utensil Sets", "Quantity": 1, "Units": "Sets"},
 
     # Ingredients for Cheeseburger
     {"MenuItemName": "Cheeseburger", 
@@ -226,7 +226,7 @@ menu_item_ingredients = [
     {"MenuItemName": "Cheeseburger",
         "IngredientName": "Napkins", "Quantity": 2, "Units": "Napkins"},
     {"MenuItemName": "Cheeseburger",
-        "IngredientName": "Untensil Sets", "Quantity": 1, "Units": "Sets"},
+        "IngredientName": "Utensil Sets", "Quantity": 1, "Units": "Sets"},
 
     # Ingredients for Rev's Grilled Chicken Sandwich
     {"MenuItemName": "Rev's Grilled Chicken Sandwich", 
@@ -246,7 +246,7 @@ menu_item_ingredients = [
     {"MenuItemName": "Rev's Grilled Chicken Sandwich",
         "IngredientName": "Napkins", "Quantity": 2, "Units": "Napkins"},
     {"MenuItemName": "Rev's Grilled Chicken Sandwich",
-        "IngredientName": "Untensil Sets", "Quantity": 1, "Units": "Sets"},
+        "IngredientName": "Utensil Sets", "Quantity": 1, "Units": "Sets"},
 
     # Ingredients for Spicy Chicken Sandwich
     {"MenuItemName": "Spicy Chicken Sandwich", 
@@ -264,7 +264,7 @@ menu_item_ingredients = [
     {"MenuItemName": "Spicy Chicken Sandwich",
         "IngredientName": "Napkins", "Quantity": 2, "Units": "Napkins"},
     {"MenuItemName": "Spicy Chicken Sandwich",
-        "IngredientName": "Untensil Sets", "Quantity": 1, "Units": "Sets"},
+        "IngredientName": "Utensil Sets", "Quantity": 1, "Units": "Sets"},
 
     # Ingredients for Aggie Chicken Club
     {"MenuItemName": "Aggie Chicken Club", 
@@ -282,7 +282,7 @@ menu_item_ingredients = [
     {"MenuItemName": "Aggie Chicken Club",
         "IngredientName": "Napkins", "Quantity": 2, "Units": "Napkins"},
     {"MenuItemName": "Aggie Chicken Club",
-        "IngredientName": "Untensil Sets", "Quantity": 1, "Units": "Sets"},
+        "IngredientName": "Utensil Sets", "Quantity": 1, "Units": "Sets"},
 
     # Ingredients for 2 Hot Dog Value Meal
     {"MenuItemName": "2 Hot Dog Value Meal", 
@@ -298,7 +298,7 @@ menu_item_ingredients = [
     {"MenuItemName": "2 Hot Dog Value Meal",
         "IngredientName": "Napkins", "Quantity": 2, "Units": "Napkins"},
     {"MenuItemName": "2 Hot Dog Value Meal",
-        "IngredientName": "Untensil Sets", "Quantity": 1, "Units": "Sets"},
+        "IngredientName": "Utensil Sets", "Quantity": 1, "Units": "Sets"},
 
     # Ingredients for 2 Corn Dog Value Meal
     {"MenuItemName": "2 Corn Dog Value Meal", 
@@ -312,7 +312,7 @@ menu_item_ingredients = [
     {"MenuItemName": "2 Corn Dog Value Meal",
         "IngredientName": "Napkins", "Quantity": 2, "Units": "Napkins"},
     {"MenuItemName": "2 Corn Dog Value Meal",
-        "IngredientName": "Untensil Sets", "Quantity": 1, "Units": "Sets"},
+        "IngredientName": "Utensil Sets", "Quantity": 1, "Units": "Sets"},
 
     # Ingredients for 3 Tender Entree
     {"MenuItemName": "3 Tender Entree", 
@@ -324,7 +324,7 @@ menu_item_ingredients = [
     {"MenuItemName": "3 Tender Entree",
         "IngredientName": "Napkins", "Quantity": 2, "Units": "Napkins"},
     {"MenuItemName": "3 Tender Entree",
-        "IngredientName": "Untensil Sets", "Quantity": 1, "Units": "Sets"},
+        "IngredientName": "Utensil Sets", "Quantity": 1, "Units": "Sets"},
     
     # Ingredients for 3 Chicken Tender Combo
     {"MenuItemName": "3 Chicken Tender Combo", 
@@ -338,7 +338,7 @@ menu_item_ingredients = [
     {"MenuItemName": "3 Chicken Tender Combo",
         "IngredientName": "Napkins", "Quantity": 2, "Units": "Napkins"},
     {"MenuItemName": "3 Chicken Tender Combo",
-        "IngredientName": "Untensil Sets", "Quantity": 1, "Units": "Sets"},
+        "IngredientName": "Utensil Sets", "Quantity": 1, "Units": "Sets"},
     {"MenuItemName": "3 Chicken Tender Combo", 
         "IngredientName": "20 oz Cup/Lid/Straw", "Quantity": 1, "Units": "Sets"},
 

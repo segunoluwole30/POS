@@ -1,3 +1,4 @@
+import numpy as np
 import random
 import datetime
 
@@ -14,11 +15,45 @@ with open('menuitems.csv', 'r') as csvfile:  # Ensure this matches your CSV file
         price = float(row['Price'])
         menu_item_prices[menu_item_id] = price
 
+# Time ranges (in 24-hour format)
+time_ranges = {
+    'breakfast': (8, 11),  # 8 AM to 11 AM
+    'lunch': (11, 14),  # 11 AM to 2 PM
+    'late lunch': (14, 17),  # 2 PM to 5 PM
+    'dinner': (17, 20)  # 5 PM to 8 PM
+}
+
+# Probabilities for each time range
+time_probabilities = {
+    'breakfast': 0.1,  # 10% of orders
+    'lunch': 0.45,  # 45% of orders
+    'late lunch': 0.225,  # 27.5% of orders
+    'dinner': 0.225  # 27.5% of orders
+}
+
+
+# Function to choose a time range based on defined probabilities
+
+def choose_time_range():
+    ranges = list(time_ranges.keys())
+    probabilities = [time_probabilities[r] for r in ranges]
+    chosen_range = np.random.choice(ranges, p=probabilities)
+    return time_ranges[chosen_range]
+
+# Function to generate a random time within the chosen time range
+
+
+def generate_random_time_within_range(time_range):
+    start_hour, end_hour = time_range
+    hour = random.randint(start_hour, end_hour - 1)
+    minute = random.randint(0, 59)
+    second = random.randint(0, 59)
+    return hour, minute, second
+
 
 # Configuration
 # start_date = datetime.datetime(2023, 1, 1)
 # num_days = 365  # One year
-
 # Current date
 current_date = datetime.datetime.now()
 
@@ -54,7 +89,7 @@ def batch_insert_entries(entries):
 
 
 # Open a file to write the SQL statements
-with open('optimized_transactions.sql', 'w') as file:
+with open('transactions.sql', 'w') as file:
     transaction_id = 1
     for day in range(num_days):
         transactions = []
@@ -72,12 +107,11 @@ with open('optimized_transactions.sql', 'w') as file:
 
             # Calculate total based on selected menu items
             total = sum([menu_item_prices[item] for item in items_selected])
-            # Generate random hour and minute for transaction time
-            random_hour = random.randint(8, 20)
-            random_minute = random.randint(0, 59)
-            random_second = random.randint(0, 59)
+            # Choose a time range and generate a random time within that range
+            chosen_time_range = choose_time_range()
+            random_hour, random_minute, random_second = generate_random_time_within_range(
+                chosen_time_range)
 
-            # Update transaction_time to include random hour and minute
             transaction_time = current_day_date.replace(
                 hour=random_hour, minute=random_minute, second=random_second).strftime('%Y-%m-%d %H:%M:%S')
 

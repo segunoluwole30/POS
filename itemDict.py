@@ -42,12 +42,12 @@ ingredients_inventory = [
         "MaxStock": 20, "Units": "Bottles"},
     {"IngredientID": 10, "Name": "Mustard", "Stock": 10,
         "MaxStock": 20, "Units": "Bottles"},
-    {"IngredientID": 11, "Name": "Rye Bread",
+    {"IngredientID": 11, "Name": "Texas Toast",
         "Stock": 50, "MaxStock": 100, "Units": "Slices"},
     {"IngredientID": 12, "Name": "Swiss Cheese",
         "Stock": 40, "MaxStock": 80, "Units": "Slices"},
-    {"IngredientID": 13, "Name": "Black Beans",
-        "Stock": 10, "MaxStock": 20, "Units": "Cans"},
+    {"IngredientID": 13, "Name": "Black Bean Patty",
+        "Stock": 50, "MaxStock": 100, "Units": "Pieces"},
     {"IngredientID": 14, "Name": "Avocado",
         "Stock": 20, "MaxStock": 40, "Units": "Pieces"},
     {"IngredientID": 15, "Name": "Vegan Mayo",
@@ -88,6 +88,8 @@ ingredients_inventory = [
         "Stock": 10, "MaxStock": 20, "Units": "Bottles"},
     {"IngredientID": 33, "Name": "Water", "Stock": 100,
         "MaxStock": 200, "Units": "Bottles"}
+    {"IngredientID": 9, "Name": "Gig Em Sauce", "Stock": 10,
+        "MaxStock": 20, "Units": "Bottles"},
 ]
 
 
@@ -96,26 +98,70 @@ menu_item_ingredients = [
     {"MenuItemName": "Bacon Cheeseburger",
         "IngredientName": "Beef Patties", "Quantity": 1, "Units": "Pieces"},
     {"MenuItemName": "Bacon Cheeseburger",
-        "IngredientName": "Bacon", "Quantity": 2, "Units": "Slices"},
+        "IngredientName": "Bacon", "Quantity": 4, "Units": "Slices"},
     {"MenuItemName": "Bacon Cheeseburger",
         "IngredientName": "Cheddar Cheese", "Quantity": 1, "Units": "Slices"},
-    # Add more ingredients for Bacon Cheeseburger...
+    {"MenuItemName": "Bacon Cheeseburger",
+        "IngredientName": "Burger Buns", "Quantity": 2, "Units": "Pieces"},
 
     # Ingredients for Classic Hamburger
-    {"MenuItemName": "Classic Hamburger", "IngredientName": "Beef Patties",
-        "Quantity": 1, "Units": "Pieces"},
+    {"MenuItemName": "Classic Hamburger", 
+     "IngredientName": "Beef Patties", "Quantity": 1, "Units": "Pieces"},
     {"MenuItemName": "Classic Hamburger",
         "IngredientName": "Lettuce", "Quantity": 1, "Units": "Heads"},
     {"MenuItemName": "Classic Hamburger",
-        "IngredientName": "Tomato", "Quantity": 1, "Units": "Slice"},
-    # Add more ingredients for Classic Hamburger...
+        "IngredientName": "Tomato", "Quantity": 2, "Units": "Slice"},
+    {"MenuItemName": "Classic Hamburger",
+        "IngredientName": "Onion", "Quantity": 3, "Units": "Slice"},
+    {"MenuItemName": "Classic Hamburger",
+        "IngredientName": "Pickle", "Quantity": 4, "Units": "Slice"},
+    {"MenuItemName": "Classic Hamburger",
+        "IngredientName": "Burger Buns", "Quantity": 2, "Units": "Pieces"},
 
     # Ingredients for Double Stack Burger
     {"MenuItemName": "Double Stack Burger",
         "IngredientName": "Beef Patties", "Quantity": 2, "Units": "Pieces"},
     {"MenuItemName": "Double Stack Burger",
         "IngredientName": "Cheddar Cheese", "Quantity": 2, "Units": "Slices"},
-    # Add more ingredients for Double Stack Burger...
+    {"MenuItemName": "Double Stack Burger",
+        "IngredientName": "Burger Buns", "Quantity": 2, "Units": "Pieces"},
+
+    # Ingredients for Patty Melt
+    {"MenuItemName": "Gig Em Patty Melt", 
+     "IngredientName": "Beef Patties", "Quantity": 1, "Units": "Pieces"},
+    {"MenuItemName": "Gig Em Patty Melt",
+        "IngredientName": "Onion", "Quantity": 3, "Units": "Slices"},
+    {"MenuItemName": "Gig Em Patty Melt",
+        "IngredientName": "Pickle", "Quantity": 4, "Units": "Slice"},
+    {"MenuItemName": "Gig Em Patty Melt",
+        "IngredientName": "Texas Toast", "Quantity": 2, "Units": "Pieces"},
+   
+    # Ingredients for Cheeseburger
+    {"MenuItemName": "Cheeseburger", 
+     "IngredientName": "Beef Patties", "Quantity": 1, "Units": "Pieces"},
+    {"MenuItemName": "Cheeseburger",
+        "IngredientName": "Cheddar Cheese", "Quantity": 1, "Units": "Slices"},
+    {"MenuItemName": "Cheeseburger",
+        "IngredientName": "Pickle", "Quantity": 4, "Units": "Slice"},
+    {"MenuItemName": "Cheeseburger",
+        "IngredientName": "Burger Buns", "Quantity": 2, "Units": "Pieces"},
+
+    # Ingredients for Black Bean Burger
+   {"MenuItemName": "Black Bean Burger", 
+     "IngredientName": "Black Bean Patties", "Quantity": 1, "Units": "Pieces"},
+   {"MenuItemName": "Black Bean Burger", 
+        "IngredientName": "Lettuce", "Quantity": 1, "Units": "Heads"},
+   {"MenuItemName": "Black Bean Burger", 
+        "IngredientName": "Tomato", "Quantity": 2, "Units": "Slice"},
+   {"MenuItemName": "Black Bean Burger", 
+        "IngredientName": "Onion", "Quantity": 3, "Units": "Slice"},
+   {"MenuItemName": "Black Bean Burger", 
+        "IngredientName": "Pickle", "Quantity": 4, "Units": "Slice"},
+   {"MenuItemName": "Black Bean Burger", 
+        "IngredientName": "Burger Buns", "Quantity": 2, "Units": "Pieces"},
+
+
+
 
     # Continue adding entries for each menu item and their ingredients...
 ]

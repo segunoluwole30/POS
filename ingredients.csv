@@ -9,9 +9,9 @@ IngredientID,Name,Stock,MaxStock,Units
 8,Burger Buns,100,200,Pieces
 9,Ketchup,10,20,Bottles
 10,Mustard,10,20,Bottles
-11,Rye Bread,50,100,Slices
+11,Texas Toast,50,100,Slices
 12,Swiss Cheese,40,80,Slices
-13,Black Beans,10,20,Cans
+13,Black Bean Patties,50,100,Pieces
 14,Avocado,20,40,Pieces
 15,Vegan Mayo,5,10,Jars
 16,Chicken Breast,60,120,Pieces
@@ -32,3 +32,4 @@ IngredientID,Name,Stock,MaxStock,Units
 31,Carbonated Water,50,100,Liters
 32,Flavor Syrup for Drinks,10,20,Bottles
 33,Water,100,200,Bottles
+34,Gig Em Sauce,100,200,Bottles

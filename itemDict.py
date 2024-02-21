@@ -18,7 +18,7 @@ menu_items = [
     {"MenuItemID": 19, "Name": "Double Scoop Ice Cream", "Price": 3.29},
     {"MenuItemID": 20, "Name": "Root Beer Float", "Price": 5.49},
     {"MenuItemID": 21, "Name": "Fountain Drink", "Price": 1.99},
-    {"MenuItemID": 22, "Name": "Bottled Water", "Price": 2.19},
+    {"MenuItemID": 22, "Name": "Bottled Water", "Price": 2.19}
 ]
 
 ingredients_inventory = [
@@ -54,6 +54,8 @@ ingredients_inventory = [
         "Stock": 5, "MaxStock": 10, "Units": "Jars"},
     {"IngredientID": 16, "Name": "Chicken Breast",
         "Stock": 60, "MaxStock": 120, "Units": "Pieces"},
+    {"IngredientID": 16, "Name": "Breaded Chicken Patty",
+        "Stock": 60, "MaxStock": 120, "Units": "Pieces"},
     {"IngredientID": 17, "Name": "Spicy Mayo",
         "Stock": 5, "MaxStock": 10, "Units": "Jars"},
     {"IngredientID": 18, "Name": "Cornmeal",
@@ -62,8 +64,6 @@ ingredients_inventory = [
         "Stock": 50, "MaxStock": 100, "Units": "Pieces"},
     {"IngredientID": 20, "Name": "Hot Dog Buns",
         "Stock": 50, "MaxStock": 100, "Units": "Pieces"},
-    {"IngredientID": 21, "Name": "Breading Mix",
-        "Stock": 10, "MaxStock": 20, "Units": "Bags"},
     {"IngredientID": 22, "Name": "Cooking Oil",
         "Stock": 20, "MaxStock": 40, "Units": "Liters"},
     {"IngredientID": 23, "Name": "Potatoes",
@@ -87,9 +87,13 @@ ingredients_inventory = [
     {"IngredientID": 32, "Name": "Flavor Syrup for Drinks",
         "Stock": 10, "MaxStock": 20, "Units": "Bottles"},
     {"IngredientID": 33, "Name": "Water", "Stock": 100,
-        "MaxStock": 200, "Units": "Bottles"}
+        "MaxStock": 200, "Units": "Bottles"},
     {"IngredientID": 9, "Name": "Gig Em Sauce", "Stock": 10,
         "MaxStock": 20, "Units": "Bottles"},
+    {"IngredientID": 9, "Name": "Ranch", "Stock": 5,
+        "MaxStock": 10, "Units": "Bottles"},
+    {"IngredientID": 9, "Name": "Buffalo Sauce", "Stock": 5,
+        "MaxStock": 10, "Units": "Bottles"}
 ]
 
 
@@ -160,19 +164,32 @@ menu_item_ingredients = [
     {"MenuItemName": "Cheeseburger",
         "IngredientName": "Burger Buns", "Quantity": 2, "Units": "Pieces"},
 
-
     # Ingredients for Rev's Grilled Chicken Sandwich
    {"MenuItemName": "Rev's Grilled Chicken Sandwich", 
-     "IngredientName": "Black Bean Patties", "Quantity": 1, "Units": "Pieces"},
+     "IngredientName": "Chicken Breast", "Quantity": 1, "Units": "Pieces"},
     {"MenuItemName": "Rev's Grilled Chicken Sandwich",
         "IngredientName": "Lettuce", "Quantity": 1, "Units": "Heads"},
-   {"MenuItemName": "Black Bean Burger", 
+   {"MenuItemName": "Rev's Grilled Chicken Sandwich", 
         "IngredientName": "Tomato", "Quantity": 2, "Units": "Slice"},
-   {"MenuItemName": "Black Bean Burger", 
+   {"MenuItemName": "Rev's Grilled Chicken Sandwich", 
         "IngredientName": "Onion", "Quantity": 3, "Units": "Slice"},
-   {"MenuItemName": "Black Bean Burger", 
+   {"MenuItemName": "Rev's Grilled Chicken Sandwich", 
         "IngredientName": "Pickle", "Quantity": 4, "Units": "Slice"},
-   {"MenuItemName": "Black Bean Burger", 
+   {"MenuItemName": "Rev's Grilled Chicken Sandwich", 
+        "IngredientName": "Burger Buns", "Quantity": 2, "Units": "Pieces"},
+
+    # Ingredients for Spicy Chicken Sandwich
+   {"MenuItemName": "Spicy Chicken Sandwich", 
+     "IngredientName": "Breaded Chicken Patty", "Quantity": 1, "Units": "Pieces"},
+   {"MenuItemName": "Spicy Chicken Sandwich", 
+        "IngredientName": "Lettuce", "Quantity": 1, "Units": "Heads"},
+   {"MenuItemName": "Spicy Chicken Sandwich", 
+        "IngredientName": "Tomato", "Quantity": 2, "Units": "Slice"},
+   {"MenuItemName": "Spicy Chicken Sandwich", 
+        "IngredientName": "Onion", "Quantity": 3, "Units": "Slice"},
+   {"MenuItemName": "Spicy Chicken Sandwich", 
+        "IngredientName": "Pickle", "Quantity": 4, "Units": "Slice"},
+   {"MenuItemName": "Spicy Chicken Sandwich", 
         "IngredientName": "Burger Buns", "Quantity": 2, "Units": "Pieces"},
 
 

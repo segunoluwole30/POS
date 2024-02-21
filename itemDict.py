@@ -308,6 +308,10 @@ menu_item_ingredients = [
         "IngredientName": "Vanilla Ice Cream", "Quantity": .5, "Units": "Pints"},
     # TODO: Add Root Beer and Cup
 
+    # Ingredients for Bottled Water
+    {"MenuItemName": "Bottled Water", 
+        "IngredientName": "Water", "Quantity": 1, "Units": "Bottles"},
+
     # ADD WATER AND FOUNTAIN DRINKS
 ]
 

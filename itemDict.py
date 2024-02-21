@@ -3,8 +3,8 @@ menu_items = [
     {"MenuItemID": 2, "Name": "Classic Hamburger", "Price": 6.89},
     {"MenuItemID": 3, "Name": "Double Stack Burger", "Price": 9.99},
     {"MenuItemID": 5, "Name": "Gig Em Patty Melt", "Price": 7.59},
-    {"MenuItemID": 6, "Name": "Cheeseburger", "Price": 6.89},
     {"MenuItemID": 7, "Name": "Black Bean Burger", "Price": 8.38},
+    {"MenuItemID": 6, "Name": "Cheeseburger", "Price": 6.89},
     {"MenuItemID": 9, "Name": "Rev's Grilled Chicken Sandwich", "Price": 8.39},
     {"MenuItemID": 10, "Name": "Spicy Chicken Sandwich", "Price": 8.39},
     {"MenuItemID": 11, "Name": "Aggie Chicken Club", "Price": 8.39},
@@ -135,7 +135,21 @@ menu_item_ingredients = [
         "IngredientName": "Pickle", "Quantity": 4, "Units": "Slice"},
     {"MenuItemName": "Gig Em Patty Melt",
         "IngredientName": "Texas Toast", "Quantity": 2, "Units": "Pieces"},
-   
+
+    # Ingredients for Black Bean Burger
+   {"MenuItemName": "Black Bean Burger", 
+     "IngredientName": "Black Bean Patties", "Quantity": 1, "Units": "Pieces"},
+   {"MenuItemName": "Black Bean Burger", 
+        "IngredientName": "Lettuce", "Quantity": 1, "Units": "Heads"},
+   {"MenuItemName": "Black Bean Burger", 
+        "IngredientName": "Tomato", "Quantity": 2, "Units": "Slice"},
+   {"MenuItemName": "Black Bean Burger", 
+        "IngredientName": "Onion", "Quantity": 3, "Units": "Slice"},
+   {"MenuItemName": "Black Bean Burger", 
+        "IngredientName": "Pickle", "Quantity": 4, "Units": "Slice"},
+   {"MenuItemName": "Black Bean Burger", 
+        "IngredientName": "Burger Buns", "Quantity": 2, "Units": "Pieces"},
+
     # Ingredients for Cheeseburger
     {"MenuItemName": "Cheeseburger", 
      "IngredientName": "Beef Patties", "Quantity": 1, "Units": "Pieces"},
@@ -146,10 +160,11 @@ menu_item_ingredients = [
     {"MenuItemName": "Cheeseburger",
         "IngredientName": "Burger Buns", "Quantity": 2, "Units": "Pieces"},
 
-    # Ingredients for Black Bean Burger
-   {"MenuItemName": "Black Bean Burger", 
+
+    # Ingredients for Rev's Grilled Chicken Sandwich
+   {"MenuItemName": "Rev's Grilled Chicken Sandwich", 
      "IngredientName": "Black Bean Patties", "Quantity": 1, "Units": "Pieces"},
-   {"MenuItemName": "Black Bean Burger", 
+    {"MenuItemName": "Rev's Grilled Chicken Sandwich",
         "IngredientName": "Lettuce", "Quantity": 1, "Units": "Heads"},
    {"MenuItemName": "Black Bean Burger", 
         "IngredientName": "Tomato", "Quantity": 2, "Units": "Slice"},

@@ -3,7 +3,7 @@ menu_items = [
     {"MenuItemID": 2, "Name": "Classic Hamburger", "Price": 6.89},
     {"MenuItemID": 3, "Name": "Double Stack Burger", "Price": 9.99},
     {"MenuItemID": 4, "Name": "Gig Em Patty Melt", "Price": 7.59},
-    {"MenuItemID": 5, "Name": "Black Bean Burger", "Price": 8.38},
+    {"MenuItemID": 5, "Name": "Black Bean Patty", "Price": 8.38},
     {"MenuItemID": 6, "Name": "Cheeseburger", "Price": 6.89},
     {"MenuItemID": 7, "Name": "Rev's Grilled Chicken Sandwich", "Price": 8.39},
     {"MenuItemID": 8, "Name": "Spicy Chicken Sandwich", "Price": 8.39},
@@ -163,7 +163,7 @@ menu_item_ingredients = [
 
     # Ingredients for Black Bean Burger
     {"MenuItemName": "Black Bean Burger", 
-        "IngredientName": "Black Bean Patties", "Quantity": 1, "Units": "Pieces"},
+        "IngredientName": "Black Bean Patty", "Quantity": 1, "Units": "Pieces"},
     {"MenuItemName": "Black Bean Burger", 
         "IngredientName": "Lettuce", "Quantity": 1, "Units": "Pieces"},
     {"MenuItemName": "Black Bean Burger", 

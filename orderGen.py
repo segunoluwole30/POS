@@ -33,7 +33,6 @@ time_probabilities = {
 
 
 # Function to choose a time range based on defined probabilities
-
 def choose_time_range():
     ranges = list(time_ranges.keys())
     probabilities = [time_probabilities[r] for r in ranges]
@@ -52,8 +51,6 @@ def generate_random_time_within_range(time_range):
 
 
 # Configuration
-# start_date = datetime.datetime(2023, 1, 1)
-# num_days = 365  # One year
 # Current date
 current_date = datetime.datetime.now()
 
@@ -73,7 +70,7 @@ max_items_per_transaction = 5
 # Peak days configuration
 peak_days = [datetime.datetime(
     start_date.year, 1, 15), datetime.datetime(start_date.year, 8, 30)]
-peak_day_sales = 50000  # Increased target sales for peak days
+peak_day_sales = 10000  # Increased target sales for peak days
 regular_days_sales_target = (
     total_sales_target - (peak_day_sales * len(peak_days))) / (num_days - len(peak_days))
 

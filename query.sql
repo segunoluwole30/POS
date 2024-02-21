@@ -76,7 +76,7 @@ SELECT
 FROM 
     Employees
 WHERE 
-    Role = 'Manager';
+    Role = 'manager';
 
 --TODO: Get list of cashier (UNVERIFIED ON DATABASE)
 SELECT 
@@ -86,7 +86,7 @@ SELECT
 FROM 
     Employees
 WHERE 
-    Role = 'Cashier';
+    Role = 'crew';
 
 --TODO: Most sold items (UNVERIFIED ON DATABASE)
 SELECT mi.MenuItemID, mi.Name, COUNT(te.TransactionID) AS TotalSales
@@ -97,8 +97,8 @@ GROUP BY mi.MenuItemID, mi.Name
 ORDER BY TotalSales DESC;
 
 --TODO: Lowest stock items? (UNVERIFIED ON DATABASE)
-SELECT IngredientID, IngredientName, Stock
-FROM Ingredients
+SELECT IngredientID, Name, Stock
+FROM IngredientsInventory
 ORDER BY Stock ASC;
 
 --TODO: Get cheapest items (UNVERIFIED ON DATABASE)
@@ -112,7 +112,7 @@ ORDER BY
     Price
 LIMIT 5;
 
---TODO: Get worst selling items (UNVERIFIED ON DATABASE)
+--TODO: Get 5 worst selling items (UNVERIFIED ON DATABASE)
 SELECT mi.MenuItemID, mi.Name, COUNT(te.TransactionID) AS TotalSales
 FROM Transactions t
 JOIN TransactionEntry te ON t.TransactionID = te.TransactionID

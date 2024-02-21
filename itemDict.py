@@ -83,9 +83,9 @@ ingredients_inventory = [
     {"IngredientID": 30, "Name": "Root Beer",
         "Stock": 20, "MaxStock": 40, "Units": "Bottles"},
     {"IngredientID": 31, "Name": "Carbonated Water",
+        "Stock": 250, "MaxStock": 500, "Units": "Liters"},
+    {"IngredientID": 32, "Name": "Flavored Syrup",
         "Stock": 50, "MaxStock": 100, "Units": "Liters"},
-    {"IngredientID": 32, "Name": "Flavor Syrup for Drinks",
-        "Stock": 10, "MaxStock": 20, "Units": "Bottles"},
     {"IngredientID": 33, "Name": "Water", "Stock": 100,
         "MaxStock": 200, "Units": "Bottles"},
     {"IngredientID": 34, "Name": "Gig Em Sauce", "Stock": 1000,
@@ -93,7 +93,11 @@ ingredients_inventory = [
     {"IngredientID": 35, "Name": "Ranch", "Stock": 500,
         "MaxStock": 1000, "Units": "Pumps"},
     {"IngredientID": 36, "Name": "Buffalo Sauce", "Stock": 500,
-        "MaxStock": 1000, "Units": "Pumps"}
+        "MaxStock": 1000, "Units": "Pumps"},
+    {"IngredientID": 40, "Name": "20 oz Cup/Lid", "Stock": 500,
+        "MaxStock": 1000, "Units": "Pairs"},
+    {"IngredientID": 41, "Name": "Togo Boxes", "Stock": 750,
+        "MaxStock": 1500, "Units": "Boxes"},                
 ]
 
 
@@ -206,6 +210,13 @@ menu_item_ingredients = [
     {"MenuItemName": "Aggie Chicken Club",
         "IngredientName": "Burger Buns", "Quantity": 2, "Units": "Pieces"},
 
+    # Ingredients for Fountain Drink
+    {"MenutItemName": "Fountain Drink",
+     "IngredientName": "Carbonated Water", "Quantity": .5, "Units": "Liters"},
+    {"MenutItemName": "Fountain Drink",
+     "IngredientName": "Flavored Syrup", "Quantity": .1, "Units": "Liters"},
+    {"MenutItemName": "Fountain Drink",
+     "IngredientName": "20 oz Cup/Lid", "Quantity": 1, "Units": "Pairs"},         
 
     # Ingredients for Bottled Water
     {"MenutItemName": "Bottled Water",

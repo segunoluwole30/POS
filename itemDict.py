@@ -87,7 +87,7 @@ ingredients_inventory = [
     {"IngredientID": 32, "Name": "Flavor Syrup for Drinks",
         "Stock": 10, "MaxStock": 20, "Units": "Bottles"},
     {"IngredientID": 33, "Name": "Water", "Stock": 100,
-        "MaxStock": 200, "Units": "Bottles"}
+        "MaxStock": 200, "Units": "Bottles"},
     {"IngredientID": 9, "Name": "Gig Em Sauce", "Stock": 10,
         "MaxStock": 20, "Units": "Bottles"},
 ]
@@ -176,7 +176,9 @@ menu_item_ingredients = [
         "IngredientName": "Burger Buns", "Quantity": 2, "Units": "Pieces"},
 
 
-
+    # Ingredients for Bottled Water
+    {"MenutItemName": "Bottled Water",
+     "IngredientName": "Water", "Quantity": 1, "Units": "Bottles"}
 
     # Continue adding entries for each menu item and their ingredients...
 ]

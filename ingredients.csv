@@ -2,34 +2,45 @@ IngredientID,Name,Stock,MaxStock,Units
 1,Beef Patties,100,200,Pieces
 2,Bacon,50,100,Slices
 3,Cheddar Cheese,40,80,Slices
-4,Lettuce,20,40,Heads
+4,Lettuce,200,400,Pieces
 5,Tomato,30,60,Slices
 6,Onion,25,50,Slices
 7,Pickles,15,30,Slices
 8,Burger Buns,100,200,Pieces
-9,Ketchup,10,20,Bottles
-10,Mustard,10,20,Bottles
+9,Ketchup,1000,2000,Pumps
+10,Mustard,1000,2000,Pumps
 11,Texas Toast,50,100,Slices
 12,Swiss Cheese,40,80,Slices
-13,Black Bean Patties,50,100,Pieces
+13,Black Bean Patty,50,100,Pieces
 14,Avocado,20,40,Pieces
-15,Vegan Mayo,5,10,Jars
-16,Chicken Breast,60,120,Pieces
-17,Spicy Mayo,5,10,Jars
-18,Cornmeal,10,20,Bags
-19,Hot Dogs,50,100,Pieces
-20,Hot Dog Buns,50,100,Pieces
-21,Breading Mix,10,20,Bags
+15,Spicy Mayo,500,1000,Pumps
+16,Vegan Mayo,500,1000,Pumps
+17,Chicken Breast,60,120,Pieces
+18,Breaded Chicken Patty,60,120,Pieces
+19,Corndog,100,200,Pieces
+20,Hot Dog,50,100,Pieces
+21,Hot Dog Bun,50,100,Pieces
 22,Cooking Oil,20,40,Liters
 23,Potatoes,30,60,Pounds
-24,Ice Cream,50,100,Pints
+24,Vanilla Ice Cream,50,100,Pints
 25,Milk,20,40,Gallons
-26,Flavor Syrup,10,20,Bottles
-27,Chocolate Chip Cookies,30,60,Packets
-28,Chocolate Syrup,5,10,Bottles
+26,Bags,750,1500,Bags
+27,Chocolate Chip Cookies,30,60,Pieces
+28,Chocolate Ice Cream,50,100,Pints
 29,Whipped Cream,10,20,Cans
-30,Root Beer,20,40,Bottles
-31,Carbonated Water,50,100,Liters
-32,Flavor Syrup for Drinks,10,20,Bottles
+30,Root Beer,50,100,Bottles
+31,Carbonated Water,250,500,Liters
+32,Flavored Syrup,50,100,Liters
 33,Water,100,200,Bottles
-34,Gig Em Sauce,100,200,Bottles
+34,Gig Em Sauce,1000,2000,Pumps
+35,Ranch,500,1000,Pumps
+36,Buffalo Sauce,500,1000,Pumps
+37,Chicken Tender,60,120,Pieces
+38,Strawberry Ice Cream,50,100,Pints
+39,Peppermint Ice Cream,50,100,Pints
+40,Oreo Ice Cream,50,100,Pints
+41,20 oz Cup/Lid/Straw,500,1000,Sets
+42,Togo Boxes,750,1500,Boxes
+43,Napkins,1500,3000,Napkins
+44,Utensil Sets,750,1500,Sets
+45,Bowls,250,500,Bowls

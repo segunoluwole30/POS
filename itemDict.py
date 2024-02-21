@@ -79,8 +79,8 @@ ingredients_inventory = [
         "Stock": 50, "MaxStock": 100, "Units": "Pints"},
     {"IngredientID": 25, "Name": "Milk", "Stock": 20,
         "MaxStock": 40, "Units": "Gallons"},
-    {"IngredientID": 26, "Name": "Flavor Syrup",
-        "Stock": 10, "MaxStock": 20, "Units": "Bottles"},
+    {"IngredientID": 26, "Name": "Bags",
+        "Stock": 750, "MaxStock": 1500, "Units": "Bags"},
     {"IngredientID": 27, "Name": "Chocolate Chip Cookies",
         "Stock": 30, "MaxStock": 60, "Units": "Pieces"},
     {"IngredientID": 28, "Name": "Chocolate Ice Cream",
@@ -88,7 +88,7 @@ ingredients_inventory = [
     {"IngredientID": 29, "Name": "Whipped Cream",
         "Stock": 10, "MaxStock": 20, "Units": "Cans"},
     {"IngredientID": 30, "Name": "Root Beer",
-        "Stock": 20, "MaxStock": 40, "Units": "Bottles"},
+        "Stock": 50, "MaxStock": 100, "Units": "Bottles"},
     {"IngredientID": 31, "Name": "Carbonated Water",
         "Stock": 250, "MaxStock": 500, "Units": "Liters"},
     {"IngredientID": 32, "Name": "Flavored Syrup",
@@ -107,12 +107,17 @@ ingredients_inventory = [
         "Stock": 50, "MaxStock": 100, "Units": "Pints"},
     {"IngredientID": 39, "Name": "Oreo Ice Cream",
         "Stock": 50, "MaxStock": 100, "Units": "Pints"},
-    {"IngredientID": 40, "Name": "20 oz Cup/Lid", "Stock": 500,
-        "MaxStock": 1000, "Units": "Pairs"},
+    {"IngredientID": 40, "Name": "20 oz Cup/Lid/Straw", "Stock": 500,
+        "MaxStock": 1000, "Units": "Sets"},
     {"IngredientID": 41, "Name": "Togo Boxes", "Stock": 750,
-        "MaxStock": 1500, "Units": "Boxes"},                
+        "MaxStock": 1500, "Units": "Boxes"},
+    {"IngredientID": 42, "Name": "Napkins", "Stock": 1500,
+        "MaxStock": 3000, "Units": "Napkins"},
+    {"IngredientID": 43, "Name": "Utensil Sets", "Stock": 750,
+        "MaxStock": 1500, "Units": "Sets"},
+    {"IngredientID": 44, "Name": "Bowls", "Stock": 250,
+        "MaxStock": 500, "Units": "Bowls"},    
 ]
-
 
 menu_item_ingredients = [
     # Ingredients for Bacon Cheeseburger
@@ -124,6 +129,12 @@ menu_item_ingredients = [
         "IngredientName": "Cheddar Cheese", "Quantity": 1, "Units": "Slices"},
     {"MenuItemName": "Bacon Cheeseburger",
         "IngredientName": "Burger Buns", "Quantity": 2, "Units": "Pieces"},
+    {"MenuItemName": "Bacon Cheeseburger",
+        "IngredientName": "Togo Boxes", "Quantity": 1, "Units": "Boxes"},
+    {"MenuItemName": "Bacon Cheeseburger",
+        "IngredientName": "Napkins", "Quantity": 2, "Units": "Napkins"},
+    {"MenuItemName": "Bacon Cheeseburger",
+        "IngredientName": "Untensil Sets", "Quantity": 1, "Units": "Sets"},
 
     # Ingredients for Classic Hamburger
     {"MenuItemName": "Classic Hamburger", 
@@ -138,6 +149,12 @@ menu_item_ingredients = [
         "IngredientName": "Pickles", "Quantity": 4, "Units": "Slice"},
     {"MenuItemName": "Classic Hamburger",
         "IngredientName": "Burger Buns", "Quantity": 2, "Units": "Pieces"},
+    {"MenuItemName": "Classic Hamburger",
+        "IngredientName": "Togo Boxes", "Quantity": 1, "Units": "Boxes"},
+    {"MenuItemName": "Classic Hamburger",
+        "IngredientName": "Napkins", "Quantity": 2, "Units": "Napkins"},
+    {"MenuItemName": "Classic Hamburger",
+        "IngredientName": "Untensil Sets", "Quantity": 1, "Units": "Sets"},
 
     # Ingredients for Double Stack Burger
     {"MenuItemName": "Double Stack Burger",
@@ -146,6 +163,12 @@ menu_item_ingredients = [
         "IngredientName": "Cheddar Cheese", "Quantity": 2, "Units": "Slices"},
     {"MenuItemName": "Double Stack Burger",
         "IngredientName": "Burger Buns", "Quantity": 2, "Units": "Pieces"},
+    {"MenuItemName": "Double Stack Burger",
+        "IngredientName": "Togo Boxes", "Quantity": 1, "Units": "Boxes"},
+    {"MenuItemName": "Double Stack Burger",
+        "IngredientName": "Napkins", "Quantity": 2, "Units": "Napkins"},
+    {"MenuItemName": "Double Stack Burger",
+        "IngredientName": "Untensil Sets", "Quantity": 1, "Units": "Sets"},
 
     # Ingredients for Patty Melt
     {"MenuItemName": "Gig Em Patty Melt", 
@@ -160,6 +183,12 @@ menu_item_ingredients = [
         "IngredientName": "Texas Toast", "Quantity": 2, "Units": "Pieces"},
     {"MenuItemName": "Gig Em Patty Melt", 
         "IngredientName": "Gig Em Sauce", "Quantity": 1, "Units": "Pumps"},
+    {"MenuItemName": "Gig Em Patty Melt",
+        "IngredientName": "Togo Boxes", "Quantity": 1, "Units": "Boxes"},
+    {"MenuItemName": "Gig Em Patty Melt",
+        "IngredientName": "Napkins", "Quantity": 2, "Units": "Napkins"},
+    {"MenuItemName": "Gig Em Patty Melt",
+        "IngredientName": "Untensil Sets", "Quantity": 1, "Units": "Sets"},
 
     # Ingredients for Black Bean Burger
     {"MenuItemName": "Black Bean Burger", 
@@ -174,6 +203,12 @@ menu_item_ingredients = [
         "IngredientName": "Pickles", "Quantity": 4, "Units": "Slice"},
     {"MenuItemName": "Black Bean Burger", 
         "IngredientName": "Burger Buns", "Quantity": 2, "Units": "Pieces"},
+    {"MenuItemName": "Black Bean Burgerr",
+        "IngredientName": "Togo Boxes", "Quantity": 1, "Units": "Boxes"},
+    {"MenuItemName": "Black Bean Burger",
+        "IngredientName": "Napkins", "Quantity": 2, "Units": "Napkins"},
+    {"MenuItemName": "Black Bean Burger",
+        "IngredientName": "Untensil Sets", "Quantity": 1, "Units": "Sets"},
 
     # Ingredients for Cheeseburger
     {"MenuItemName": "Cheeseburger", 
@@ -184,6 +219,12 @@ menu_item_ingredients = [
         "IngredientName": "Pickles", "Quantity": 4, "Units": "Slice"},
     {"MenuItemName": "Cheeseburger",
         "IngredientName": "Burger Buns", "Quantity": 2, "Units": "Pieces"},
+    {"MenuItemName": "Cheeseburger",
+        "IngredientName": "Togo Boxes", "Quantity": 1, "Units": "Boxes"},
+    {"MenuItemName": "Cheeseburger",
+        "IngredientName": "Napkins", "Quantity": 2, "Units": "Napkins"},
+    {"MenuItemName": "Cheeseburger",
+        "IngredientName": "Untensil Sets", "Quantity": 1, "Units": "Sets"},
 
     # Ingredients for Rev's Grilled Chicken Sandwich
     {"MenuItemName": "Rev's Grilled Chicken Sandwich", 
@@ -198,6 +239,12 @@ menu_item_ingredients = [
         "IngredientName": "Pickles", "Quantity": 4, "Units": "Slice"},
     {"MenuItemName": "Rev's Grilled Chicken Sandwich", 
         "IngredientName": "Burger Buns", "Quantity": 2, "Units": "Pieces"},
+    {"MenuItemName": "Rev's Grilled Chicken Sandwich",
+        "IngredientName": "Togo Boxes", "Quantity": 1, "Units": "Boxes"},
+    {"MenuItemName": "Rev's Grilled Chicken Sandwich",
+        "IngredientName": "Napkins", "Quantity": 2, "Units": "Napkins"},
+    {"MenuItemName": "Rev's Grilled Chicken Sandwich",
+        "IngredientName": "Untensil Sets", "Quantity": 1, "Units": "Sets"},
 
     # Ingredients for Spicy Chicken Sandwich
     {"MenuItemName": "Spicy Chicken Sandwich", 
@@ -210,6 +257,12 @@ menu_item_ingredients = [
         "IngredientName": "Buffalo Sauce", "Quantity": 1, "Units": "Pumps"},
     {"MenuItemName": "Spicy Chicken Sandwich", 
         "IngredientName": "Burger Buns", "Quantity": 2, "Units": "Pieces"},
+    {"MenuItemName": "Spicy Chicken Sandwich",
+        "IngredientName": "Togo Boxes", "Quantity": 1, "Units": "Boxes"},
+    {"MenuItemName": "Spicy Chicken Sandwich",
+        "IngredientName": "Napkins", "Quantity": 2, "Units": "Napkins"},
+    {"MenuItemName": "Spicy Chicken Sandwich",
+        "IngredientName": "Untensil Sets", "Quantity": 1, "Units": "Sets"},
 
     # Ingredients for Aggie Chicken Club
     {"MenuItemName": "Aggie Chicken Club", 
@@ -218,10 +271,16 @@ menu_item_ingredients = [
         "IngredientName": "Swiss Cheese", "Quantity": 1, "Units": "Slices"},
     {"MenuItemName": "Aggie Chicken Club", 
         "IngredientName": "Bacon", "Quantity": 3, "Units": "Slices"},
-    {"MenuItemName": "Aggie Chicken Club",  # TODO: Change this to be .25
-        "IngredientName": "Avocado", "Quantity": 1, "Units": "Pieces"},
+    {"MenuItemName": "Aggie Chicken Club",
+        "IngredientName": "Avocado", "Quantity": .25, "Units": "Pieces"},
     {"MenuItemName": "Aggie Chicken Club",
         "IngredientName": "Burger Buns", "Quantity": 2, "Units": "Pieces"},
+    {"MenuItemName": "Aggie Chicken Club",
+        "IngredientName": "Togo Boxes", "Quantity": 1, "Units": "Boxes"},
+    {"MenuItemName": "Aggie Chicken Club",
+        "IngredientName": "Napkins", "Quantity": 2, "Units": "Napkins"},
+    {"MenuItemName": "Aggie Chicken Club",
+        "IngredientName": "Untensil Sets", "Quantity": 1, "Units": "Sets"},
 
     # Ingredients for 2 Hot Dog Value Meal
     {"MenuItemName": "2 Hot Dog Value Meal", 
@@ -232,6 +291,12 @@ menu_item_ingredients = [
         "IngredientName": "Ketchup", "Quantity": 1, "Units": "Pumps"},
     {"MenuItemName": "2 Hot Dog Value Meal", 
         "IngredientName": "Mustard", "Quantity": 1, "Units": "Pumps"},
+    {"MenuItemName": "2 Hot Dog Value Meal",
+        "IngredientName": "Togo Boxes", "Quantity": 1, "Units": "Boxes"},
+    {"MenuItemName": "2 Hot Dog Value Meal",
+        "IngredientName": "Napkins", "Quantity": 2, "Units": "Napkins"},
+    {"MenuItemName": "2 Hot Dog Value Meal",
+        "IngredientName": "Untensil Sets", "Quantity": 1, "Units": "Sets"},
 
     # Ingredients for 2 Corn Dog Value Meal
     {"MenuItemName": "2 Corn Dog Value Meal", 
@@ -240,12 +305,24 @@ menu_item_ingredients = [
         "IngredientName": "Ketchup", "Quantity": 1, "Units": "Pumps"},
     {"MenuItemName": "2 Corn Dog Value Meal", 
         "IngredientName": "Mustard", "Quantity": 1, "Units": "Pumps"},
+    {"MenuItemName": "2 Corn Dog Value Meal",
+        "IngredientName": "Togo Boxes", "Quantity": 1, "Units": "Boxes"},
+    {"MenuItemName": "2 Corn Dog Value Meal",
+        "IngredientName": "Napkins", "Quantity": 2, "Units": "Napkins"},
+    {"MenuItemName": "2 Corn Dog Value Meal",
+        "IngredientName": "Untensil Sets", "Quantity": 1, "Units": "Sets"},
 
     # Ingredients for 3 Tender Entree
     {"MenuItemName": "3 Tender Entree", 
      "IngredientName": "Chicken Tender", "Quantity": 3, "Units": "Pieces"},
     {"MenuItemName": "3 Tender Entree", 
         "IngredientName": "Spicy Mayo", "Quantity": 1, "Units": "Pumps"},
+    {"MenuItemName": "3 Tender Entree",
+        "IngredientName": "Togo Boxes", "Quantity": 1, "Units": "Boxes"},
+    {"MenuItemName": "3 Tender Entree",
+        "IngredientName": "Napkins", "Quantity": 2, "Units": "Napkins"},
+    {"MenuItemName": "3 Tender Entree",
+        "IngredientName": "Untensil Sets", "Quantity": 1, "Units": "Sets"},
     
     # Ingredients for 3 Chicken Tender Combo
     {"MenuItemName": "3 Chicken Tender Combo", 
@@ -254,76 +331,105 @@ menu_item_ingredients = [
         "IngredientName": "Gig Em Sauce", "Quantity": 1, "Units": "Pumps"},
     {"MenuItemName": "3 Chicken Tender Combo", 
      "IngredientName": "Potatoes", "Quantity": .25, "Units": "Pounds"},
-    # TODO: Add 20oz Drink
+    {"MenuItemName": "3 Chicken Tender Combo",
+        "IngredientName": "Togo Boxes", "Quantity": 1, "Units": "Boxes"},
+    {"MenuItemName": "3 Chicken Tender Combo",
+        "IngredientName": "Napkins", "Quantity": 2, "Units": "Napkins"},
+    {"MenuItemName": "3 Chicken Tender Combo",
+        "IngredientName": "Untensil Sets", "Quantity": 1, "Units": "Sets"},
+    {"MenuItemName": "3 Chicken Tender Combo", 
+        "IngredientName": "20 oz Cup/Lid/Straw", "Quantity": 1, "Units": "Sets"},
 
     # Ingredients for French Fries
     {"MenuItemName": "French Fries", 
      "IngredientName": "Potatoes", "Quantity": .25, "Units": "Pounds"},
+    {"MenuItemName": "French Fries",
+        "IngredientName": "Togo Boxes", "Quantity": 1, "Units": "Boxes"},
+    {"MenuItemName": "French Fries",
+        "IngredientName": "Napkins", "Quantity": 2, "Units": "Napkins"},
 
     # Ingredients for Cookie Ice Cream Sundae
     {"MenuItemName": "Cookie Ice Cream Sundae", 
         "IngredientName": "Chocolate Chip Cookies", "Quantity": 2, "Units": "Pieces"},
     {"MenuItemName": "Cookie Ice Cream Sundae", 
         "IngredientName": "Vanilla Ice Cream", "Quantity": 0.125, "Units": "Pints"},
+    {"MenuItemName": "Cookie Ice Cream Sundae",
+        "IngredientName": "Togo Boxes", "Quantity": 1, "Units": "Boxes"},
 
     # Ingredients for Oreo Shake
     {"MenuItemName": "Oreo Shake", 
         "IngredientName": "Oreo Ice Cream", "Quantity": 0.125, "Units": "Pints"},
+    {"MenuItemName": "Oreo Shake", 
+        "IngredientName": "20 oz Cup/Lid/Straw", "Quantity": 1, "Units": "Sets"},
 
     # Ingredients for Chocolate Shake
     {"MenuItemName": "Chocolate Shake", 
         "IngredientName": "Chocolate Ice Cream", "Quantity": 0.125, "Units": "Pints"},
+    {"MenuItemName": "Chocolate Shake", 
+        "IngredientName": "20 oz Cup/Lid/Straw", "Quantity": 1, "Units": "Sets"},
 
 
     # Ingredients for Strawberry Shake
     {"MenuItemName": "Strawberry Shake", 
         "IngredientName": "Strawberry Ice Cream", "Quantity": 0.125, "Units": "Pints"},
-
+    {"MenuItemName": "Strawberry Shake", 
+        "IngredientName": "20 oz Cup/Lid/Straw", "Quantity": 1, "Units": "Sets"},
 
     # Ingredients for Vanilla Shake
     {"MenuItemName": "Vanilla Shake", 
         "IngredientName": "Vanilla Ice Cream", "Quantity": 0.125, "Units": "Pints"},
+    {"MenuItemName": "Vanilla Shake", 
+        "IngredientName": "20 oz Cup/Lid/Straw", "Quantity": 1, "Units": "Sets"},
 
     # Ingredients for Chocolate Double Scoop Ice Cream
     {"MenuItemName": "Chocolate Double Scoop Ice Cream", 
      "IngredientName": "Chocolate Ice Cream", "Quantity": .5, "Units": "Pints"},
+    {"MenuItemName": "Chocolate Double Scoop Ice Cream", 
+     "IngredientName": "Bowls", "Quantity": 1, "Units": "Bowls"},
 
     # Ingredients for Peppermint Double Scoop Ice Cream
     {"MenuItemName": "Peppermint Double Scoop Ice Cream", 
        "IngredientName": "Peppermint Ice Cream", "Quantity": .5, "Units": "Pints"},
-
+    {"MenuItemName": "Peppermint Double Scoop Ice Cream", 
+     "IngredientName": "Bowls", "Quantity": 1, "Units": "Bowls"},
 
     # Ingredients for Strawberry Double Scoop Ice Cream
     {"MenuItemName": "Strawberry Double Scoop Ice Cream", 
         "IngredientName": "Strawberry Ice Cream", "Quantity": .5, "Units": "Pints"},
-
+    {"MenuItemName": "Strawberry Double Scoop Ice Cream", 
+     "IngredientName": "Bowls", "Quantity": 1, "Units": "Bowls"},
 
     # Ingredients for Vanilla Double Scoop Ice Cream
     {"MenuItemName": "Vanilla Double Scoop Ice Cream", 
         "IngredientName": "Vanilla Ice Cream", "Quantity": .5, "Units": "Pints"},
-
+    {"MenuItemName": "Vanilla Double Scoop Ice Cream", 
+     "IngredientName": "Bowls", "Quantity": 1, "Units": "Bowls"},
 
     # Ingredients for Oreo Cookie Double Scoop Ice Cream
     {"MenuItemName": "Oreo Cookie Double Scoop Ice Cream", 
         "IngredientName": "Oreo Ice Cream", "Quantity": .5, "Units": "Pints"},
+    {"MenuItemName": "Oreo Cookie Double Scoop Ice Cream", 
+     "IngredientName": "Bowls", "Quantity": 1, "Units": "Bowls"},
 
     # Ingredients for Root Beer Float
     {"MenuItemName": "Root Beer Float", 
         "IngredientName": "Vanilla Ice Cream", "Quantity": .5, "Units": "Pints"},
-    # TODO: Add Root Beer and Cup
+    {"MenuItemName": "Root Beer Float", 
+        "IngredientName": "20 oz Cup/Lid/Straw", "Quantity": 1, "Units": "Sets"},
+    {"MenuItemName": "Root Beer Float", 
+        "IngredientName": "Root Beer", "Quantity": 1, "Units": "Bottles"},
+
     # Ingredients for Fountain Drink
     {"MenutItemName": "Fountain Drink",
      "IngredientName": "Carbonated Water", "Quantity": .5, "Units": "Liters"},
     {"MenutItemName": "Fountain Drink",
      "IngredientName": "Flavored Syrup", "Quantity": .1, "Units": "Liters"},
     {"MenutItemName": "Fountain Drink",
-     "IngredientName": "20 oz Cup/Lid", "Quantity": 1, "Units": "Pairs"},         
+     "IngredientName": "20 oz Cup/Lid/Straw", "Quantity": 1, "Units": "Sets"},         
 
     # Ingredients for Bottled Water
     {"MenuItemName": "Bottled Water", 
         "IngredientName": "Water", "Quantity": 1, "Units": "Bottles"},
-
-    # ADD WATER AND FOUNTAIN DRINKS
 ]
 
 # Lookup dictionary to convert Item Names to ID's for storage in database

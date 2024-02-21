@@ -105,11 +105,13 @@ ingredients_inventory = [
         "Stock": 60, "MaxStock": 120, "Units": "Pieces"},
     {"IngredientID": 38, "Name": "Strawberry Ice Cream",
         "Stock": 50, "MaxStock": 100, "Units": "Pints"},
-    {"IngredientID": 39, "Name": "Oreo Ice Cream",
+    {"IngredientID": 39, "Name": "Peppermint Ice Cream",
         "Stock": 50, "MaxStock": 100, "Units": "Pints"},
-    {"IngredientID": 40, "Name": "20 oz Cup/Lid", "Stock": 500,
+    {"IngredientID": 40, "Name": "Oreo Ice Cream",
+        "Stock": 50, "MaxStock": 100, "Units": "Pints"},
+    {"IngredientID": 41, "Name": "20 oz Cup/Lid", "Stock": 500,
         "MaxStock": 1000, "Units": "Pairs"},
-    {"IngredientID": 41, "Name": "Togo Boxes", "Stock": 750,
+    {"IngredientID": 42, "Name": "Togo Boxes", "Stock": 750,
         "MaxStock": 1500, "Units": "Boxes"},                
 ]
 

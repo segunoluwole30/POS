@@ -88,9 +88,18 @@ FROM
 WHERE 
     Role = 'Cashier';
 
---TODO: Most sold items
+--TODO: Most sold items (UNVERIFIED ON DATABASE)
+SELECT mi.MenuItemID, mi.Name, COUNT(te.TransactionID) AS TotalSales
+FROM Transactions t
+JOIN TransactionEntry te ON t.TransactionID = te.TransactionID
+JOIN MenuItems mi ON te.MenuItemID = mi.MenuItemID
+GROUP BY mi.MenuItemID, mi.Name
+ORDER BY TotalSales DESC;
 
---TODO: Lowest stock items?
+--TODO: Lowest stock items? (UNVERIFIED ON DATABASE)
+SELECT IngredientID, IngredientName, Stock
+FROM Ingredients
+ORDER BY Stock ASC;
 
 --TODO: Get cheapest items (UNVERIFIED ON DATABASE)
 SELECT 
@@ -103,5 +112,10 @@ ORDER BY
     Price
 LIMIT 5;
 
---TODO: Get worst selling items
-
+--TODO: Get worst selling items (UNVERIFIED ON DATABASE)
+SELECT mi.MenuItemID, mi.Name, COUNT(te.TransactionID) AS TotalSales
+FROM Transactions t
+JOIN TransactionEntry te ON t.TransactionID = te.TransactionID
+JOIN MenuItems mi ON te.MenuItemID = mi.MenuItemID
+GROUP BY mi.MenuItemID, mi.Name
+ORDER BY TotalSales ASC;

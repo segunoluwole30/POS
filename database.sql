@@ -23,7 +23,7 @@ CREATE TABLE Transactions (
     TransactionID INT PRIMARY KEY,
     EmployeeID INT,
     Total FLOAT,
-    Date DATE,
+    Date TIMESTAMP,
     FOREIGN KEY (EmployeeID) REFERENCES Employees(EmployeeID)
 );
 
@@ -42,3 +42,13 @@ CREATE TABLE MenuItemIngredients (
     FOREIGN KEY (MenuItemID) REFERENCES MenuItems(MenuItemID),
     FOREIGN KEY (IngredientID) REFERENCES IngredientsInventory(IngredientID)
 );
+
+\copy MenuItems FROM '../project-2-315/menuitems.csv' DELIMITER ',' CSV HEADER;
+
+\copy IngredientsInventory FROM '../project-2-315/ingredients.csv' DELIMITER ',' CSV HEADER;
+
+\copy MenuItemIngredients FROM '../project-2-315/menuitemingredients.csv' DELIMITER ',' CSV HEADER;
+
+\copy Employees FROM '../project-2-315/employees.csv' DELIMITER ',' CSV HEADER;
+
+

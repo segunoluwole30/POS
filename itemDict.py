@@ -135,7 +135,7 @@ menu_item_ingredients = [
     {"MenuItemName": "Classic Hamburger",
         "IngredientName": "Onion", "Quantity": 3, "Units": "Slice"},
     {"MenuItemName": "Classic Hamburger",
-        "IngredientName": "Pickle", "Quantity": 4, "Units": "Slice"},
+        "IngredientName": "Pickles", "Quantity": 4, "Units": "Slice"},
     {"MenuItemName": "Classic Hamburger",
         "IngredientName": "Burger Buns", "Quantity": 2, "Units": "Pieces"},
 
@@ -155,7 +155,7 @@ menu_item_ingredients = [
     {"MenuItemName": "Gig Em Patty Melt",
         "IngredientName": "Onion", "Quantity": 3, "Units": "Slices"},
     {"MenuItemName": "Gig Em Patty Melt",
-        "IngredientName": "Pickle", "Quantity": 4, "Units": "Slice"},
+        "IngredientName": "Pickles", "Quantity": 4, "Units": "Slice"},
     {"MenuItemName": "Gig Em Patty Melt",
         "IngredientName": "Texas Toast", "Quantity": 2, "Units": "Pieces"},
     {"MenuItemName": "Gig Em Patty Melt", 
@@ -171,7 +171,7 @@ menu_item_ingredients = [
     {"MenuItemName": "Black Bean Burger", 
         "IngredientName": "Onion", "Quantity": 3, "Units": "Slice"},
     {"MenuItemName": "Black Bean Burger", 
-        "IngredientName": "Pickle", "Quantity": 4, "Units": "Slice"},
+        "IngredientName": "Pickles", "Quantity": 4, "Units": "Slice"},
     {"MenuItemName": "Black Bean Burger", 
         "IngredientName": "Burger Buns", "Quantity": 2, "Units": "Pieces"},
 
@@ -181,7 +181,7 @@ menu_item_ingredients = [
     {"MenuItemName": "Cheeseburger",
         "IngredientName": "Cheddar Cheese", "Quantity": 1, "Units": "Slices"},
     {"MenuItemName": "Cheeseburger",
-        "IngredientName": "Pickle", "Quantity": 4, "Units": "Slice"},
+        "IngredientName": "Pickles", "Quantity": 4, "Units": "Slice"},
     {"MenuItemName": "Cheeseburger",
         "IngredientName": "Burger Buns", "Quantity": 2, "Units": "Pieces"},
 
@@ -195,7 +195,7 @@ menu_item_ingredients = [
     {"MenuItemName": "Rev's Grilled Chicken Sandwich", 
         "IngredientName": "Onion", "Quantity": 3, "Units": "Slice"},
     {"MenuItemName": "Rev's Grilled Chicken Sandwich", 
-        "IngredientName": "Pickle", "Quantity": 4, "Units": "Slice"},
+        "IngredientName": "Pickles", "Quantity": 4, "Units": "Slice"},
     {"MenuItemName": "Rev's Grilled Chicken Sandwich", 
         "IngredientName": "Burger Buns", "Quantity": 2, "Units": "Pieces"},
 

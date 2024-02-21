@@ -19,11 +19,20 @@ GROUP BY EXTRACT(HOUR FROM Date)
 ORDER BY Hour_Number DESC;
 
 --Query to get Ingredients associated with a specific menu item
-SELECT mi.Name AS MenuItemName, ii.Name AS IngredientName
+SELECT mi.Name AS MenuItemName, ii.Name AS IngredientName, mii.Quantity as Quantity
 FROM MenuItemIngredients mii
 JOIN MenuItems mi ON mii.MenuItemID = mi.MenuItemID
 JOIN IngredientsInventory ii ON mii.IngredientID = ii.IngredientID
-WHERE mi.Name = 'Double Stack Burger';
+WHERE mi.Name = 'Bacon Cheeseburger';
+
+
+--Query to get Ingredients associated with a specific menu item
+SELECT mi.Name AS MenuItemName, SUM(mii.Quantity)
+FROM MenuItemIngredients mii
+JOIN MenuItems mi ON mii.MenuItemID = mi.MenuItemID
+JOIN IngredientsInventory ii ON mii.IngredientID = ii.IngredientID
+GROUP BY mi.Name
+LIMIT 20;
 
 -------------------------------------------------------------------
 
@@ -119,3 +128,5 @@ JOIN TransactionEntry te ON t.TransactionID = te.TransactionID
 JOIN MenuItems mi ON te.MenuItemID = mi.MenuItemID
 GROUP BY mi.MenuItemID, mi.Name
 ORDER BY TotalSales ASC;
+
+

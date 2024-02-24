@@ -18,14 +18,13 @@ menu_item_ingredients_with_ids = [
     {
         "MenuItemID": menu_item_id_lookup[entry["MenuItemName"]],
         "IngredientID": ingredient_id_lookup[entry["IngredientName"]],
-        "Quantity": entry["Quantity"],
-        "Units": entry["Units"]
+        "Quantity": entry["Quantity"]
     } for entry in menu_item_ingredients if "MenuItemName" in entry and "IngredientName" in entry  # This checks if the keys exist
 ]
 
 # Fieldnames for MenuItemIngredients
 menu_item_ingredients_fieldnames = [
-    'MenuItemID', 'IngredientID', 'Quantity', 'Units']
+    'MenuItemID', 'IngredientID', 'Quantity']
 
 write_to_csv(menu_items, 'MenuItems.csv', menu_items_fieldnames)
 write_to_csv(ingredients_inventory, 'ingredients.csv', ingredients_fieldnames)

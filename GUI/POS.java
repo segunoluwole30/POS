@@ -7,13 +7,14 @@ import java.io.IOException;
 import javax.swing.*;
 import java.util.Properties;
 
-public class POS {
+public class POS extends JFrame {
 
     private Connection conn;
 
     public POS() {
 
         inititializeDatabaseConnection();
+        displayLoginPage();
 
     }
 
@@ -42,6 +43,28 @@ public class POS {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
+    }
+
+    private void displayLoginPage() {
+        LoginPage loginPage = new LoginPage(conn);
+
+        // add loginPage to JFrame
+        add(loginPage);
+
+        // Set JFrame properties
+        setTitle("Point of Sale");
+        setSize(500, 600); // Set your preferred size
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null); // Center the JFrame
+        setVisible(true); // Make the JFrame visible
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new POS();
+            }
+        });
     }
 
 }

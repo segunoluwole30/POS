@@ -19,7 +19,7 @@ public class LoginPage extends JPanel {
 
     private void initializeUI() {
 
-        setBackground(new Color(128, 0, 0));
+        setBackground(new Color(78, 18, 2));
 
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();

@@ -6,20 +6,23 @@ import java.io.IOException;
 
 import javax.swing.*;
 import java.util.Properties;
+import java.awt.*;
 
 public class POS extends JFrame {
 
     private Connection conn;
+    private JPanel cards; // Panel to hold different pages
+    private CardLayout cardLayout;
 
     public POS() {
 
         inititializeDatabaseConnection();
-        displayLoginPage();
+        setupUI();
 
     }
 
     private void inititializeDatabaseConnection() {
-        Connection conn = null;
+        this.conn = null;
         Properties props = new Properties();
         // TODO STEP 1 (see line 7)
         try {
@@ -45,18 +48,39 @@ public class POS extends JFrame {
         }
     }
 
-    private void displayLoginPage() {
-        LoginPage loginPage = new LoginPage(conn);
-
-        // add loginPage to JFrame
-        add(loginPage);
-
-        // Set JFrame properties
+    private void setupUI() {
         setTitle("Point of Sale");
-        setSize(500, 600); // Set your preferred size
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null); // Center the JFrame
-        setVisible(true); // Make the JFrame visible
+
+        // Initialize CardLayout
+        cardLayout = new CardLayout();
+        cards = new JPanel(cardLayout);
+
+        // Create instances of each page
+        LoginPage loginPage = new LoginPage(conn, this);
+        MenuPage menuPage = new MenuPage();
+        // Add more pages as needed
+
+        // Add pages to the card panel with unique identifiers
+        cards.add(loginPage, "login");
+        cards.add(menuPage, "menu");
+        // Add more pages with unique identifiers
+
+        // Add the card panel to the frame
+        add(cards);
+
+        // Show the login page initially
+        cardLayout.show(cards, "login");
+
+        // Adjust frame properties
+        setSize(500, 600);
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+    // Method to switch to the menu page
+    public void showMenuPage() {
+        cardLayout.show(cards, "menu");
     }
 
     public static void main(String[] args) {

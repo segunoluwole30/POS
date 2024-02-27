@@ -1,28 +1,28 @@
-MenuItemID,Name,Price
-1,Bacon Cheeseburger,8.29
-2,Classic Hamburger,6.89
-3,Double Stack Burger,9.99
-4,Gig Em Patty Melt,7.59
-5,Black Bean Burger,8.38
-6,Cheeseburger,6.89
-7,Rev's Grilled Chicken Sandwich,8.39
-8,Spicy Chicken Sandwich,8.39
-9,Aggie Chicken Club,8.39
-10,2 Hot Dog Value Meal,4.99
-11,2 Corn Dog Value Meal,4.99
-12,3 Tender Entree,4.99
-13,3 Chicken Tender Combo,7.99
-14,French Fries,1.99
-15,Cookie Ice Cream Sundae,4.69
-16,Oreo Shake,4.49
-17,Chocolate Shake,4.49
-18,Strawberry Shake,4.49
-19,Vanilla Shake,4.49
-20,Chocolate Double Scoop Ice Cream,3.29
-21,Peppermint Double Scoop Ice Cream,3.29
-22,Strawberry Double Scoop Ice Cream,3.29
-23,Vanilla Double Scoop Ice Cream,3.29
-24,Oreo Cookie Double Scoop Ice Cream,3.29
-25,Root Beer Float,5.49
-26,Fountain Drink,1.99
-27,Bottled Water,2.19
+MenuItemID,Name,Price,Type
+1,Bacon Cheeseburger,8.29,Entree
+2,Classic Hamburger,6.89,Entree
+3,Double Stack Burger,9.99,Entree
+4,Gig Em Patty Melt,7.59,Entree
+5,Black Bean Burger,8.38,Entree
+6,Cheeseburger,6.89,Entree
+7,Revs Grilled Chicken Sandwich,8.39,Entree
+8,Spicy Chicken Sandwich,8.39,Entree
+9,Aggie Chicken Club,8.39,Entree
+10,2 Hot Dog Value Meal,4.99,Entree
+11,2 Corn Dog Value Meal,4.99,Entree
+12,3 Tender Entree,4.99,Entree
+13,3 Chicken Tender Combo,7.99,Entree
+14,French Fries,1.99,Side
+15,Cookie Ice Cream Sundae,4.69,Dessert
+16,Oreo Shake,4.49,Drink
+17,Chocolate Shake,4.49,Drink
+18,Strawberry Shake,4.49,Drink
+19,Vanilla Shake,4.49,Drink
+20,Chocolate Double Scoop Ice Cream,3.29,Dessert
+21,Peppermint Double Scoop Ice Cream,3.29,Dessert
+22,Strawberry Double Scoop Ice Cream,3.29,Dessert
+23,Vanilla Double Scoop Ice Cream,3.29,Dessert
+24,Oreo Cookie Double Scoop Ice Cream,3.29,Dessert
+25,Root Beer Float,5.49,Drink
+26,Fountain Drink,1.99,Drink
+27,Bottled Water,2.19,Drink

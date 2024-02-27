@@ -8,7 +8,8 @@ CREATE TABLE Employees (
 CREATE TABLE MenuItems (
     MenuItemID INT PRIMARY KEY,
     Name VARCHAR(255),
-    Price FLOAT
+    Price FLOAT,
+    Type TEXT
 );
 
 CREATE TABLE IngredientsInventory (
@@ -38,9 +39,14 @@ CREATE TABLE MenuItemIngredients (
     MenuItemID INT,
     IngredientID INT,
     Quantity FLOAT,
-    Units VARCHAR(255),
     FOREIGN KEY (MenuItemID) REFERENCES MenuItems(MenuItemID),
     FOREIGN KEY (IngredientID) REFERENCES IngredientsInventory(IngredientID)
+);
+
+CREATE TABLE Reports (
+    ReportID INT,
+    Type TEXT,
+    Date TIMESTAMP
 );
 
 \copy MenuItems FROM '../project-2-315/menuitems.csv' DELIMITER ',' CSV HEADER;

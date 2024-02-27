@@ -59,7 +59,6 @@ public class OrderSummary extends JPanel {
         bottomButton.setBackground(Color.GREEN);
 
         loadMiddlePanel(OrderSummary);
-        add(OrderSummary);
     }
 
     public static void main(String[] args) {

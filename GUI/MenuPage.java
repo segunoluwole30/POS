@@ -22,13 +22,13 @@ public class MenuPage extends JPanel {
 
     private void initializeUI() {
         setBackground(Common.MAROON);
-        setLayout(new BorderLayout()); 
+        setLayout(new BorderLayout());
 
         loadNavbar();
-        add(navbar, BorderLayout.WEST); 
+        add(navbar, BorderLayout.WEST);
 
         loadMiddlePanel();
-        add(middlePanel, BorderLayout.CENTER); 
+        add(middlePanel, BorderLayout.CENTER);
 
         JPanel orderSummary = new JPanel(new FlowLayout());
         orderSummary.setBackground(Color.MAGENTA);
@@ -98,25 +98,25 @@ public class MenuPage extends JPanel {
         orderTotal.setFont(labelFont);
         orderTotal.setOpaque(true);
         orderTotal.setBackground(Color.WHITE);
-        
+
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(10, 10, 10, 10); // Padding between components
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
-        
+
         gbc.gridx = 0;
         gbc.gridy = 0;
         infoPanel.add(managerButton, gbc);
-        
+
         gbc.gridx = 1;
         gbc.gridy = 0;
         infoPanel.add(employeeName, gbc);
-        
+
         gbc.gridx = 0;
         gbc.gridy = 1;
         infoPanel.add(orderNumber, gbc);
-        
+
         gbc.gridx = 1;
         gbc.gridy = 1;
         infoPanel.add(orderTotal, gbc);
@@ -126,9 +126,9 @@ public class MenuPage extends JPanel {
 
     private void loadNavbar() {
         // Create menu navbar
-        navbar = new JPanel();
-        navbar.setLayout(new GridLayout(4,1));
-        navbar.setPreferredSize(new Dimension(300, Common.HEIGHT));
+        JPanel navbar = new JPanel();
+        navbar.setLayout(new GridLayout(4, 1));
+        navbar.setPreferredSize(new Dimension(300, Common.HEIGHT - 1));
         navbar.setBackground(Color.gray);
 
         Font buttonFonts = new Font("Arial", Font.BOLD, 30);
@@ -150,17 +150,15 @@ public class MenuPage extends JPanel {
         navbar.add(beverageButton);
         navbar.add(dessertButton);
 
-        add(navbar);
+        add(navbar, BorderLayout.WEST);
     }
 
-
     public static void main(String[] args) {
-        MenuPage p = new MenuPage(null,null);
+        MenuPage p = new MenuPage(null, null);
         JFrame f = new JFrame();
-        f.setSize(Common.WIDTH,Common.HEIGHT + 25);
+        f.setSize(1600, 900);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.add(p);
         f.setVisible(true);
     }
 }
-

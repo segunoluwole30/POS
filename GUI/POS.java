@@ -58,11 +58,13 @@ public class POS extends JFrame {
         // Create instances of each page
         LoginPage loginPage = new LoginPage(conn, this);
         MenuPage menuPage = new MenuPage(conn, this);
+        ManagerHomePage managerHomePage = new ManagerHomePage(this);
         // Add more pages as needed
 
         // Add pages to the card panel with unique identifiers
         cards.add(loginPage, "login");
         cards.add(menuPage, "menu");
+        cards.add(managerHomePage, "managerHome");
         // Add more pages with unique identifiers
 
         // Add the card panel to the frame
@@ -80,6 +82,14 @@ public class POS extends JFrame {
     // Method to switch to the menu page
     public void showMenuPage() {
         cardLayout.show(cards, "menu");
+    }
+
+    public void showLoginPage() {
+        cardLayout.show(cards, "login");
+    }
+
+    public void showManagerHomePage() {
+        cardLayout.show(cards, "managerHome");
     }
 
     public static void main(String[] args) {

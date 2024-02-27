@@ -54,6 +54,7 @@ public class PaymentPage extends JPanel {
         add(middlePanel, BorderLayout.CENTER);
 
         JPanel orderSummary = new OrderSummary();
+        add(orderSummary.Contents)
         /*
         orderSummary.setBackground(Color.MAGENTA);
         orderSummary.setPreferredSize(new Dimension(400, 800));

@@ -59,7 +59,7 @@ public class POS extends JFrame {
 
         // Create instances of each page
         LoginPage loginPage = new LoginPage(conn, this);
-        MenuPage menuPage = new MenuPage();
+        MenuPage menuPage = new MenuPage(conn, this);
         // Add more pages as needed
 
         // Add pages to the card panel with unique identifiers
@@ -74,7 +74,7 @@ public class POS extends JFrame {
         cardLayout.show(cards, "login");
 
         // Adjust frame properties
-        setSize(500, 600);
+        setSize(Common.WIDTH, Common.HEIGHT);
         setLocationRelativeTo(null);
         setVisible(true);
     }

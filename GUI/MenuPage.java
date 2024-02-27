@@ -65,7 +65,7 @@ public class MenuPage extends JPanel {
 
         loadInfoPanel();
 
-        itemPanel = new JPanel(new FlowLayout());
+        itemPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         itemPanel.setBackground(Common.MAROON);
         itemPanel.setPreferredSize(new Dimension(900, 700));
         setItemPanel("Entree");
@@ -174,8 +174,16 @@ public class MenuPage extends JPanel {
 
         for (int i = 0; i < items.size(); i++) {
             JButton b = new JButton(items.get(i));
-            b.setFont(new Font("Arial", Font.BOLD, 15));
-            b.setPreferredSize(new Dimension(275, 100));
+
+            if (type == "Entree") {
+                b.setFont(new Font("Arial", Font.BOLD, 15));
+                b.setPreferredSize(new Dimension(250, 100));
+            }
+            else {
+                b.setFont(new Font("Arial", Font.BOLD, 15));
+                b.setPreferredSize(new Dimension(325, 125));
+            }
+
             itemPanel.add(b);
         }
 

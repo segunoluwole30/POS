@@ -1,16 +1,21 @@
 import javax.swing.*;
 import java.sql.*;
 import java.awt.*;
+import java.sql.*;
+import java.util.ArrayList;
 
 public class MenuPage extends JPanel {
 
-    private Connection con;
+    private Connection conn;
     private POS pos;
     private JPanel navbar;
     private JPanel middlePanel;
+    private JPanel itemPanel;
+    private ArrayList<String> entrees;
+    
 
     public MenuPage(Connection con, POS pos) {
-        this.con = con;
+        this.conn = con;
         this.pos = pos;
         initializeUI();
     }
@@ -34,23 +39,45 @@ public class MenuPage extends JPanel {
 
     private void loadMiddlePanel() {
 
-        middlePanel = new JPanel();
+        middlePanel = new JPanel(new BorderLayout());
         middlePanel.setPreferredSize(new Dimension(900, Common.HEIGHT));
         middlePanel.setBackground(Common.MAROON);
 
         loadInfoPanel();
 
-        JPanel itemPanel = new JPanel(new FlowLayout());
+        itemPanel = new JPanel(new FlowLayout());
+        itemPanel.setBackground(Color.GREEN);
         itemPanel.setPreferredSize(new Dimension(900,700));
 
         middlePanel.add(itemPanel);
         add(middlePanel);
     }
 
+    private void setItemPanel(String type) {
+        itemPanel.removeAll();
+        itemPanel.revalidate();
+
+        String sqlStatement = "SELECT Name, Price FROM MenuItems WHERE Type = " + type + ";";
+
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet result = stmt.executeQuery(sqlStatement);
+
+            while (result.next()) {
+
+            }
+            
+
+        } catch (SQLException exc) {
+            exc.printStackTrace();;
+        }
+        
+    }
+
     private void loadInfoPanel() {
         GridBagLayout infoLayout = new GridBagLayout();
         JPanel infoPanel = new JPanel(infoLayout);
-        infoPanel.setPreferredSize(new Dimension(900, 200));
+        infoPanel.setPreferredSize(new Dimension(900, 250));
 
         Font labelFont = new Font("Arial", Font.BOLD, 20);
 
@@ -94,7 +121,7 @@ public class MenuPage extends JPanel {
         gbc.gridy = 1;
         infoPanel.add(orderTotal, gbc);
 
-        middlePanel.add(infoPanel);
+        middlePanel.add(infoPanel, BorderLayout.NORTH);
     }
 
     private void loadNavbar() {

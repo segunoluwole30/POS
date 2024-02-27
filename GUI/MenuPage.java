@@ -19,6 +19,25 @@ public class MenuPage extends JPanel {
         this.conn = con;
         this.pos = pos;
         typeMap = new HashMap<>();
+
+        String sqlStatement = "SELECT * FROM MenuItems;";
+
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet result = stmt.executeQuery(sqlStatement);
+
+            while (result.next()) {
+                String itemType = result.getString(4);
+                String itemName = result.getString(2);
+
+                typeMap.putIfAbsent(itemType, new ArrayList<String>());
+                typeMap.get(itemType).add(itemName);
+            }
+
+        } catch (SQLException exc) {
+            exc.printStackTrace();
+        }
+
         initializeUI();
     }
 
@@ -41,44 +60,24 @@ public class MenuPage extends JPanel {
     private void loadMiddlePanel() {
 
         middlePanel = new JPanel(new BorderLayout());
-        middlePanel.setPreferredSize(new Dimension(900, Common.HEIGHT));
         middlePanel.setBackground(Common.MAROON);
+        middlePanel.setPreferredSize(new Dimension(900, Common.HEIGHT));
 
         loadInfoPanel();
 
         itemPanel = new JPanel(new FlowLayout());
-        itemPanel.setBackground(Color.GREEN);
+        itemPanel.setBackground(Common.MAROON);
         itemPanel.setPreferredSize(new Dimension(900, 700));
+        setItemPanel("Entree");
 
         middlePanel.add(itemPanel);
         add(middlePanel);
     }
 
-    private void setItemPanel(String type) {
-        itemPanel.removeAll();
-        itemPanel.revalidate();
-
-        String sqlStatement = "SELECT Name, Price FROM MenuItems WHERE Type = " + type + ";";
-
-        try {
-            Statement stmt = conn.createStatement();
-            ResultSet result = stmt.executeQuery(sqlStatement);
-
-            while (result.next()) {
-
-
-            }
-
-        } catch (SQLException exc) {
-            exc.printStackTrace();
-            ;
-        }
-
-    }
-
     private void loadInfoPanel() {
         GridBagLayout infoLayout = new GridBagLayout();
         JPanel infoPanel = new JPanel(infoLayout);
+        infoPanel.setBackground(Common.MAROON);
         infoPanel.setPreferredSize(new Dimension(900, 250));
 
         Font labelFont = new Font("Arial", Font.BOLD, 20);
@@ -136,22 +135,26 @@ public class MenuPage extends JPanel {
         // Create menu navbar
         navbar = new JPanel();
         navbar.setLayout(new GridLayout(4, 1));
-        navbar.setPreferredSize(new Dimension(300, Common.HEIGHT - 1));
         navbar.setBackground(Color.gray);
-
+        navbar.setPreferredSize(new Dimension(300, Common.HEIGHT));
+        
         Font buttonFonts = new Font("Arial", Font.BOLD, 30);
 
         JButton entreeButton = new JButton("Entrees");
         entreeButton.setFont(buttonFonts);
+        entreeButton.addActionListener(e -> setItemPanel("Entree"));
 
         JButton sidesButton = new JButton("Sides");
         sidesButton.setFont(buttonFonts);
+        sidesButton.addActionListener(e -> setItemPanel("Side"));
 
         JButton beverageButton = new JButton("Beverages");
         beverageButton.setFont(buttonFonts);
+        beverageButton.addActionListener(e -> setItemPanel("Drink"));
 
         JButton dessertButton = new JButton("Desserts");
         dessertButton.setFont(buttonFonts);
+        dessertButton.addActionListener(e -> setItemPanel("Dessert"));
 
         navbar.add(entreeButton);
         navbar.add(sidesButton);
@@ -161,6 +164,22 @@ public class MenuPage extends JPanel {
         add(navbar, BorderLayout.WEST);
     }
 
+
+    private void setItemPanel(String type) {
+        itemPanel.removeAll();
+        itemPanel.revalidate();
+        itemPanel.repaint();
+
+        ArrayList<String> items = typeMap.get(type);
+
+        for (int i = 0; i < items.size(); i++) {
+            JButton b = new JButton(items.get(i));
+            b.setFont(new Font("Arial", Font.BOLD, 15));
+            b.setPreferredSize(new Dimension(275, 120));
+            itemPanel.add(b);
+        }
+
+    }
     // public static void main(String[] args) {
     // MenuPage p = new MenuPage(null, null);
     // JFrame f = new JFrame();

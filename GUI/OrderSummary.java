@@ -7,75 +7,58 @@ public class OrderSummary extends JPanel {
 
     int HEIGHT = Common.HEIGHT-50;
     int WIDTH = 300;
-    
-    public class ItemEntry extends JPanel {
-        private JButton ItemButton;
-    
-        public ItemEntry(String itemName, double price) {
-            setLayout(new GridLayout());
-            setSize(new Dimension(WIDTH, 50)); // Ensure it doesn't expand vertically
-            setBackground(Color.WHITE); // Set background or any color you like
-    
-            ItemButton = new JButton(itemName + "  " + price);
-            ItemButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    removeFromParent();
-                }
-            });
 
-            add(ItemButton, BorderLayout.WEST);
+    private void addButton(JPanel canvas, String itemName, String price) {
+        JButton b = new JButton(itemName + " " + price);
+        b.setSize(WIDTH, 150);
+        canvas.add(b, BorderLayout.CENTER);
 
-        }
-    
-        private void removeFromParent() {
-            Container parent = this.getParent();
-            parent.remove(this);
-            parent.revalidate();
-            parent.repaint();
-        }
-    }
+        b.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Container parent = b.getParent();
+                parent.remove(b);
+                parent.revalidate();
+                parent.repaint();
+            }
+        });
 
-    private void addItemEntry(JPanel canvas, String itemName, double price) {
-        ItemEntry itemEntry = new ItemEntry(itemName, price);
-        canvas.add(itemEntry, BorderLayout.CENTER);
+        // Might not be needed
         canvas.revalidate();
         canvas.repaint();
     }
 
-    private void loadMiddlePanel() {
+    private void loadMiddlePanel(JPanel canvas) {
         JPanel middlePanel = new JPanel();
         middlePanel.setLayout(new BoxLayout(middlePanel, BoxLayout.Y_AXIS));
         middlePanel.setPreferredSize(new Dimension(300, 800));
         middlePanel.setBackground(Common.MAROON);
 
-        // You can call addItemEntry whenever you want to add new items
-        addItemEntry(middlePanel, "Burger", 19.99);
-        addItemEntry(middlePanel, "Example Item 2", 29.99);
-        addItemEntry(middlePanel, "Example Item 2", 29.99);
-        addItemEntry(middlePanel, "Example Item 2", 29.99);
-        addItemEntry(middlePanel, "Example Item 2", 29.99);
-
-        add(middlePanel, BorderLayout.CENTER);
+        addButton(middlePanel, "Burger", "$6.99");
+        addButton(middlePanel, "Fries", "$2.99");
+        addButton(middlePanel, "Double Cheeseburger", "$10.99");
+        addButton(middlePanel, "Bacon Burger", "$8.99");
+        addButton(middlePanel, "Large Soda", "$1.99");
+        addButton(middlePanel, "Chicken Tender Combo", "$6.99");
+        canvas.add(middlePanel);
     }
 
     public OrderSummary() {
-        JPanel menuSummary = new JPanel();
-        menuSummary.setLayout(new BorderLayout());
-        menuSummary.setPreferredSize(new Dimension(300, HEIGHT));
+        JPanel OrderSummary = new JPanel();
+        OrderSummary.setLayout(new BorderLayout());
+        OrderSummary.setPreferredSize(new Dimension(300, HEIGHT));
 
         // Top button (cancel order)
         JButton topButton = new JButton("Cancel Order");
-        menuSummary.add(topButton, BorderLayout.NORTH);
+        OrderSummary.add(topButton, BorderLayout.NORTH);
         topButton.setBackground(Color.RED);
 
         // Bottom button (total and pay)
         JButton bottomButton = new JButton("Total & Pay");
-        menuSummary.add(bottomButton, BorderLayout.SOUTH);
+        OrderSummary.add(bottomButton, BorderLayout.SOUTH);
         bottomButton.setBackground(Color.GREEN);
 
-        loadMiddlePanel();
-        add(menuSummary);
+        loadMiddlePanel(OrderSummary);
     }
 
     public static void main(String[] args) {

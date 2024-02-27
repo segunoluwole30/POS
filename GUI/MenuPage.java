@@ -13,7 +13,6 @@ public class MenuPage extends JPanel {
     private JPanel middlePanel;
     private JPanel itemPanel;
     private Map<String, ArrayList<String>> typeMap;
-    
 
     public MenuPage(Connection con, POS pos) {
         this.conn = con;
@@ -137,7 +136,7 @@ public class MenuPage extends JPanel {
         navbar.setLayout(new GridLayout(4, 1));
         navbar.setBackground(Color.gray);
         navbar.setPreferredSize(new Dimension(300, Common.HEIGHT));
-        
+
         Font buttonFonts = new Font("Arial", Font.BOLD, 30);
 
         JButton entreeButton = new JButton("Entrees");
@@ -163,7 +162,6 @@ public class MenuPage extends JPanel {
 
         add(navbar, BorderLayout.WEST);
     }
-
 
     private void setItemPanel(String type) {
         itemPanel.removeAll();

@@ -15,16 +15,15 @@ public class MenuPage extends JPanel {
 
     private void initializeUI() {
         setBackground(Common.MAROON);
-        
+
         SpringLayout layout = new SpringLayout();
         setLayout(layout);
 
         // Create menu navbar
         JPanel navbar = new JPanel();
-        navbar.setLayout(new GridLayout(4,1));
+        navbar.setLayout(new GridLayout(4, 1));
         navbar.setPreferredSize(new Dimension(300, Common.HEIGHT - 1));
         navbar.setBackground(Color.gray);
-
 
         JButton entreeButton = new JButton("Entrees");
         JButton sidesButton = new JButton("Sides");
@@ -36,17 +35,13 @@ public class MenuPage extends JPanel {
         navbar.add(beverageButton);
         navbar.add(dessertButton);
 
-
         add(navbar, BorderLayout.WEST);
     }
 
-    
-
-
     public static void main(String[] args) {
-        MenuPage p = new MenuPage(null,null);
+        MenuPage p = new MenuPage(null, null);
         JFrame f = new JFrame();
-        f.setSize(1600,900);
+        f.setSize(1600, 900);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.add(p);
         f.setVisible(true);

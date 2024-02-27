@@ -3,6 +3,7 @@ import java.sql.*;
 import java.awt.*;
 import java.sql.*;
 import java.util.ArrayList;
+import java.awt.event.*;
 
 public class MenuPage extends JPanel {
 
@@ -12,7 +13,6 @@ public class MenuPage extends JPanel {
     private JPanel middlePanel;
     private JPanel itemPanel;
     private ArrayList<String> entrees;
-    
 
     public MenuPage(Connection con, POS pos) {
         this.conn = con;
@@ -47,7 +47,7 @@ public class MenuPage extends JPanel {
 
         itemPanel = new JPanel(new FlowLayout());
         itemPanel.setBackground(Color.GREEN);
-        itemPanel.setPreferredSize(new Dimension(900,700));
+        itemPanel.setPreferredSize(new Dimension(900, 700));
 
         middlePanel.add(itemPanel);
         add(middlePanel);
@@ -66,12 +66,12 @@ public class MenuPage extends JPanel {
             while (result.next()) {
 
             }
-            
 
         } catch (SQLException exc) {
-            exc.printStackTrace();;
+            exc.printStackTrace();
+            ;
         }
-        
+
     }
 
     private void loadInfoPanel() {
@@ -83,6 +83,12 @@ public class MenuPage extends JPanel {
 
         JButton managerButton = new JButton("Manager Mode");
         managerButton.setFont(labelFont);
+        managerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                pos.showManagerHomePage();
+            }
+        });
 
         JLabel employeeName = new JLabel("EMPLOYEE NAME", SwingConstants.CENTER);
         employeeName.setFont(labelFont);
@@ -153,12 +159,12 @@ public class MenuPage extends JPanel {
         add(navbar, BorderLayout.WEST);
     }
 
-    public static void main(String[] args) {
-        MenuPage p = new MenuPage(null, null);
-        JFrame f = new JFrame();
-        f.setSize(1600, 900);
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.add(p);
-        f.setVisible(true);
-    }
+    // public static void main(String[] args) {
+    // MenuPage p = new MenuPage(null, null);
+    // JFrame f = new JFrame();
+    // f.setSize(1600, 900);
+    // f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    // f.add(p);
+    // f.setVisible(true);
+    // }
 }

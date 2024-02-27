@@ -14,7 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class ManagerHomePage extends JPanel {
-    private Connection conn;
+    // private Connection conn;
     private POS pos;
 
     public ManagerHomePage(POS pos) {
@@ -50,6 +50,13 @@ public class ManagerHomePage extends JPanel {
         JButton backButton = new JButton("Back");
         backButton.setForeground(Color.WHITE);
         backButton.setBackground(Color.RED);
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Perform action to log out
+                pos.showMenuPage();
+            }
+        });
         leftPanel.add(backButton);
 
         // Add space between back button and manager ID

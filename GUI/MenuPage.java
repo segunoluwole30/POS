@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.sql.*;
 import java.awt.*;
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.*;
 
 public class MenuPage extends JPanel {
 
@@ -11,12 +11,13 @@ public class MenuPage extends JPanel {
     private JPanel navbar;
     private JPanel middlePanel;
     private JPanel itemPanel;
-    private ArrayList<String> entrees;
+    private Map<String, ArrayList<String>> typeMap;
     
 
     public MenuPage(Connection con, POS pos) {
         this.conn = con;
         this.pos = pos;
+        typeMap = new HashMap<>();
         initializeUI();
     }
 
@@ -64,6 +65,7 @@ public class MenuPage extends JPanel {
             ResultSet result = stmt.executeQuery(sqlStatement);
 
             while (result.next()) {
+
 
             }
             

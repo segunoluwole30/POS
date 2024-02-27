@@ -126,7 +126,7 @@ public class MenuPage extends JPanel {
 
     private void loadNavbar() {
         // Create menu navbar
-        JPanel navbar = new JPanel();
+        navbar = new JPanel();
         navbar.setLayout(new GridLayout(4, 1));
         navbar.setPreferredSize(new Dimension(300, Common.HEIGHT - 1));
         navbar.setBackground(Color.gray);

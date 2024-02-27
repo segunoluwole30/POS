@@ -120,14 +120,16 @@ public class ManagerHomePage extends JPanel {
     private void displayButtons() {
         JPanel buttonPanel = new JPanel(new GridLayout(1, 2)); // Main panel with 2 columns
 
-        JPanel leftPanel = new JPanel(new GridLayout(2, 1)); // Left panel with 2 rows
+        JPanel leftPanel = new JPanel(new GridLayout(3, 1)); // Left panel with 2 rows
         leftPanel.setBackground(Color.LIGHT_GRAY); // Background color for visualization
 
         JButton orderHistoryButton = new JButton("View Order History Report");
         JButton inventoryReportButton = new JButton("View Inventory Report");
+        JButton menuItemsButton = new JButton("Edit Menu Items");
 
         leftPanel.add(orderHistoryButton);
         leftPanel.add(inventoryReportButton);
+        leftPanel.add(menuItemsButton);
 
         JPanel rightPanel = new JPanel(new GridLayout(3, 1)); // Right panel with 3 rows
         rightPanel.setBackground(Color.GRAY); // Background color for visualization

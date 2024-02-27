@@ -1,5 +1,3 @@
-package gui;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -21,7 +19,7 @@ public class LoginPage extends JPanel {
 
     private void initializeUI() {
 
-        setBackground(Common.MAROON);
+        setBackground(new Color(78, 18, 26));
 
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();

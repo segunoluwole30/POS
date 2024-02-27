@@ -53,10 +53,12 @@ public class PaymentPage extends JPanel {
         loadMiddlePanel();
         add(middlePanel, BorderLayout.CENTER);
 
-        JPanel orderSummary = new JPanel(new FlowLayout());
+        JPanel orderSummary = new OrderSummary();
+        /*
         orderSummary.setBackground(Color.MAGENTA);
         orderSummary.setPreferredSize(new Dimension(400, 800));
         add(orderSummary, BorderLayout.EAST);
+        */
     }
 
     private void loadMiddlePanel() {

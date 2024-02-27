@@ -13,6 +13,9 @@ public class POS extends JFrame {
     private JPanel cards; // Panel to hold different pages
     private CardLayout cardLayout;
     private ManagerHomePage managerHomePage;
+    private XReportPage xReportPage;
+    private ZReportPage zReportPage;
+    private ZZReportPage zzReportPage;
 
     public void setEmployeeID(String employeeID) {
         this.employeeID = employeeID;
@@ -68,14 +71,14 @@ public class POS extends JFrame {
         LoginPage loginPage = new LoginPage(conn, this);
         MenuPage menuPage = new MenuPage(conn, this);
         // ManagerHomePage managerHomePage = new ManagerHomePage(conn, this);
-        XReportPage xReport = new XReportPage(conn, this);
+        // XReportPage xReport = new XReportPage(conn, this);
         // Add more pages as needed
 
         // Add pages to the card panel with unique identifiers
         cards.add(loginPage, "login");
         cards.add(menuPage, "menu");
         // cards.add(managerHomePage, "managerHome");
-        cards.add(xReport, "XReport");
+        // cards.add(xReportPage, "XReport");
         // Add more pages with unique identifiers
 
         // Add the card panel to the frame
@@ -110,7 +113,33 @@ public class POS extends JFrame {
     }
 
     public void showXReportPage() {
+        if (xReportPage == null) {
+            // Lazy initialization of managerHomePage
+            xReportPage = new XReportPage(conn, this);
+            cards.add(xReportPage, "XReport");
+        }
+        xReportPage.refreshHeader(); // Now safe to call refreshHeader
         cardLayout.show(cards, "XReport");
+    }
+
+    public void showZReportPage() {
+        if (zReportPage == null) {
+            // Lazy initialization of managerHomePage
+            zReportPage = new ZReportPage(conn, this);
+            cards.add(zReportPage, "ZReport");
+        }
+        zReportPage.refreshHeader(); // Now safe to call refreshHeader
+        cardLayout.show(cards, "ZReport");
+    }
+
+    public void showZZReportPage() {
+        if (zzReportPage == null) {
+            // Lazy initialization of managerHomePage
+            zzReportPage = new ZZReportPage(conn, this);
+            cards.add(zzReportPage, "ZZReport");
+        }
+        zzReportPage.refreshHeader(); // Now safe to call refreshHeader
+        cardLayout.show(cards, "ZZReport");
     }
 
     public static void main(String[] args) {

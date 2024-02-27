@@ -20,6 +20,7 @@ public class XReportPage extends JPanel {
 	private static Connection conn;
 	private static POS pos;
 	private JPanel centerPanel;
+	private JPanel navbar;
 	private ChartPanel generatedChart;
 
 	public XReportPage(Connection conn, POS pos) {
@@ -83,9 +84,9 @@ public class XReportPage extends JPanel {
 		setLayout(new BorderLayout());
 
 		// Creating the top navbar
-		JPanel navbar = new JPanel();
-		navbar.setBackground(Color.RED);
+		navbar = Utils.createHeaderPanel(pos);
 		navbar.setPreferredSize(new Dimension(getWidth(), 50));
+		add(navbar, BorderLayout.NORTH);
 
 		// Creating the centered panel
 		centerPanel = new JPanel(new BorderLayout());
@@ -125,13 +126,25 @@ public class XReportPage extends JPanel {
 		}
 	}
 
-	// for testing purposes
-	public static void main(String[] args) {
-		XReportPage p = new XReportPage(conn, pos);
-		JFrame f = new JFrame();
-		f.setSize(1600, 900);
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.add(p);
-		f.setVisible(true);
+	public void refreshHeader() {
+		// Remove the old header
+		remove(navbar);
+		// Directly update the class field `navbar` with a new header panel
+		navbar = Utils.createHeaderPanel(pos);
+		// Add the updated navbar to the panel
+		add(navbar, BorderLayout.NORTH);
+		// Revalidate and repaint to ensure UI updates are displayed
+		revalidate();
+		repaint();
 	}
+
+	// for testing purposes
+	// public static void main(String[] args) {
+	// XReportPage p = new XReportPage(conn, pos);
+	// JFrame f = new JFrame();
+	// f.setSize(1600, 900);
+	// f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	// f.add(p);
+	// f.setVisible(true);
+	// }
 }

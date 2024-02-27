@@ -141,12 +141,23 @@ public class ManagerHomePage extends JPanel {
         xReportButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Perform action to log out
                 pos.showXReportPage();
             }
         });
         JButton zReportButton = new JButton("Generate Z Report");
+        zReportButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                pos.showZReportPage();
+            }
+        });
         JButton zzReportButton = new JButton("Generate ZZ Report");
+        zzReportButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                pos.showZZReportPage();
+            }
+        });
 
         rightPanel.add(xReportButton);
         rightPanel.add(zReportButton);

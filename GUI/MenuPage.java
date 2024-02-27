@@ -6,6 +6,8 @@ public class MenuPage extends JPanel {
 
     private Connection con;
     private POS pos;
+    private JPanel navbar;
+    private JPanel middlePanel;
 
     public MenuPage(Connection con, POS pos) {
         this.con = con;
@@ -15,10 +17,87 @@ public class MenuPage extends JPanel {
 
     private void initializeUI() {
         setBackground(Common.MAROON);
+        setLayout(new BorderLayout());
 
-        SpringLayout layout = new SpringLayout();
-        setLayout(layout);
+        loadNavbar();
+        add(navbar, BorderLayout.WEST);
 
+        loadMiddlePanel();
+        add(middlePanel, BorderLayout.CENTER);
+
+        JPanel orderSummary = new JPanel(new FlowLayout());
+        orderSummary.setBackground(Color.MAGENTA);
+        orderSummary.setPreferredSize(new Dimension(400, 800));
+        add(orderSummary, BorderLayout.EAST);
+
+    }
+
+    private void loadMiddlePanel() {
+
+        middlePanel = new JPanel();
+        middlePanel.setPreferredSize(new Dimension(900, Common.HEIGHT));
+        middlePanel.setBackground(Common.MAROON);
+
+        loadInfoPanel();
+
+        JPanel itemPanel = new JPanel(new FlowLayout());
+        itemPanel.setPreferredSize(new Dimension(900, 700));
+
+        middlePanel.add(itemPanel);
+        add(middlePanel);
+    }
+
+    private void loadInfoPanel() {
+        GridBagLayout infoLayout = new GridBagLayout();
+        JPanel infoPanel = new JPanel(infoLayout);
+        infoPanel.setPreferredSize(new Dimension(900, 200));
+
+        Font labelFont = new Font("Arial", Font.BOLD, 20);
+
+        JButton managerButton = new JButton("Manager Mode");
+        managerButton.setFont(labelFont);
+
+        JLabel employeeName = new JLabel("EMPLOYEE NAME", SwingConstants.CENTER);
+        employeeName.setFont(labelFont);
+        employeeName.setOpaque(true);
+        employeeName.setBackground(Color.WHITE);
+
+        JLabel orderNumber = new JLabel("ORDER NUMBER", SwingConstants.CENTER);
+        orderNumber.setFont(labelFont);
+        orderNumber.setOpaque(true);
+        orderNumber.setBackground(Color.WHITE);
+
+        JLabel orderTotal = new JLabel("ORDER TOTAL", SwingConstants.CENTER);
+        orderTotal.setFont(labelFont);
+        orderTotal.setOpaque(true);
+        orderTotal.setBackground(Color.WHITE);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.insets = new Insets(10, 10, 10, 10); // Padding between components
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        infoPanel.add(managerButton, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        infoPanel.add(employeeName, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        infoPanel.add(orderNumber, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        infoPanel.add(orderTotal, gbc);
+
+        middlePanel.add(infoPanel);
+    }
+
+    private void loadNavbar() {
         // Create menu navbar
         JPanel navbar = new JPanel();
         navbar.setLayout(new GridLayout(4, 1));
@@ -26,9 +105,16 @@ public class MenuPage extends JPanel {
         navbar.setBackground(Color.gray);
 
         JButton entreeButton = new JButton("Entrees");
+        entreeButton.setFont(buttonFonts);
+
         JButton sidesButton = new JButton("Sides");
+        sidesButton.setFont(buttonFonts);
+
         JButton beverageButton = new JButton("Beverages");
+        beverageButton.setFont(buttonFonts);
+
         JButton dessertButton = new JButton("Desserts");
+        dessertButton.setFont(buttonFonts);
 
         navbar.add(entreeButton);
         navbar.add(sidesButton);

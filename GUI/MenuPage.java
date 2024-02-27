@@ -36,7 +36,6 @@ public class MenuPage extends JPanel {
         orderSummary.setBackground(Color.MAGENTA);
         orderSummary.setPreferredSize(new Dimension(400, 800));
         add(orderSummary, BorderLayout.EAST);
-
     }
 
     private void loadMiddlePanel() {

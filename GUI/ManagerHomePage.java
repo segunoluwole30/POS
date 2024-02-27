@@ -14,12 +14,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class ManagerHomePage extends JPanel {
-    // private Connection conn;
+    private Connection conn;
     private POS pos;
+    private String employeeID;
+    private JPanel headerPanel;
 
-    public ManagerHomePage(POS pos) {
-        // this.conn = conn;
+    public ManagerHomePage(Connection conn, POS pos) {
+        this.conn = conn;
         this.pos = pos;
+        this.employeeID = pos.getEmployeeID();
         initializeUI();
     }
 
@@ -37,7 +40,7 @@ public class ManagerHomePage extends JPanel {
 
     private JPanel createHeaderPanel() {
 
-        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBackground(new Color(95, 95, 80));
         headerPanel.setPreferredSize(new Dimension(getWidth(), 75));
 
@@ -62,7 +65,7 @@ public class ManagerHomePage extends JPanel {
         // Add space between back button and manager ID
         leftPanel.add(Box.createHorizontalStrut(10));
 
-        JLabel headerText = new JLabel("Manager ID: XXXX-XXXX");
+        JLabel headerText = new JLabel("Manager ID: " + pos.getEmployeeID());
         headerText.setForeground(Color.WHITE);
         headerText.setFont(headerText.getFont().deriveFont(24f));
         leftPanel.add(headerText);
@@ -135,6 +138,13 @@ public class ManagerHomePage extends JPanel {
         rightPanel.setBackground(Color.GRAY); // Background color for visualization
 
         JButton xReportButton = new JButton("Generate X Report");
+        xReportButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Perform action to log out
+                pos.showXReportPage();
+            }
+        });
         JButton zReportButton = new JButton("Generate Z Report");
         JButton zzReportButton = new JButton("Generate ZZ Report");
 
@@ -146,6 +156,17 @@ public class ManagerHomePage extends JPanel {
         buttonPanel.add(rightPanel); // Add right panel to the main panel
 
         add(buttonPanel, BorderLayout.CENTER);
+    }
+
+    public void refreshHeader() {
+        // Remove the old header
+        remove(headerPanel);
+        // Create and add a new header panel using the updated employeeID
+        JPanel headerPanel = createHeaderPanel();
+        add(headerPanel, BorderLayout.NORTH);
+        // Revalidate and repaint to ensure UI updates are displayed
+        revalidate();
+        repaint();
     }
 
     // for testing purposes

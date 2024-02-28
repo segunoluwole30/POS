@@ -17,6 +17,7 @@ public class POS extends JFrame {
     private ZReportPage zReportPage;
     private ZZReportPage zzReportPage;
     private OrderHistoryPage orderHistoryPage;
+    private InventoryPage inventoryPage;
 
     public void setEmployeeID(String employeeID) {
         this.employeeID = employeeID;
@@ -146,6 +147,16 @@ public class POS extends JFrame {
         }
         orderHistoryPage.refreshHeader(); // Now safe to call refreshHeader
         cardLayout.show(cards, "OrderHistory");
+    }
+
+    public void showInventoryPage() {
+        if (inventoryPage == null) {
+            // Lazy initialization of managerHomePage
+            inventoryPage = new InventoryPage(conn, this);
+            cards.add(inventoryPage, "Inventory");
+        }
+        inventoryPage.refreshHeader(); // Now safe to call refreshHeader
+        cardLayout.show(cards, "Inventory");
     }
 
     public static void main(String[] args) {

@@ -41,7 +41,7 @@ public class OrderHistoryPage extends JPanel {
         
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 1; // Increase the gridy to move the table below the navbar, still buggy
+        gbc.gridy = 1; // Increase the grid_y to move the table below the navbar, still buggy
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.weightx = 1.0;
@@ -89,6 +89,7 @@ public class OrderHistoryPage extends JPanel {
         }
     }
 
+    // TODO: Revise comments in refreshHeader()
     public void refreshHeader() {
         // Remove the old navbar using GridBagConstraints
         GridBagConstraints gbc = getConstraints(navbar);

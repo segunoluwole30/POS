@@ -92,14 +92,11 @@ public class XReportPage extends JPanel {
 	}
 
 	private void setupUI() {
+		// Boilerplate code to setup layout
 		setLayout(new BorderLayout());
-
-		// Creating the top navbar
 		navbar = Utils.createHeaderPanel(pos);
 		navbar.setPreferredSize(new Dimension(getWidth(), 50));
 		add(navbar, BorderLayout.NORTH);
-
-		// Creating the centered panel
 		centerPanel = new JPanel(new BorderLayout());
 
 		// Creating three buttons vertically aligned on the left side
@@ -164,13 +161,9 @@ public class XReportPage extends JPanel {
   }
 
 	public void refreshHeader() {
-		// Remove the old header
 		remove(navbar);
-		// Directly update the class field `navbar` with a new header panel
 		navbar = Utils.createHeaderPanel(pos);
-		// Add the updated navbar to the panel
 		add(navbar, BorderLayout.NORTH);
-		// Revalidate and repaint to ensure UI updates are displayed
 		revalidate();
 		repaint();
 	}

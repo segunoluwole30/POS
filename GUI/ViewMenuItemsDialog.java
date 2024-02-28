@@ -41,7 +41,6 @@ public class ViewMenuItemsDialog extends JDialog {
                     float price = Float.parseFloat(tableModel.getValueAt(row, 2).toString());
                     String type = tableModel.getValueAt(row, 3).toString();
                     insertNewItem(name, price, type);
-                    // Refresh data to get new IDs and ensure table is up-to-date
                     refreshTableData();
                 } else {
                     // Existing row, handle the update operation
@@ -69,20 +68,16 @@ public class ViewMenuItemsDialog extends JDialog {
     }
 
     private void addMenuItem() {
-        // Add a new empty row at the end of the table
         tableModel.addRow(new Object[] { null, "", 5.0, "" });
         int newRow = tableModel.getRowCount() - 1;
 
-        // Ensure the new row is visible and editable
         table.scrollRectToVisible(table.getCellRect(newRow, 0, true));
         table.setRowSelectionInterval(newRow, newRow);
 
-        // Make specific cells editable
         table.editCellAt(newRow, 0); // MenuItemID
         table.editCellAt(newRow, 2); // Price
         table.editCellAt(newRow, 3); // Type
 
-        // Request focus on the first editable cell
         Component editor = table.getEditorComponent();
         if (editor != null) {
             editor.requestFocusInWindow();

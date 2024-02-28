@@ -89,6 +89,7 @@ public class ZReportPage extends JPanel {
 	}
 
 	private void setupUI() {
+		// Boilerplate code to setup layout
 		setLayout(new BorderLayout());
 
 		navbar = Utils.createHeaderPanel(pos);
@@ -151,12 +152,12 @@ public class ZReportPage extends JPanel {
 					new Color(18, 0, 130),
 					new Color(9, 0, 88), // Dark blue
 			};
-        // Add color schemes to the map
+
         colorSchemes.put("Scheme 1", scheme1);
         colorSchemes.put("Scheme 2", scheme2);
 				colorSchemes.put("gradientBlue", gradientBlueScheme);
 				colorSchemes.put("purp", smoothColorScheme);
-        // Add more color schemes as needed
+
     }
 
 	public void refreshHeader() {

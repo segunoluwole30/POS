@@ -9,14 +9,14 @@ import java.util.Properties;
 
 /*
   TODO:
-  1) Change credentials for your own team's database
+  1) Change credentials for your own team'mainGUI database
   2) Change SQL command to a relevant query that retrieves a small amount of data
   3) Create a JTextArea object using the queried data
-  4) Add the new object to the JPanel p
+  4) Add the new object to the JPanel centerPanel
 */
 
 public class GUI extends JFrame implements ActionListener {
-  static JFrame f;
+  static JFrame mainFrame;
 
   public static void main(String[] args) {
     // Building the connection
@@ -28,7 +28,7 @@ public class GUI extends JFrame implements ActionListener {
       String database_name = props.getProperty("database_name");
       String database_user = props.getProperty("database_user");
       String database_password = props.getProperty("database_password");
-      String database_url = String.format("jdbc:postgresql://csce-315-db.engr.tamu.edu/%s", database_name);
+      String database_url = String.format("jdbc:postgresql://csce-315-db.engr.tamu.edu/%mainGUI", database_name);
       conn = DriverManager.getConnection(database_url, database_user, database_password);
       JOptionPane.showMessageDialog(null, "Opened database successfully");
     } catch (FileNotFoundException e) {
@@ -62,36 +62,25 @@ public class GUI extends JFrame implements ActionListener {
     } catch (Exception e) {
       JOptionPane.showMessageDialog(null, "Error accessing Database.");
     }
-    // create a new frame
-    f = new JFrame("Menu Items");
 
-    // create a object
-    GUI s = new GUI();
-
-    // create a panel
-    JPanel p = new JPanel();
-
-    JButton b = new JButton("Close");
-
-    // add actionlistener to button
-    b.addActionListener(s);
+    // Set up main JFrame for Menu Items
+    mainFrame = new JFrame("Menu Items");
+    GUI mainGUI = new GUI();
+    
+    // Set up close button
+    JPanel centerPanel = new JPanel();
+    JButton closeButton = new JButton("Close");
+    closeButton.addActionListener(mainGUI);
 
     // TODO Step 3 (see line 9)
-    JTextArea t = new JTextArea(name);
+    JTextArea nameText = new JTextArea(name);
 
     // TODO Step 4 (see line 10)
-    p.add(t);
-
-    // add button to panel
-    p.add(b);
-
-    // add panel to frame
-    f.add(p);
-
-    // set the size of frame
-    f.setSize(400, 400);
-
-    f.setVisible(true);
+    centerPanel.add(nameText);
+    centerPanel.add(closeButton);
+    mainFrame.add(centerPanel);
+    mainFrame.setSize(400, 400);
+    mainFrame.setVisible(true);
 
     // closing the connection
     try {
@@ -104,9 +93,9 @@ public class GUI extends JFrame implements ActionListener {
 
   // if button is pressed
   public void actionPerformed(ActionEvent e) {
-    String s = e.getActionCommand();
-    if (s.equals("Close")) {
-      f.dispose();
+    String mainGUI = e.getActionCommand();
+    if (mainGUI.equals("Close")) {
+      mainFrame.dispose();
     }
   }
 }

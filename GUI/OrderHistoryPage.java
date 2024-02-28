@@ -1,9 +1,6 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.sql.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -38,7 +35,7 @@ public class OrderHistoryPage extends JPanel {
         add(navbar, gbc);
 
         table = new JTable();
-        
+
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 1; // Increase the gridy to move the table below the navbar, still buggy
@@ -49,38 +46,38 @@ public class OrderHistoryPage extends JPanel {
         gbc.insets = new Insets(10, 10, 10, 10);
         add(new JScrollPane(table), gbc);
 
-        refresh = new JButton("Refresh Report");        
+        refresh = new JButton("Refresh Report");
         refresh.addActionListener(e -> loadHistory());
-        
+
         gbc.gridy++; // attempts to add button below table and navbar, still buggy
         gbc.fill = GridBagConstraints.NONE;
         add(refresh, gbc);
-        
+
         loadHistory();
     }
 
     private void loadHistory() {
-        String sql = "SELECT t.Date, t.TransactionID, t.Total, string_agg(mi.Name, ', ') AS MenuItems " + 
-        "FROM transactions t " +
-        "JOIN transactionentry te ON t.TransactionID = te.TransactionID " + 
-        "JOIN MenuItems mi ON te.MenuItemID = mi.MenuItemID " + 
-        "GROUP BY t.TransactionID " + 
-        "LIMIT 200";
+        String sql = "SELECT t.Date, t.TransactionID, t.Total, string_agg(mi.Name, ', ') AS MenuItems " +
+                "FROM transactions t " +
+                "JOIN transactionentry te ON t.TransactionID = te.TransactionID " +
+                "JOIN MenuItems mi ON te.MenuItemID = mi.MenuItemID " +
+                "GROUP BY t.TransactionID " +
+                "LIMIT 200";
 
         try {
             Statement statement = conn.createStatement();
             ResultSet result = statement.executeQuery(sql);
 
             DefaultTableModel model = new DefaultTableModel();
-            model.setColumnIdentifiers(new String[]{"Date", "Order ID", "Price", "Items"});
+            model.setColumnIdentifiers(new String[] { "Date", "Order ID", "Price", "Items" });
 
             while (result.next()) {
                 // converting query lines into values for GUI table
-                String date = result.getString("date"); 
-                int orderID = result.getInt("transactionid"); 
-                float price = result.getFloat("total"); 
+                String date = result.getString("date");
+                int orderID = result.getInt("transactionid");
+                float price = result.getFloat("total");
                 String items = result.getString("menuitems");
-                model.addRow(new Object[]{date, orderID, price, items}); // adds row to GUI table
+                model.addRow(new Object[] { date, orderID, price, items }); // adds row to GUI table
             }
 
             table.setModel(model);

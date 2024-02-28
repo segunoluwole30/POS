@@ -6,18 +6,18 @@ import java.awt.event.ActionListener;
 public class OrderSummary extends JPanel {
 
     private JPanel middlePanel;
-    private MenuPage parentMenu;
+    private MenuPage parentPage;
 
     public OrderSummary(MenuPage mp) {
 
         setLayout(new BorderLayout());
-        // setPreferredSize(new Dimension(300, 300));
+        parentPage = mp;
 
         Font buttonFont = new Font("Arial", Font.BOLD, 20);
     
         // Top button (cancel order)
         JButton topButton = new JButton("Cancel Order");
-        topButton.addActionListener(e -> mp.cancelButton());
+        topButton.addActionListener(e -> parentPage.cancelButton());
         topButton.setFont(buttonFont);
         topButton.setPreferredSize(new Dimension(300, 75));
         topButton.setBackground(Color.DARK_GRAY);
@@ -27,7 +27,7 @@ public class OrderSummary extends JPanel {
 
         // Bottom button (total and pay)
         JButton bottomButton = new JButton("Pay");
-        bottomButton.addActionListener(e -> mp.payButton());
+        bottomButton.addActionListener(e -> parentPage.payButton());
         bottomButton.setFont(buttonFont);
         bottomButton.setPreferredSize(new Dimension(300, 75));
         bottomButton.setBackground(Color.DARK_GRAY);
@@ -46,7 +46,7 @@ public class OrderSummary extends JPanel {
         add(middlePanel);
     }
 
-    public void addButton(String itemName, float price) {
+    public void addButton(String itemName, double price) {
         JButton b = new JButton(itemName + " $" + price);
         b.setSize(WIDTH, 150);
         middlePanel.add(b, BorderLayout.CENTER);
@@ -54,10 +54,10 @@ public class OrderSummary extends JPanel {
         b.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Container parent = b.getParent();
-                parent.remove(b);
-                parent.revalidate();
-                parent.repaint();
+                parentPage.removeTransactionEntree(itemName, price);
+                middlePanel.remove(b);
+                middlePanel.revalidate();
+                middlePanel.repaint();
             }
         });
 

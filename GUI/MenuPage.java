@@ -13,11 +13,18 @@ public class MenuPage extends JPanel {
     private JPanel middlePanel;
     private JPanel itemPanel;
     private JPanel payPanel;
+    private JLabel orderTotal;
     private OrderSummary orderSummary;
     private Map<String, ArrayList<String>> typeMap;
-    private Map<String, Float> priceMap;
+    private Map<String, Double> priceMap;
     private Map<String, Integer> idMap;
-    private boolean currentlyOrdering;
+    private ArrayList<String> transactionItems;
+    private boolean currentlyPaying;
+    private String currentEmployeeName;
+    private String currentRole;
+    private String paymentType;
+    private int transactionID;
+    private double transactionTotal;
 
     public MenuPage(Connection con, POS pos) {
         this.conn = con;
@@ -25,18 +32,18 @@ public class MenuPage extends JPanel {
         typeMap = new HashMap<>();
         priceMap = new HashMap<>();
         idMap = new HashMap<>();
-        currentlyOrdering = true;
-
-        String sqlStatement = "SELECT * FROM MenuItems;";
+        transactionItems = new ArrayList<String>();
+        currentlyPaying = false;
+        paymentType = "";
 
         try {
             Statement stmt = conn.createStatement();
-            ResultSet result = stmt.executeQuery(sqlStatement);
+            ResultSet result = stmt.executeQuery("SELECT * FROM MenuItems;");
 
             while (result.next()) {
                 String itemType = result.getString(4);
                 String itemName = result.getString(2);
-                float price = result.getFloat(3);
+                double price = result.getDouble(3);
                 int id = result.getInt(1);
 
                 typeMap.putIfAbsent(itemType, new ArrayList<String>());
@@ -45,6 +52,15 @@ public class MenuPage extends JPanel {
                 priceMap.put(itemName, price);
                 idMap.put(itemName, id);
             }
+
+            result = stmt.executeQuery("SELECT transactionid FROM transactions ORDER BY transactionid DESC LIMIT 1;");
+            result.next();
+            transactionID = result.getInt(1) + 1;
+
+            result = stmt.executeQuery("SELECT name, role FROM employees WHERE employeeid = " + pos.getEmployeeID());
+            result.next();
+            currentEmployeeName = result.getString(1);
+            currentRole = result.getString(2);
 
         } catch (SQLException exc) {
             exc.printStackTrace();
@@ -58,16 +74,13 @@ public class MenuPage extends JPanel {
         setLayout(new BorderLayout());
 
         loadNavbar();
-
         loadMiddlePanel();
 
         orderSummary = new OrderSummary(this);
-        // orderSummary.setPreferredSize(new Dimension(400, 800));
         add(orderSummary, BorderLayout.EAST);
     }
 
     private void loadMiddlePanel() {
-
         middlePanel = new JPanel(new BorderLayout());
         middlePanel.setBackground(Common.MAROON);
         middlePanel.setPreferredSize(new Dimension(900, Common.HEIGHT));
@@ -96,21 +109,27 @@ public class MenuPage extends JPanel {
         managerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                pos.showManagerHomePage();
+                System.out.println(currentRole);
+                if (currentRole.equals("manager")) {
+                    pos.showManagerHomePage();
+                }
+                else {
+                    JOptionPane.showMessageDialog(null, "Cannot Access Manager Mode", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
 
-        JLabel employeeName = new JLabel("EMPLOYEE NAME", SwingConstants.CENTER);
+        JLabel employeeName = new JLabel("Current User: " + currentEmployeeName, SwingConstants.CENTER);
         employeeName.setFont(labelFont);
         employeeName.setOpaque(true);
         employeeName.setBackground(Color.WHITE);
 
-        JLabel orderNumber = new JLabel("ORDER NUMBER", SwingConstants.CENTER);
+        JLabel orderNumber = new JLabel("ORDER #" + transactionID, SwingConstants.CENTER);
         orderNumber.setFont(labelFont);
         orderNumber.setOpaque(true);
         orderNumber.setBackground(Color.WHITE);
 
-        JLabel orderTotal = new JLabel("ORDER TOTAL", SwingConstants.CENTER);
+        orderTotal = new JLabel("Order Total: $" + transactionTotal, SwingConstants.CENTER);
         orderTotal.setFont(labelFont);
         orderTotal.setOpaque(true);
         orderTotal.setBackground(Color.WHITE);
@@ -141,7 +160,6 @@ public class MenuPage extends JPanel {
     }
 
     private void loadNavbar() {
-        // Create menu navbar
         navbar = new JPanel();
         navbar.setLayout(new GridLayout(4, 1));
         navbar.setBackground(Color.gray);
@@ -181,9 +199,13 @@ public class MenuPage extends JPanel {
         payPanel.setPreferredSize(new Dimension(1250, Common.HEIGHT - 50));
 
         JButton cashButton = new JButton("Cash");
+        cashButton.addActionListener(e -> setPaymentType("Cash"));
         JButton creditButton = new JButton("Credit Card");
+        creditButton.addActionListener(e -> setPaymentType("Credit Card"));
         JButton diningButton = new JButton("Dining Dollars");
+        diningButton.addActionListener(e -> setPaymentType("Dining Dollars"));
         JButton swipeButton = new JButton("Meal Swipe");
+        swipeButton.addActionListener(e -> setPaymentType("Meal Swipe"));
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH;
@@ -219,8 +241,9 @@ public class MenuPage extends JPanel {
 
         for (int i = 0; i < items.size(); i++) {
             String itemName = items.get(i);
+            double itemPrice = priceMap.get(itemName);
             JButton b = new JButton(itemName);
-            b.addActionListener(e -> addToSummary(itemName, priceMap.get(itemName)));
+            b.addActionListener(e -> addToSummary(itemName, itemPrice));
 
             if (type == "Entree") {
                 b.setFont(new Font("Arial", Font.BOLD, 15));
@@ -236,28 +259,69 @@ public class MenuPage extends JPanel {
 
     }
 
-    private void addToSummary(String item, float price) {
+    private void finalizeOrder() {
+        System.out.println("\n\n\n\n");
+        for (int i = 0; i < transactionItems.size(); i++) {
+            System.out.println(transactionItems.get(i));
+        }
+        System.out.println("Processed Order with " + paymentType);
+        pos.showLoginPage();
+    }
+
+    private void addToSummary(String item, double price) {
+        transactionTotal += price;
+        transactionTotal = round(transactionTotal);
+        orderTotal.setText("Order Total: $" + transactionTotal);
         orderSummary.addButton(item, price);
+        transactionItems.add(item);
+    }
+
+    public void removeTransactionEntree(String item, double price) {
+        transactionTotal -= price;
+        transactionTotal = round(transactionTotal);
+        orderTotal.setText("Order Total: $" + transactionTotal);
+        transactionItems.remove(item);
+    }
+
+    private void setPaymentType(String type) {
+        paymentType = type;
     }
 
     public void payButton() {
-        // if (currentlyOrdering)
-
-        remove(middlePanel);
-        remove(navbar);
-        revalidate();
-        loadPayPanel();
-        repaint();
+        if (currentlyPaying) {
+            if (!paymentType.equals("")) {
+                finalizeOrder();
+            }
+            else {
+                JOptionPane.showMessageDialog(null, "Select a Payent Type", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        else {
+            remove(middlePanel);
+            remove(navbar);
+            revalidate();
+            loadPayPanel();
+            repaint();
+            currentlyPaying = true;
+        }
     }
 
     public void cancelButton() {
-        // if (currentlyOrdering)
-
-        remove(payPanel);
-        revalidate();
-        loadNavbar();
-        loadMiddlePanel();
-        repaint();
+        if (currentlyPaying) {
+            remove(payPanel);
+            revalidate();
+            loadNavbar();
+            loadMiddlePanel();
+            repaint();    
+            currentlyPaying = false;
+            paymentType = "";
+        } 
+        else {
+            pos.showLoginPage();      
+        }
     }
 
+    private double round(double num) {
+        return Math.round(num * 100) / 100.0;
+    }
 }

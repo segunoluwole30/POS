@@ -141,7 +141,7 @@ public class ManagerHomePage extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ViewMenuItemsDialog dialog = new ViewMenuItemsDialog(
-                        (Frame) SwingUtilities.getWindowAncestor(ManagerHomePage.this), conn, pos);
+                        (Frame) SwingUtilities.getWindowAncestor(ManagerHomePage.this), conn);
                 dialog.setLocationRelativeTo(ManagerHomePage.this);
                 dialog.refreshTableData();
                 dialog.setVisible(true);

@@ -12,12 +12,20 @@ public class MenuPage extends JPanel {
     private JPanel navbar;
     private JPanel middlePanel;
     private JPanel itemPanel;
+    private JPanel payPanel;
+    private OrderSummary orderSummary;
     private Map<String, ArrayList<String>> typeMap;
+    private Map<String, Float> priceMap;
+    private Map<String, Integer> idMap;
+    private boolean currentlyOrdering;
 
     public MenuPage(Connection con, POS pos) {
         this.conn = con;
         this.pos = pos;
         typeMap = new HashMap<>();
+        priceMap = new HashMap<>();
+        idMap = new HashMap<>();
+        currentlyOrdering = true;
 
         String sqlStatement = "SELECT * FROM MenuItems;";
 
@@ -28,9 +36,14 @@ public class MenuPage extends JPanel {
             while (result.next()) {
                 String itemType = result.getString(4);
                 String itemName = result.getString(2);
+                float price = result.getFloat(3);
+                int id = result.getInt(1);
 
                 typeMap.putIfAbsent(itemType, new ArrayList<String>());
                 typeMap.get(itemType).add(itemName);
+
+                priceMap.put(itemName, price);
+                idMap.put(itemName, id);
             }
 
         } catch (SQLException exc) {
@@ -45,14 +58,11 @@ public class MenuPage extends JPanel {
         setLayout(new BorderLayout());
 
         loadNavbar();
-        add(navbar, BorderLayout.WEST);
 
         loadMiddlePanel();
-        add(middlePanel, BorderLayout.CENTER);
 
-        JPanel orderSummary = new JPanel(new FlowLayout());
-        orderSummary.setBackground(Color.MAGENTA);
-        orderSummary.setPreferredSize(new Dimension(400, 800));
+        orderSummary = new OrderSummary(this);
+        // orderSummary.setPreferredSize(new Dimension(400, 800));
         add(orderSummary, BorderLayout.EAST);
     }
 
@@ -163,6 +173,43 @@ public class MenuPage extends JPanel {
         add(navbar, BorderLayout.WEST);
     }
 
+    private void loadPayPanel() {
+        payPanel = new JPanel();
+
+        payPanel.setBackground(Common.MAROON);
+        payPanel.setLayout(new GridBagLayout());
+        payPanel.setPreferredSize(new Dimension(1250, Common.HEIGHT - 50));
+
+        JButton cashButton = new JButton("Cash");
+        JButton creditButton = new JButton("Credit Card");
+        JButton diningButton = new JButton("Dining Dollars");
+        JButton swipeButton = new JButton("Meal Swipe");
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.insets = new Insets(20, 20, 20, 0); // Padding between components
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        payPanel.add(cashButton, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        payPanel.add(creditButton, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        payPanel.add(diningButton, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        payPanel.add(swipeButton, gbc);
+
+        add(payPanel, BorderLayout.WEST);
+    }
+
     private void setItemPanel(String type) {
         itemPanel.removeAll();
         itemPanel.revalidate();
@@ -171,7 +218,9 @@ public class MenuPage extends JPanel {
         ArrayList<String> items = typeMap.get(type);
 
         for (int i = 0; i < items.size(); i++) {
-            JButton b = new JButton(items.get(i));
+            String itemName = items.get(i);
+            JButton b = new JButton(itemName);
+            b.addActionListener(e -> addToSummary(itemName, priceMap.get(itemName)));
 
             if (type == "Entree") {
                 b.setFont(new Font("Arial", Font.BOLD, 15));
@@ -186,12 +235,29 @@ public class MenuPage extends JPanel {
         }
 
     }
-    // public static void main(String[] args) {
-    // MenuPage p = new MenuPage(null, null);
-    // JFrame f = new JFrame();
-    // f.setSize(1600, 900);
-    // f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    // f.add(p);
-    // f.setVisible(true);
-    // }
+
+    private void addToSummary(String item, float price) {
+        orderSummary.addButton(item, price);
+    }
+
+    public void payButton() {
+        // if (currentlyOrdering)
+
+        remove(middlePanel);
+        remove(navbar);
+        revalidate();
+        loadPayPanel();
+        repaint();
+    }
+
+    public void cancelButton() {
+        // if (currentlyOrdering)
+
+        remove(payPanel);
+        revalidate();
+        loadNavbar();
+        loadMiddlePanel();
+        repaint();
+    }
+
 }

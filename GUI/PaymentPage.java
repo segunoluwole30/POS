@@ -7,105 +7,37 @@ import java.awt.event.*;
 
 public class PaymentPage extends JPanel {
 
-    private Connection conn;
-    private POS pos;
-    private JPanel navbar;
-    private JPanel middlePanel;
-    private JPanel itemPanel;
-    private Map<String, ArrayList<String>> typeMap;
-    
-
-    public PaymentPage(Connection con, POS pos) {
-        this.conn = con;
-        this.pos = pos;
-        typeMap = new HashMap<>();
-
-        String sqlStatement = "SELECT * FROM MenuItems;";
-
-        if(this.conn != null) {
-            try {
-                Statement stmt = conn.createStatement();
-                ResultSet result = stmt.executeQuery(sqlStatement);
-
-                while (result.next()) {
-                    String itemType = result.getString(4);
-                    String itemName = result.getString(2);
-
-                    typeMap.putIfAbsent(itemType, new ArrayList<String>());
-                    typeMap.get(itemType).add(itemName);
-                }
-
-            } catch (SQLException exc) {
-                exc.printStackTrace();
-            }
-        }
-
-        initializeUI();
-    }
-
-    private void initializeUI() {
+    public PaymentPage() {
         setBackground(Common.MAROON);
-        setLayout(new BorderLayout());
+        setLayout(new GridBagLayout());
+        setPreferredSize(new Dimension(1250, Common.HEIGHT - 50));
 
-        //loadNavbar();
-        //add(navbar, BorderLayout.WEST);
+        JButton cashButton = new JButton("Cash");
+        JButton creditButton = new JButton("Credit Card");
+        JButton diningButton = new JButton("Dining Dollars");
+        JButton swipeButton = new JButton("Meal Swipe");
 
-        loadMiddlePanel();
-        add(middlePanel, BorderLayout.CENTER);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.insets = new Insets(10, 10, 10, 10); // Padding between components
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
 
-        JPanel orderSummary = new OrderSummary();
-        add(orderSummary.Contents)
-        /*
-        orderSummary.setBackground(Color.MAGENTA);
-        orderSummary.setPreferredSize(new Dimension(400, 800));
-        add(orderSummary, BorderLayout.EAST);
-        */
-    }
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        add(cashButton, gbc);
 
-    private void loadMiddlePanel() {
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        add(creditButton, gbc);
 
-        middlePanel = new JPanel();
-        middlePanel.setLayout(new BoxLayout(middlePanel, BoxLayout.Y_AXIS));
-        middlePanel.setBackground(Common.MAROON);
-        middlePanel.setPreferredSize(new Dimension(900, Common.HEIGHT));
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        add(diningButton, gbc);
 
-        //loadInfoPanel();
-
-        itemPanel = new JPanel(new FlowLayout());
-        itemPanel.setBackground(Common.MAROON);
-        itemPanel.setPreferredSize(new Dimension(900, 700));
-        setItemPanel("Entree");
-
-        middlePanel.add(itemPanel);
-        add(middlePanel);
-    }
-
-    private void setItemPanel(String type) {
-        itemPanel.removeAll();
-        itemPanel.revalidate();
-        itemPanel.repaint();
-
-        ArrayList<String> items = new ArrayList<>();
-        items.add("Cash");
-        items.add("Credit Card");
-        items.add("Dining Dollars");
-        items.add("Retail Swipe");
-
-        for (int i = 0; i < items.size(); i++) {
-            JButton b = new JButton(items.get(i));
-            b.setFont(new Font("Arial", Font.BOLD, 15));
-            b.setPreferredSize(new Dimension(300, 300));
-            itemPanel.add(b);
-        }
-
-    }
-    public static void main(String[] args) {
-    PaymentPage p = new PaymentPage(null, null);
-    JFrame f = new JFrame();
-    f.setSize(1600, 900);
-    f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    f.add(p);
-    f.setVisible(true);
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        add(swipeButton, gbc);
     }
 }
 

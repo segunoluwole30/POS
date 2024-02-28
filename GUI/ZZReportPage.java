@@ -55,7 +55,6 @@ public class ZZReportPage extends JPanel {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			// Handle any SQL exceptions
 		}
 
 		// Create the pie chart
@@ -92,15 +91,12 @@ public class ZZReportPage extends JPanel {
 	}
 
 	private void setupUI() {
-		// Setting layout for the panel
 		setLayout(new BorderLayout());
 
 		// Creating the top navbar
 		navbar = Utils.createHeaderPanel(pos);
 		navbar.setPreferredSize(new Dimension(getWidth(), 50));
 		add(navbar, BorderLayout.NORTH);
-
-		// Creating the centered panel
 		centerPanel = new JPanel(new BorderLayout());
 
 		// Creating three buttons vertically aligned on the left side
@@ -118,7 +114,6 @@ public class ZZReportPage extends JPanel {
 		centerPanel.add(generatedChart, BorderLayout.CENTER);
 		centerPanel.add(buttonPanel, BorderLayout.WEST);
 
-		// Adding navbar and center panel to the main panel
 		add(navbar, BorderLayout.NORTH);
 		add(centerPanel, BorderLayout.CENTER);
 	}
@@ -166,13 +161,9 @@ public class ZZReportPage extends JPanel {
   }
 
 	public void refreshHeader() {
-		// Remove the old header
 		remove(navbar);
-		// Directly update the class field `navbar` with a new header panel
 		navbar = Utils.createHeaderPanel(pos);
-		// Add the updated navbar to the panel
 		add(navbar, BorderLayout.NORTH);
-		// Revalidate and repaint to ensure UI updates are displayed
 		revalidate();
 		repaint();
 	}

@@ -47,7 +47,6 @@ public class ZReportPage extends JPanel {
 								"AND MI.Type = '" + category + "' " +
 								"GROUP BY MI.MenuItemID, MI.Name " +
 								"ORDER BY QuantitySold DESC")) {
-			// Process the query results
 			while (rs.next()) {
 				String menuItemName = rs.getString("MenuItemName");
 				int quantitySold = rs.getInt("QuantitySold");
@@ -55,21 +54,19 @@ public class ZReportPage extends JPanel {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			// Handle any SQL exceptions
 		}
 
 		// Create the pie chart
 		if (generatedChart == null) {
 			JFreeChart chart = ChartFactory.createPieChart(
-					category + " ZReport", // chart title
-					dataset, // data
-					true, // include legend
+					category + " ZReport",
+					dataset, 
+					true, 
 					true,
 					false);
 
 			generatedChart = new ChartPanel(chart);
 		} else {
-			// Otherwise, update the dataset associated with the existing chart
 			JFreeChart chart = generatedChart.getChart();
 			chart.setTitle(category + " ZReport");
 			PiePlot plot = (PiePlot) chart.getPlot();
@@ -92,15 +89,12 @@ public class ZReportPage extends JPanel {
 	}
 
 	private void setupUI() {
-		// Setting layout for the panel
 		setLayout(new BorderLayout());
 
-		// Creating the top navbar
 		navbar = Utils.createHeaderPanel(pos);
 		navbar.setPreferredSize(new Dimension(getWidth(), 50));
 		add(navbar, BorderLayout.NORTH);
 
-		// Creating the centered panel
 		centerPanel = new JPanel(new BorderLayout());
 
 		// Creating three buttons vertically aligned on the left side
@@ -166,13 +160,9 @@ public class ZReportPage extends JPanel {
     }
 
 	public void refreshHeader() {
-		// Remove the old header
 		remove(navbar);
-		// Directly update the class field `navbar` with a new header panel
 		navbar = Utils.createHeaderPanel(pos);
-		// Add the updated navbar to the panel
 		add(navbar, BorderLayout.NORTH);
-		// Revalidate and repaint to ensure UI updates are displayed
 		revalidate();
 		repaint();
 	}

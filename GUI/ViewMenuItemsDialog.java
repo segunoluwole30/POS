@@ -2,7 +2,6 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.*;
 import java.sql.*;
 
 public class ViewMenuItemsDialog extends JDialog {
@@ -71,13 +70,19 @@ public class ViewMenuItemsDialog extends JDialog {
 
     private void addMenuItem() {
         // Add a new empty row at the end of the table
-        tableModel.addRow(new Object[] { null, "", 0.0, "" });
+        tableModel.addRow(new Object[] { null, "", 5.0, "" });
         int newRow = tableModel.getRowCount() - 1;
 
         // Ensure the new row is visible and editable
         table.scrollRectToVisible(table.getCellRect(newRow, 0, true));
         table.setRowSelectionInterval(newRow, newRow);
-        table.editCellAt(newRow, 1);
+
+        // Make specific cells editable
+        table.editCellAt(newRow, 0); // MenuItemID
+        table.editCellAt(newRow, 2); // Price
+        table.editCellAt(newRow, 3); // Type
+
+        // Request focus on the first editable cell
         Component editor = table.getEditorComponent();
         if (editor != null) {
             editor.requestFocusInWindow();
@@ -87,8 +92,20 @@ public class ViewMenuItemsDialog extends JDialog {
         table.repaint();
     }
 
+    private int getNextMenuItemID() {
+        String query = "SELECT MAX(MenuItemID) AS MaxID FROM MenuItems";
+        try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
+            if (rs.next()) {
+                return rs.getInt("MaxID") + 1;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Database error: " + e.getMessage());
+        }
+        return 1; // Default ID if table is empty or in case of error
+    }
+
     private void insertNewItem(String name, float price, String type) {
-        // Similar implementation as your existing insertMenuItem method
         String sql = "INSERT INTO MenuItems (Name, Price, Type) VALUES (?, ?, ?)";
         try (PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, name);
@@ -159,7 +176,7 @@ public class ViewMenuItemsDialog extends JDialog {
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             if (column == 2) { // For "Price" column
                 // Use setObject with explicit parsing for the price column
-                double priceValue = Double.parseDouble(value.toString());
+                float priceValue = Float.parseFloat(value.toString());
                 pstmt.setObject(1, priceValue);
             } else {
                 pstmt.setObject(1, value); // For other columns

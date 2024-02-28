@@ -259,7 +259,6 @@ public class MenuPage extends JPanel {
     }
 
     private void finalizeOrder() {
-
         try {
             Statement stmt = conn.createStatement();
             String finalOrderTotal = round(transactionTotal) + "";
@@ -276,7 +275,7 @@ public class MenuPage extends JPanel {
             exc.printStackTrace();
         }
 
-        pos.showLoginPage();
+        pos.showMenuPage();
 
     }
 

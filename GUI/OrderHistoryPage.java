@@ -23,7 +23,6 @@ public class OrderHistoryPage extends JPanel {
     }
 
     private void initializeUI() {
-        // JPanel homePanel = new JPanel(new GridBagLayout());
         setBackground(Common.DARKCYAN);
         // homePanel.setPreferredSize(new Dimension(Common.WIDTH, Common.HEIGHT));
         // Creating the top navbar
@@ -42,7 +41,7 @@ public class OrderHistoryPage extends JPanel {
         
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 1; // Increase the gridy to move the table below the navbar
+        gbc.gridy = 1; // Increase the gridy to move the table below the navbar, still buggy
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.weightx = 1.0;
@@ -53,7 +52,7 @@ public class OrderHistoryPage extends JPanel {
         refresh = new JButton("Refresh Report");        
         refresh.addActionListener(e -> loadHistory());
         
-        gbc.gridy++;
+        gbc.gridy++; // attempts to add button below table and navbar, still buggy
         gbc.fill = GridBagConstraints.NONE;
         add(refresh, gbc);
         
@@ -61,31 +60,29 @@ public class OrderHistoryPage extends JPanel {
     }
 
     private void loadHistory() {
-        
         String sql = "SELECT t.Date, t.TransactionID, t.Total, string_agg(mi.Name, ', ') AS MenuItems " + 
         "FROM transactions t " +
         "JOIN transactionentry te ON t.TransactionID = te.TransactionID " + 
         "JOIN MenuItems mi ON te.MenuItemID = mi.MenuItemID " + 
         "GROUP BY t.TransactionID " + 
-        "LIMIT 20";
+        "LIMIT 200";
 
         try {
             Statement statement = conn.createStatement();
             ResultSet result = statement.executeQuery(sql);
 
-            // Create a table model and populate it with data from the result set
             DefaultTableModel model = new DefaultTableModel();
             model.setColumnIdentifiers(new String[]{"Date", "Order ID", "Price", "Items"});
 
             while (result.next()) {
-                String date = result.getString("date");
-                int orderID = result.getInt("transactionid");
-                float price = result.getFloat("total");
+                // converting query lines into values for GUI table
+                String date = result.getString("date"); 
+                int orderID = result.getInt("transactionid"); 
+                float price = result.getFloat("total"); 
                 String items = result.getString("menuitems");
-                model.addRow(new Object[]{date, orderID, price, items});
+                model.addRow(new Object[]{date, orderID, price, items}); // adds row to GUI table
             }
 
-            // Set the table model to the JTable
             table.setModel(model);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -118,16 +115,4 @@ public class OrderHistoryPage extends JPanel {
             return null;
         }
     }
-
-    /* public static void main(String[] args) {
-        JFrame f = new JFrame();
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        OrderHistoryPage p = new OrderHistoryPage(conn, pos);
-        f.getContentPane().add(p);
-
-        f.pack();
-        f.setLocationRelativeTo(null);
-        f.setVisible(true);
-    } */
 }

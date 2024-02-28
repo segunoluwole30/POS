@@ -41,6 +41,8 @@ public class OrderSummary extends JPanel {
         middlePanel.setPreferredSize(new Dimension(300, 800));
         middlePanel.setBackground(Color.DARK_GRAY);
 
+        // addButton("Burger", "$6.99");
+
         add(middlePanel);
     }
 

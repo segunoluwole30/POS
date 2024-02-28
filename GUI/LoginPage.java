@@ -86,6 +86,8 @@ public class LoginPage extends JPanel {
                 // Employee ID found in the database
                 // You can perform further actions here
                 System.out.println("Employee ID found");
+                pos.setEmployeeID(enteredID); // Save the entered ID
+                System.out.println("Employee ID = " + pos.getEmployeeID());
                 pos.showMenuPage();
             } else {
                 // Employee ID not found in the database

@@ -19,15 +19,18 @@ public class OrderHistoryPage extends JPanel {
     }
 
     private void initializeUI() {
-        // JPanel panel = new JPanel(new GridBagLayout());
-        
+
         setBackground(Common.DARKCYAN);
         setLayout(new GridBagLayout());
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(10, 10, 10, 10);
     
-        // setTitle("Order History Report");
-        // setSize(Common.WIDTH, Common.HEIGHT);
-
-
+        
         String[] columnNames = {"TransactionID", "EmployeeID", "Total", "Date"};
         Object[][] data = {
             {1, 2033, 5.49, "2024-02-27"},
@@ -67,39 +70,7 @@ public class OrderHistoryPage extends JPanel {
             {16, 2033, 5.49, "2024-02-27"},
             {17, 2033, 5.49, "2024-02-27"},
             {18, 2033, 5.49, "2024-02-27"},
-            {19, 2033, 5.49, "2024-02-27"},
-            {1, 2033, 5.49, "2024-02-27"},
-            {2, 2033, 5.49, "2024-02-27"},
-            {3, 2033, 5.49, "2024-02-27"},
-            {4, 2033, 5.49, "2024-02-27"},
-            {5, 2033, 5.49, "2024-02-27"},
-            {6, 2033, 5.49, "2024-02-27"},
-            {7, 2033, 5.49, "2024-02-27"},
-            {8, 2033, 5.49, "2024-02-27"},
-            {9, 2033, 5.49, "2024-02-27"},
-            {10, 2033, 5.49, "2024-02-27"},
-            {11, 2033, 5.49, "2024-02-27"},
-            {12, 2033, 5.49, "2024-02-27"},
-            {13, 2033, 5.49, "2024-02-27"},
-            {14, 2033, 5.49, "2024-02-27"},
-            {15, 2033, 5.49, "2024-02-27"},
-            {16, 2033, 5.49, "2024-02-27"},
-            {17, 2033, 5.49, "2024-02-27"},
-            {18, 2033, 5.49, "2024-02-27"},
-            {19, 2033, 5.49, "2024-02-27"},
-            {1, 2033, 5.49, "2024-02-27"},
-            {2, 2033, 5.49, "2024-02-27"},
-            {3, 2033, 5.49, "2024-02-27"},
-            {4, 2033, 5.49, "2024-02-27"},
-            {5, 2033, 5.49, "2024-02-27"},
-            {6, 2033, 5.49, "2024-02-27"},
-            {7, 2033, 5.49, "2024-02-27"},
-            {8, 2033, 5.49, "2024-02-27"},
-            {9, 2033, 5.49, "2024-02-27"},
-            {10, 2033, 5.49, "2024-02-27"},
-            {11, 2033, 5.49, "2024-02-27"},
-            {12, 2033, 5.49, "2024-02-27"},
-            {13, 2033, 5.49, "2024-02-27"}
+            {19, 2033, 5.49, "2024-02-27"}
         };
 
         DefaultTableModel model = new DefaultTableModel(data, columnNames);
@@ -111,22 +82,15 @@ public class OrderHistoryPage extends JPanel {
                 System.out.println("Refresh button clicked");
             }
         });
+        /* refresh.addActionListener(e -> refreshOrderHistory());
 
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(10, 10, 10, 10);
+        refreshOrderHistory(); */
+
         add(new JScrollPane(table), gbc);
 
         gbc.gridy++;
         gbc.fill = GridBagConstraints.NONE;
         add(refresh, gbc);
-
-        /* refresh.addActionListener(e -> refreshOrderHistory());
-
-        refreshOrderHistory(); */
     }
 
     /* private void refreshOrderHistory() {

@@ -4,6 +4,7 @@ import java.awt.*;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 
@@ -11,7 +12,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
+import java.util.HashMap;
+import java.util.Map;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -21,15 +23,17 @@ public class ZReportPage extends JPanel {
 	private JPanel centerPanel;
 	private JPanel navbar;
 	private ChartPanel generatedChart;
+	private Map<String, Color[]> colorSchemes;
 
 	public ZReportPage(Connection conn, POS pos) {
 		this.conn = conn;
 		this.pos = pos;
 		generateZChart("Entree", 10);
+		initializeColorSchemes();
 		setupUI();
 	}
 
-	private void generateZChart(String category, int hour) {
+	private void generateZChart(String category, int day) {
 		DefaultPieDataset dataset = new DefaultPieDataset();
 
 		// Execute query to retrieve data from the database
@@ -39,7 +43,7 @@ public class ZReportPage extends JPanel {
 								"FROM MenuItems MI " +
 								"JOIN TransactionEntry TE ON MI.MenuItemID = TE.MenuItemID " +
 								"JOIN Transactions T ON TE.TransactionID = T.TransactionID " +
-								"WHERE DATE_PART('hour', T.Date) = " + hour + " " +
+								"WHERE DATE_PART('day', T.Date) = " + day + " " +
 								"AND MI.Type = '" + category + "' " +
 								"GROUP BY MI.MenuItemID, MI.Name " +
 								"ORDER BY QuantitySold DESC")) {
@@ -69,7 +73,17 @@ public class ZReportPage extends JPanel {
 			JFreeChart chart = generatedChart.getChart();
 			chart.setTitle(category + " ZReport");
 			PiePlot plot = (PiePlot) chart.getPlot();
+
+			Color[] colors = colorSchemes.get("gradientBlue");
+        if (colors != null) {
+            for (int i = 0; i < dataset.getItemCount(); i++) {
+                plot.setSectionPaint(dataset.getKey(i), colors[i % colors.length]);
+            }
+        }
+
 			plot.setDataset(dataset);
+			plot.setSimpleLabels(true);
+			plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0}: {2}"));
 
 			// Invalidate the chart panel to trigger repaint
 			generatedChart.invalidate();
@@ -123,6 +137,20 @@ public class ZReportPage extends JPanel {
 			generateZChart(category, hour);
 		}
 	}
+
+	private void initializeColorSchemes() {
+        colorSchemes = new HashMap<>();
+
+        // Define some preset color schemes
+        Color[] scheme1 = {Color.RED, Color.GREEN, Color.BLUE};
+        Color[] scheme2 = {Color.ORANGE, Color.YELLOW, Color.CYAN};
+				Color[] gradientBlueScheme = {new Color(0, 0, 255), new Color(0, 128, 255), new Color(0, 191, 255)};
+        // Add color schemes to the map
+        colorSchemes.put("Scheme 1", scheme1);
+        colorSchemes.put("Scheme 2", scheme2);
+				colorSchemes.put("gradientBlue", gradientBlueScheme);
+        // Add more color schemes as needed
+    }
 
 	public void refreshHeader() {
 		// Remove the old header

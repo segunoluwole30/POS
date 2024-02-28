@@ -4,14 +4,17 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class OrderHistoryPage extends JPanel {
-
-    private static Connection conn;
-    private static POS pos;
     private JTable table;
     private JButton refresh;
     private JPanel navbar;
+    private Connection conn;
+    private POS pos;
 
     public OrderHistoryPage(Connection conn, POS pos) {
         this.conn = conn;
@@ -20,9 +23,9 @@ public class OrderHistoryPage extends JPanel {
     }
 
     private void initializeUI() {
-
+        // JPanel homePanel = new JPanel(new GridBagLayout());
         setBackground(Common.DARKCYAN);
-        setLayout(new GridBagLayout());
+        // homePanel.setPreferredSize(new Dimension(Common.WIDTH, Common.HEIGHT));
         // Creating the top navbar
         navbar = Utils.createHeaderPanel(pos);
         navbar.setPreferredSize(new Dimension(getWidth(), 50));
@@ -35,51 +38,8 @@ public class OrderHistoryPage extends JPanel {
         gbc.insets = new Insets(10, 10, 10, 10);
         add(navbar, gbc);
 
-        String[] columnNames = { "TransactionID", "EmployeeID", "Total", "Date" };
-        Object[][] data = {
-                { 1, 2033, 5.49, "2024-02-27" },
-                { 2, 2033, 5.49, "2024-02-27" },
-                { 3, 2033, 5.49, "2024-02-27" },
-                { 4, 2033, 5.49, "2024-02-27" },
-                { 5, 2033, 5.49, "2024-02-27" },
-                { 6, 2033, 5.49, "2024-02-27" },
-                { 7, 2033, 5.49, "2024-02-27" },
-                { 8, 2033, 5.49, "2024-02-27" },
-                { 9, 2033, 5.49, "2024-02-27" },
-                { 10, 2033, 5.49, "2024-02-27" },
-                { 11, 2033, 5.49, "2024-02-27" },
-                { 12, 2033, 5.49, "2024-02-27" },
-                { 13, 2033, 5.49, "2024-02-27" },
-                { 14, 2033, 5.49, "2024-02-27" },
-                { 15, 2033, 5.49, "2024-02-27" },
-                { 16, 2033, 5.49, "2024-02-27" },
-                { 17, 2033, 5.49, "2024-02-27" },
-                { 18, 2033, 5.49, "2024-02-27" },
-                { 19, 2033, 5.49, "2024-02-27" },
-                { 1, 2033, 5.49, "2024-02-27" },
-                { 2, 2033, 5.49, "2024-02-27" },
-                { 3, 2033, 5.49, "2024-02-27" },
-                { 4, 2033, 5.49, "2024-02-27" },
-                { 5, 2033, 5.49, "2024-02-27" },
-                { 6, 2033, 5.49, "2024-02-27" },
-                { 7, 2033, 5.49, "2024-02-27" },
-                { 8, 2033, 5.49, "2024-02-27" },
-                { 9, 2033, 5.49, "2024-02-27" },
-                { 10, 2033, 5.49, "2024-02-27" },
-                { 11, 2033, 5.49, "2024-02-27" },
-                { 12, 2033, 5.49, "2024-02-27" },
-                { 13, 2033, 5.49, "2024-02-27" },
-                { 14, 2033, 5.49, "2024-02-27" },
-                { 15, 2033, 5.49, "2024-02-27" },
-                { 16, 2033, 5.49, "2024-02-27" },
-                { 17, 2033, 5.49, "2024-02-27" },
-                { 18, 2033, 5.49, "2024-02-27" },
-                { 19, 2033, 5.49, "2024-02-27" }
-        };
-
-        DefaultTableModel model = new DefaultTableModel(data, columnNames);
-        JTable table = new JTable(model);
-
+        table = new JTable();
+        
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 1; // Increase the gridy to move the table below the navbar
@@ -88,38 +48,49 @@ public class OrderHistoryPage extends JPanel {
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.insets = new Insets(10, 10, 10, 10);
-
-        JButton refresh = new JButton("Refresh Report");
-        refresh.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Refresh button clicked");
-            }
-        });
-        /*
-         * refresh.addActionListener(e -> refreshOrderHistory());
-         * 
-         * refreshOrderHistory();
-         */
-
         add(new JScrollPane(table), gbc);
 
+        refresh = new JButton("Refresh Report");        
+        refresh.addActionListener(e -> loadHistory());
+        
         gbc.gridy++;
         gbc.fill = GridBagConstraints.NONE;
         add(refresh, gbc);
+        
+        loadHistory();
     }
 
-    /*
-     * private void refreshOrderHistory() {
-     * try {
-     * Statement statement = conn.createStatement();
-     * ResultSet result = statement.executeQuery("SELECT * FROM transactions");
-     * 
-     * ResultSetMetaData metaData = result.getMetaData();
-     * } catch (SQLException ex){
-     * ex.printStackTrace();
-     * }
-     * }
-     */
+    private void loadHistory() {
+        
+        String sql = "SELECT t.Date, t.TransactionID, t.Total, string_agg(mi.Name, ', ') AS MenuItems " + 
+        "FROM transactions t " +
+        "JOIN transactionentry te ON t.TransactionID = te.TransactionID " + 
+        "JOIN MenuItems mi ON te.MenuItemID = mi.MenuItemID " + 
+        "GROUP BY t.TransactionID " + 
+        "LIMIT 20";
+
+        try {
+            Statement statement = conn.createStatement();
+            ResultSet result = statement.executeQuery(sql);
+
+            // Create a table model and populate it with data from the result set
+            DefaultTableModel model = new DefaultTableModel();
+            model.setColumnIdentifiers(new String[]{"Date", "Order ID", "Price", "Items"});
+
+            while (result.next()) {
+                String date = result.getString("date");
+                int orderID = result.getInt("transactionid");
+                float price = result.getFloat("total");
+                String items = result.getString("menuitems");
+                model.addRow(new Object[]{date, orderID, price, items});
+            }
+
+            // Set the table model to the JTable
+            table.setModel(model);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void refreshHeader() {
         // Remove the old navbar using GridBagConstraints
@@ -148,7 +119,7 @@ public class OrderHistoryPage extends JPanel {
         }
     }
 
-    public static void main(String[] args) {
+    /* public static void main(String[] args) {
         JFrame f = new JFrame();
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -158,5 +129,5 @@ public class OrderHistoryPage extends JPanel {
         f.pack();
         f.setLocationRelativeTo(null);
         f.setVisible(true);
-    }
+    } */
 }

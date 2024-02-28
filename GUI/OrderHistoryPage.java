@@ -62,23 +62,27 @@ public class OrderHistoryPage extends JPanel {
 
     private void loadHistory() {
         
-        String sql = "SELECT date,transactionid,total FROM transactions";
+        String sql = "SELECT t.Date, t.TransactionID, t.Total, string_agg(mi.Name, ', ') AS MenuItems " + 
+        "FROM transactions t " +
+        "JOIN transactionentry te ON t.TransactionID = te.TransactionID " + 
+        "JOIN MenuItems mi ON te.MenuItemID = mi.MenuItemID " + 
+        "GROUP BY t.TransactionID " + 
+        "LIMIT 20";
+
         try {
             Statement statement = conn.createStatement();
-            ResultSet result = statement.executeQuery(
-                "SELECT date,transactionid,total FROM transactions "+
-                "LIMIT 20");
+            ResultSet result = statement.executeQuery(sql);
 
             // Create a table model and populate it with data from the result set
             DefaultTableModel model = new DefaultTableModel();
-            model.setColumnIdentifiers(new String[]{"Date", "Order ID", "Price"});
+            model.setColumnIdentifiers(new String[]{"Date", "Order ID", "Price", "Items"});
 
             while (result.next()) {
                 String date = result.getString("date");
                 int orderID = result.getInt("transactionid");
                 float price = result.getFloat("total");
-                System.out.println("Adding row from database");
-                model.addRow(new Object[]{date, orderID, price});
+                String items = result.getString("menuitems");
+                model.addRow(new Object[]{date, orderID, price, items});
             }
 
             // Set the table model to the JTable

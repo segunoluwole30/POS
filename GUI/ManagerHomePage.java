@@ -53,8 +53,6 @@ public class ManagerHomePage extends JPanel {
 
         // Back button
         JButton backButton = new JButton("Back");
-        backButton.setForeground(Color.WHITE);
-        backButton.setBackground(Color.RED);
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -95,8 +93,6 @@ public class ManagerHomePage extends JPanel {
 
         // Right side login button
         JButton loginButton = new JButton("Log Out");
-        loginButton.setForeground(Color.WHITE);
-        loginButton.setBackground(Color.RED);
 
         loginButton.addActionListener(new ActionListener() {
             @Override

@@ -16,6 +16,7 @@ public class POS extends JFrame {
     private XReportPage xReportPage;
     private ZReportPage zReportPage;
     private ZZReportPage zzReportPage;
+    private OrderHistoryPage orderHistoryPage;
 
     public void setEmployeeID(String employeeID) {
         this.employeeID = employeeID;
@@ -104,42 +105,48 @@ public class POS extends JFrame {
 
     public void showManagerHomePage() {
         if (managerHomePage == null) {
-            // Lazy initialization of managerHomePage
             managerHomePage = new ManagerHomePage(conn, this);
             cards.add(managerHomePage, "managerHome");
         }
-        managerHomePage.refreshHeader(); // Now safe to call refreshHeader
+        managerHomePage.refreshHeader();
         cardLayout.show(cards, "managerHome");
     }
 
     public void showXReportPage() {
         if (xReportPage == null) {
-            // Lazy initialization of managerHomePage
             xReportPage = new XReportPage(conn, this);
             cards.add(xReportPage, "XReport");
         }
-        xReportPage.refreshHeader(); // Now safe to call refreshHeader
+        xReportPage.refreshHeader();
         cardLayout.show(cards, "XReport");
     }
 
     public void showZReportPage() {
         if (zReportPage == null) {
-            // Lazy initialization of managerHomePage
             zReportPage = new ZReportPage(conn, this);
             cards.add(zReportPage, "ZReport");
         }
-        zReportPage.refreshHeader(); // Now safe to call refreshHeader
+        zReportPage.refreshHeader();
         cardLayout.show(cards, "ZReport");
     }
 
     public void showZZReportPage() {
         if (zzReportPage == null) {
-            // Lazy initialization of managerHomePage
             zzReportPage = new ZZReportPage(conn, this);
             cards.add(zzReportPage, "ZZReport");
         }
-        zzReportPage.refreshHeader(); // Now safe to call refreshHeader
+        zzReportPage.refreshHeader();
         cardLayout.show(cards, "ZZReport");
+    }
+
+    public void showOrderHistoryPage() {
+        if (orderHistoryPage == null) {
+            // Lazy initialization of managerHomePage
+            orderHistoryPage = new OrderHistoryPage(conn, this);
+            cards.add(orderHistoryPage, "OrderHistory");
+        }
+        orderHistoryPage.refreshHeader(); // Now safe to call refreshHeader
+        cardLayout.show(cards, "OrderHistory");
     }
 
     public static void main(String[] args) {

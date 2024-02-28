@@ -5,7 +5,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
+import javax.swing.text.View;
 
 import java.sql.*;
 //import java.util.concurrent.Flow;
@@ -127,8 +129,24 @@ public class ManagerHomePage extends JPanel {
         leftPanel.setBackground(Color.LIGHT_GRAY); // Background color for visualization
 
         JButton orderHistoryButton = new JButton("View Order History Report");
+        orderHistoryButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                pos.showOrderHistoryPage();
+            }
+        });
         JButton inventoryReportButton = new JButton("View Inventory Report");
         JButton menuItemsButton = new JButton("Edit Menu Items");
+        menuItemsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ViewMenuItemsDialog dialog = new ViewMenuItemsDialog(
+                        (Frame) SwingUtilities.getWindowAncestor(ManagerHomePage.this), conn, pos);
+                dialog.setLocationRelativeTo(ManagerHomePage.this);
+                dialog.refreshTableData();
+                dialog.setVisible(true);
+            }
+        });
 
         leftPanel.add(orderHistoryButton);
         leftPanel.add(inventoryReportButton);

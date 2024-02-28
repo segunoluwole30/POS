@@ -28,8 +28,8 @@ public class ZReportPage extends JPanel {
 	public ZReportPage(Connection conn, POS pos) {
 		this.conn = conn;
 		this.pos = pos;
-		generateZChart("Entree", 10);
 		initializeColorSchemes();
+		generateZChart("Entree", 10);
 		setupUI();
 	}
 
@@ -71,7 +71,7 @@ public class ZReportPage extends JPanel {
 			chart.setTitle(category + " ZReport");
 			PiePlot plot = (PiePlot) chart.getPlot();
 
-			Color[] colors = colorSchemes.get("gradientBlue");
+			Color[] colors = colorSchemes.get("purp");
         if (colors != null) {
             for (int i = 0; i < dataset.getItemCount(); i++) {
                 plot.setSectionPaint(dataset.getKey(i), colors[i % colors.length]);
@@ -139,9 +139,24 @@ public class ZReportPage extends JPanel {
         Color[] scheme1 = {Color.RED, Color.GREEN, Color.BLUE};
         Color[] scheme2 = {Color.ORANGE, Color.YELLOW, Color.CYAN};
 				Color[] gradientBlueScheme = {new Color(0, 0, 255), new Color(0, 128, 255), new Color(0, 191, 255)};
+				Color[] smoothColorScheme = {
+					new Color(180, 160, 255), // Light purple
+					new Color(153, 128, 255),
+					new Color(126, 96, 255),
+					new Color(99, 64, 255),
+					new Color(72, 32, 255),
+					new Color(45, 0, 255),
+					new Color(36, 0, 214),
+					new Color(27, 0, 172),
+					new Color(18, 0, 130),
+					new Color(9, 0, 88), // Dark blue
+			};
+        // Add color schemes to the map
         colorSchemes.put("Scheme 1", scheme1);
         colorSchemes.put("Scheme 2", scheme2);
 				colorSchemes.put("gradientBlue", gradientBlueScheme);
+				colorSchemes.put("purp", smoothColorScheme);
+        // Add more color schemes as needed
     }
 
 	public void refreshHeader() {

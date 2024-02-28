@@ -132,6 +132,13 @@ public class ManagerHomePage extends JPanel {
             }
         });
         JButton inventoryReportButton = new JButton("View Inventory Report");
+        inventoryReportButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                pos.showInventoryPage();
+            }
+        });
+
         JButton menuItemsButton = new JButton("Edit Menu Items");
         menuItemsButton.addActionListener(new ActionListener() {
             @Override

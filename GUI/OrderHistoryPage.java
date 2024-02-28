@@ -58,8 +58,6 @@ public class OrderHistoryPage extends JPanel {
         centerPanel.add(new JScrollPane(table));
 		centerPanel.add(refresh, BorderLayout.SOUTH);
 		add(centerPanel, BorderLayout.CENTER);
-
-        add(navbar, BorderLayout.NORTH);
 	}
 
 	public void refreshHeader() {

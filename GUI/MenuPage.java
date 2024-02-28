@@ -128,7 +128,7 @@ public class MenuPage extends JPanel {
         orderNumber.setOpaque(true);
         orderNumber.setBackground(Color.WHITE);
 
-        orderTotal = new JLabel("Order Total: $" + transactionTotal, SwingConstants.CENTER);
+        orderTotal = new JLabel("Order Total: $" + String.format("%.2f", transactionTotal), SwingConstants.CENTER);
         orderTotal.setFont(labelFont);
         orderTotal.setOpaque(true);
         orderTotal.setBackground(Color.WHITE);
@@ -283,7 +283,7 @@ public class MenuPage extends JPanel {
     private void addToSummary(String item, double price) {
         transactionTotal += price;
         transactionTotal = round(transactionTotal);
-        orderTotal.setText("Order Total: $" + transactionTotal);
+        orderTotal.setText("Order Total: $" + String.format("%.2f", transactionTotal));
         orderSummary.addButton(item, price);
         transactionItems.add(item);
     }
@@ -291,7 +291,7 @@ public class MenuPage extends JPanel {
     public void removeTransactionEntree(String item, double price) {
         transactionTotal -= price;
         transactionTotal = round(transactionTotal);
-        orderTotal.setText("Order Total: $" + transactionTotal);
+        orderTotal.setText("Order Total: $" + String.format("%.2f", transactionTotal));
         transactionItems.remove(item);
     }
 
@@ -336,7 +336,7 @@ public class MenuPage extends JPanel {
         }
     }
 
-    private double round(double num) {
+    public double round(double num) {
         return Math.round(num * 100) / 100.0;
     }
 }

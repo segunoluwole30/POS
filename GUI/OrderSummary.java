@@ -47,7 +47,7 @@ public class OrderSummary extends JPanel {
     }
 
     public void addButton(String itemName, double price) {
-        JButton b = new JButton(itemName + " $" + price);
+        JButton b = new JButton(itemName + " $" + parentPage.round(price));
         b.setSize(WIDTH, 150);
         middlePanel.add(b, BorderLayout.CENTER);
 

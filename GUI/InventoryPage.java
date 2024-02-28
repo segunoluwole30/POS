@@ -92,7 +92,7 @@ public class InventoryPage extends JPanel {
         JTable table = new JTable(rowEntries, columnNames);
         table.setOpaque(false);
         table.setEnabled(false);
-        table.setRowHeight(Common.HEIGHT / 16);
+        table.setRowHeight(Common.HEIGHT / 24);
         table.setFont(new Font("Arial", Font.PLAIN, 16));
         table.getTableHeader().setFont(new Font("Arial", Font.PLAIN, 16));
         table.setRowSelectionInterval(1, 1);
@@ -113,7 +113,7 @@ public class InventoryPage extends JPanel {
         JTable table2 = new JTable(rowEntries2, columnNames2);
         table2.setOpaque(false);
         table2.setEnabled(false);
-        table2.setRowHeight(Common.HEIGHT / 16);
+        table2.setRowHeight(Common.HEIGHT / 24);
         table2.setFont(new Font("Arial", Font.PLAIN, 16));
         table2.getTableHeader().setFont(new Font("Arial", Font.PLAIN, 16));
         JScrollPane tableScrollPane2 = new JScrollPane();

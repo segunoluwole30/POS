@@ -7,9 +7,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class InventoryPage extends JPanel {
-    
+
     private Connection con;
     private POS pos;
+    private JPanel navbar;
 
     public InventoryPage(Connection con, POS pos) {
         this.con = con;
@@ -17,19 +18,19 @@ public class InventoryPage extends JPanel {
         initializeUI();
     }
 
-    private List<String[]> requestInventoryTable(String sqlStatement){
+    private List<String[]> requestInventoryTable(String sqlStatement) {
         List<String[]> tableOutput = new ArrayList<>();
         try {
-        Statement stmt = con.createStatement();
-        ResultSet result = stmt.executeQuery(sqlStatement);
-        while (result.next()) {
-            String[] str = {String.valueOf(result.getInt("ingredientid")), 
-                            result.getString("name"), 
-                            String.valueOf(result.getInt("stock")), 
-                            String.valueOf(result.getInt("maxstock")), 
-                            result.getString("units")};
-            tableOutput.add(str);
-        }
+            Statement stmt = con.createStatement();
+            ResultSet result = stmt.executeQuery(sqlStatement);
+            while (result.next()) {
+                String[] str = { String.valueOf(result.getInt("ingredientid")),
+                        result.getString("name"),
+                        String.valueOf(result.getInt("stock")),
+                        String.valueOf(result.getInt("maxstock")),
+                        result.getString("units") };
+                tableOutput.add(str);
+            }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error accessing Database.");
         }
@@ -42,6 +43,14 @@ public class InventoryPage extends JPanel {
         JPanel mainPanel = new JPanel(new GridBagLayout());
         mainPanel.setBackground(Common.DARKCYAN);
         mainPanel.setPreferredSize(new Dimension(Common.WIDTH, Common.HEIGHT));
+        navbar = Utils.createHeaderPanel(pos);
+        navbar.setPreferredSize(new Dimension(getWidth(), 50));
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Set up body in which the bulk of information will be placed
         GridBagConstraints constraints = new GridBagConstraints();
@@ -49,16 +58,14 @@ public class InventoryPage extends JPanel {
         constraints.anchor = GridBagConstraints.CENTER;
         JPanel bodyPanel = new JPanel(new GridBagLayout());
         bodyPanel.setBackground(Color.LIGHT_GRAY);
-        bodyPanel.setPreferredSize(new Dimension(Common.WIDTH * 7 / 8, Common.HEIGHT *7 / 9));
-        
-        
-        
+        bodyPanel.setPreferredSize(new Dimension(Common.WIDTH * 7 / 8, Common.HEIGHT * 7 / 9));
+
         // Set up panels that will display title, table, and suggested restocking orders
-        
+
         // Inventory Report Title Panel
         GridBagConstraints constraintsTitle = new GridBagConstraints();
         constraintsTitle.gridx = 0;
-        constraintsTitle.gridy = 0;
+        constraintsTitle.gridy = 1;
         constraintsTitle.weightx = 1.0;
         constraintsTitle.anchor = GridBagConstraints.PAGE_START;
         JPanel titlePanel = new JPanel();
@@ -68,7 +75,7 @@ public class InventoryPage extends JPanel {
         title.setOpaque(false);
         titlePanel.setOpaque(false);
         title.setEditable(false);
-        
+
         // Table Scroll Pane
         GridBagConstraints constraintsTable = new GridBagConstraints();
         constraintsTable.gridx = 0;
@@ -79,10 +86,10 @@ public class InventoryPage extends JPanel {
         constraintsTable.anchor = GridBagConstraints.CENTER;
         List<String[]> tableData = requestInventoryTable("SELECT * FROM ingredientsinventory;");
         String[][] rowEntries = new String[tableData.size()][];
-        for(int i = 0; i < tableData.size(); i++){
+        for (int i = 0; i < tableData.size(); i++) {
             rowEntries[i] = tableData.get(i);
         }
-        String[] columnNames = {"Ingredient ID", "Name", "Current Stock", "Max Stock", "Units"};
+        String[] columnNames = { "Ingredient ID", "Name", "Current Stock", "Max Stock", "Units" };
         JTable table = new JTable(rowEntries, columnNames);
         table.setOpaque(false);
         table.setEnabled(false);
@@ -93,7 +100,7 @@ public class InventoryPage extends JPanel {
         JScrollPane tableScrollPane = new JScrollPane();
         tableScrollPane.setViewportView(table);
         tableScrollPane.setPreferredSize(new Dimension(tableScrollPane.getPreferredSize().width, Common.HEIGHT / 4));
-        
+
         // Next Order Suggestion Title Panel
         GridBagConstraints constraintsTitle2 = new GridBagConstraints();
         constraintsTitle2.gridx = 0;
@@ -107,7 +114,7 @@ public class InventoryPage extends JPanel {
         title2.setOpaque(false);
         titlePanel2.setOpaque(false);
         title2.setEditable(false);
-        
+
         // Next Order Suggestion Scroll Pane
         GridBagConstraints constraintsTable2 = new GridBagConstraints();
         constraintsTable2.gridx = 0;
@@ -116,12 +123,13 @@ public class InventoryPage extends JPanel {
         constraintsTable2.insets = new Insets(0, 20, 0, 0);
         constraintsTable2.fill = GridBagConstraints.BOTH;
         constraintsTable2.anchor = GridBagConstraints.CENTER;
-        List<String[]> tableData2 = requestInventoryTable("SELECT * FROM ingredientsinventory ORDER BY stock / maxstock ASC LIMIT 10;");
+        List<String[]> tableData2 = requestInventoryTable(
+                "SELECT * FROM ingredientsinventory ORDER BY stock / maxstock ASC LIMIT 10;");
         String[][] rowEntries2 = new String[tableData2.size()][];
-        for(int i = 0; i < tableData2.size(); i++){
+        for (int i = 0; i < tableData2.size(); i++) {
             rowEntries2[i] = tableData2.get(i);
         }
-        String[] columnNames2 = {"Ingredient ID", "Name", "Current Stock", "Max Stock", "Units"};
+        String[] columnNames2 = { "Ingredient ID", "Name", "Current Stock", "Max Stock", "Units" };
         JTable table2 = new JTable(rowEntries2, columnNames2);
         table2.setOpaque(false);
         table2.setEnabled(false);
@@ -165,18 +173,18 @@ public class InventoryPage extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String restockIDs = "";
-                for(int i = 0; i < tableData2.size() - 1; i++){
+                for (int i = 0; i < tableData2.size() - 1; i++) {
                     restockIDs += tableData2.get(i)[0] + ", ";
                 }
                 restockIDs += tableData2.get(tableData2.size() - 1);
 
-                String restockQuery = "Update ingredientsinventory SET stock = CASE WHEN ingredientid IN (" + restockIDs + ") THEN maxstock ELSE stock END WHERE ingredientid IN (" + restockIDs + ");";
-                
+                String restockQuery = "Update ingredientsinventory SET stock = CASE WHEN ingredientid IN (" + restockIDs
+                        + ") THEN maxstock ELSE stock END WHERE ingredientid IN (" + restockIDs + ");";
+
                 try {
                     Statement stmt = con.createStatement();
                     stmt.executeQuery(restockQuery);
-                } 
-                catch (Exception ee) {
+                } catch (Exception ee) {
                     JOptionPane.showMessageDialog(null, "Error accessing Database.");
                 }
             }
@@ -196,10 +204,37 @@ public class InventoryPage extends JPanel {
         orderButtonsPanel.add(placeOrderButton, constraintsPlaceOrderButton);
     }
 
+    public void refreshHeader() {
+        // Remove the old navbar using GridBagConstraints
+        GridBagConstraints gbc = getConstraints(navbar);
+        remove(navbar);
+
+        // Directly update the class field `navbar` with a new header panel
+        navbar = Utils.createHeaderPanel(pos);
+
+        // Add the updated navbar to the panel using GridBagConstraints
+        add(navbar, gbc);
+
+        // Revalidate and repaint to ensure UI updates are displayed
+        revalidate();
+        repaint();
+    }
+
+    // Helper method to get GridBagConstraints of a component
+    private GridBagConstraints getConstraints(Component component) {
+        LayoutManager layout = getLayout();
+        if (layout instanceof GridBagLayout) {
+            GridBagLayout gbl = (GridBagLayout) layout;
+            return gbl.getConstraints(component);
+        } else {
+            return null;
+        }
+    }
+
     public static void main(String[] args) {
-        InventoryPage p = new InventoryPage(null,null);
+        InventoryPage p = new InventoryPage(null, null);
         JFrame f = new JFrame();
-        f.setSize(1600,900);
+        f.setSize(1600, 900);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.add(p);
         f.setVisible(true);

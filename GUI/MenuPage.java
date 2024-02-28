@@ -76,7 +76,7 @@ public class MenuPage extends JPanel {
         loadNavbar();
         loadMiddlePanel();
 
-        orderSummary = new OrderSummary();
+        orderSummary = new OrderSummary(this);
         add(orderSummary, BorderLayout.EAST);
     }
 

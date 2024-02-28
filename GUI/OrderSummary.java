@@ -5,71 +5,65 @@ import java.awt.event.ActionListener;
 
 public class OrderSummary extends JPanel {
 
-    int HEIGHT = Common.HEIGHT-50;
-    int WIDTH = 300;
+    private JPanel middlePanel;
+    private MenuPage parentPage;
 
-    private void addButton(JPanel canvas, String itemName, String price) {
-        JButton b = new JButton(itemName + " " + price);
+    public OrderSummary(MenuPage mp) {
+
+        setLayout(new BorderLayout());
+        parentPage = mp;
+
+        Font buttonFont = new Font("Arial", Font.BOLD, 20);
+    
+        // Top button (cancel order)
+        JButton topButton = new JButton("Cancel Order");
+        topButton.addActionListener(e -> parentPage.cancelButton());
+        topButton.setFont(buttonFont);
+        topButton.setPreferredSize(new Dimension(300, 75));
+        topButton.setBackground(Color.DARK_GRAY);
+        topButton.setOpaque(true);
+        add(topButton, BorderLayout.NORTH);
+        loadMiddlePanel();
+
+        // Bottom button (total and pay)
+        JButton bottomButton = new JButton("Pay");
+        bottomButton.addActionListener(e -> parentPage.payButton());
+        bottomButton.setFont(buttonFont);
+        bottomButton.setPreferredSize(new Dimension(300, 75));
+        bottomButton.setBackground(Color.DARK_GRAY);
+        bottomButton.setOpaque(true);
+        add(bottomButton, BorderLayout.SOUTH);
+    }
+
+    private void loadMiddlePanel() {
+        middlePanel = new JPanel();
+        middlePanel.setLayout(new BoxLayout(middlePanel, BoxLayout.Y_AXIS));
+        middlePanel.setPreferredSize(new Dimension(300, 800));
+        middlePanel.setBackground(Color.DARK_GRAY);
+
+        // addButton("Burger", "$6.99");
+
+        add(middlePanel);
+    }
+
+    public void addButton(String itemName, double price) {
+        JButton b = new JButton(itemName + " $" + price);
         b.setSize(WIDTH, 150);
-        canvas.add(b, BorderLayout.CENTER);
+        middlePanel.add(b, BorderLayout.CENTER);
 
         b.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Container parent = b.getParent();
-                parent.remove(b);
-                parent.revalidate();
-                parent.repaint();
+                parentPage.removeTransactionEntree(itemName, price);
+                middlePanel.remove(b);
+                middlePanel.revalidate();
+                middlePanel.repaint();
             }
         });
 
         // Might not be needed
-        canvas.revalidate();
-        canvas.repaint();
+        middlePanel.revalidate();
+        middlePanel.repaint();
     }
 
-    private void loadMiddlePanel(JPanel canvas) {
-        JPanel middlePanel = new JPanel();
-        middlePanel.setLayout(new BoxLayout(middlePanel, BoxLayout.Y_AXIS));
-        middlePanel.setPreferredSize(new Dimension(300, 800));
-        middlePanel.setBackground(Common.MAROON);
-
-        addButton(middlePanel, "Burger", "$6.99");
-        addButton(middlePanel, "Fries", "$2.99");
-        addButton(middlePanel, "Double Cheeseburger", "$10.99");
-        addButton(middlePanel, "Bacon Burger", "$8.99");
-        addButton(middlePanel, "Large Soda", "$1.99");
-        addButton(middlePanel, "Chicken Tender Combo", "$6.99");
-        canvas.add(middlePanel);
-    }
-
-    public OrderSummary() {
-        JPanel OrderSummary = new JPanel();
-        OrderSummary.setLayout(new BorderLayout());
-        OrderSummary.setPreferredSize(new Dimension(300, HEIGHT));
-
-        // Top button (cancel order)
-        JButton topButton = new JButton("Cancel Order");
-        OrderSummary.add(topButton, BorderLayout.NORTH);
-        topButton.setBackground(Color.RED);
-
-        // Bottom button (total and pay)
-        JButton bottomButton = new JButton("Total & Pay");
-        OrderSummary.add(bottomButton, BorderLayout.SOUTH);
-        bottomButton.setBackground(Color.GREEN);
-
-        loadMiddlePanel(OrderSummary);
-        //add(OrderSummary);
-    }
-
-    public static void main(String[] args) {
-        JFrame f = new JFrame();
-        OrderSummary os = new OrderSummary();
-        f.setBackground(Common.MAROON);
-        f.setLayout(new BorderLayout());
-        f.setSize(400,Common.HEIGHT);
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.add(os);
-        f.setVisible(true);
-    }
 }

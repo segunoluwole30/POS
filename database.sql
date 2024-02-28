@@ -6,7 +6,7 @@ CREATE TABLE Employees (
 );
 
 CREATE TABLE MenuItems (
-    MenuItemID INT PRIMARY KEY,
+    MenuItemID SERIAL PRIMARY KEY,
     Name VARCHAR(255),
     Price FLOAT,
     Type TEXT

@@ -27,6 +27,7 @@ public class ViewMenuItemsDialog extends JDialog {
             }
         };
         table = new JTable(tableModel);
+        table.setModel(tableModel);
 
         // Listen to cell edits
         tableModel.addTableModelListener(e -> {
@@ -68,12 +69,14 @@ public class ViewMenuItemsDialog extends JDialog {
     }
 
     private void addMenuItem() {
+        // Add a new empty row at the end of the table
         tableModel.addRow(new Object[] { null, "", 5.0, "" });
         int newRow = tableModel.getRowCount() - 1;
 
         table.scrollRectToVisible(table.getCellRect(newRow, 0, true));
         table.setRowSelectionInterval(newRow, newRow);
 
+        // Make specific cells editable
         table.editCellAt(newRow, 0); // MenuItemID
         table.editCellAt(newRow, 2); // Price
         table.editCellAt(newRow, 3); // Type
@@ -85,19 +88,6 @@ public class ViewMenuItemsDialog extends JDialog {
 
         table.revalidate();
         table.repaint();
-    }
-
-    private int getNextMenuItemID() {
-        String query = "SELECT MAX(MenuItemID) AS MaxID FROM MenuItems";
-        try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
-            if (rs.next()) {
-                return rs.getInt("MaxID") + 1;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Database error: " + e.getMessage());
-        }
-        return 1; // Default ID if table is empty or in case of error
     }
 
     private void insertNewItem(String name, float price, String type) {

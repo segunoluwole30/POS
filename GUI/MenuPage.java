@@ -6,7 +6,6 @@ import java.util.*;
 import java.awt.event.*;
 
 public class MenuPage extends JPanel {
-
     private Connection conn;
     private POS pos;
     private JPanel navbar;
@@ -129,14 +128,14 @@ public class MenuPage extends JPanel {
         orderNumber.setOpaque(true);
         orderNumber.setBackground(Color.WHITE);
 
-        orderTotal = new JLabel("Order Total: $" + transactionTotal, SwingConstants.CENTER);
+        orderTotal = new JLabel("Order Total: $" + String.format("%.2f", transactionTotal), SwingConstants.CENTER);
         orderTotal.setFont(labelFont);
         orderTotal.setOpaque(true);
         orderTotal.setBackground(Color.WHITE);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH;
-        gbc.insets = new Insets(10, 10, 10, 10); // Padding between components
+        gbc.insets = new Insets(10, 10, 10, 10);
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
 
@@ -260,18 +259,30 @@ public class MenuPage extends JPanel {
     }
 
     private void finalizeOrder() {
-        System.out.println("\n\n\n\n");
-        for (int i = 0; i < transactionItems.size(); i++) {
-            System.out.println(transactionItems.get(i));
+        try {
+            Statement stmt = conn.createStatement();
+            String finalOrderTotal = round(transactionTotal) + "";
+            String timeStamp = "'" + Utils.getCurrentDate() + " " + Utils.getCurrentTime() + "'";
+            String statement = "INSERT INTO transactions VALUES (" + transactionID + ", " + Integer.parseInt(pos.getEmployeeID()) + ", " + Float.parseFloat(finalOrderTotal) + ", " + timeStamp + ");";
+            stmt.executeQuery(statement);
+
+            for (int i = 0; i < transactionItems.size(); i++) {
+                int id = idMap.get(transactionItems.get(i));
+                stmt.executeQuery("INSERT INTO transactionentry VALUES (" + id + "," + transactionID + ");");
+            }
+
+        } catch (SQLException exc) {
+            exc.printStackTrace();
         }
-        System.out.println("Processed Order with " + paymentType);
-        pos.showLoginPage();
+
+        pos.showMenuPage();
+
     }
 
     private void addToSummary(String item, double price) {
         transactionTotal += price;
         transactionTotal = round(transactionTotal);
-        orderTotal.setText("Order Total: $" + transactionTotal);
+        orderTotal.setText("Order Total: $" + String.format("%.2f", transactionTotal));
         orderSummary.addButton(item, price);
         transactionItems.add(item);
     }
@@ -279,7 +290,7 @@ public class MenuPage extends JPanel {
     public void removeTransactionEntree(String item, double price) {
         transactionTotal -= price;
         transactionTotal = round(transactionTotal);
-        orderTotal.setText("Order Total: $" + transactionTotal);
+        orderTotal.setText("Order Total: $" + String.format("%.2f", transactionTotal));
         transactionItems.remove(item);
     }
 
@@ -289,11 +300,14 @@ public class MenuPage extends JPanel {
 
     public void payButton() {
         if (currentlyPaying) {
-            if (!paymentType.equals("")) {
-                finalizeOrder();
+            if (paymentType.equals("")) {
+                JOptionPane.showMessageDialog(null, "Select a Payent Type", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            else if (transactionItems.size() == 0) {
+                JOptionPane.showMessageDialog(null, "Order Must Have Items", "Error", JOptionPane.ERROR_MESSAGE);
             }
             else {
-                JOptionPane.showMessageDialog(null, "Select a Payent Type", "Error", JOptionPane.ERROR_MESSAGE);
+                finalizeOrder();
             }
         }
         else {
@@ -321,7 +335,7 @@ public class MenuPage extends JPanel {
         }
     }
 
-    private double round(double num) {
+    public double round(double num) {
         return Math.round(num * 100) / 100.0;
     }
 }

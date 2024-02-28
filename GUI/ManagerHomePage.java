@@ -119,10 +119,8 @@ public class ManagerHomePage extends JPanel {
     }
 
     private void displayButtons() {
-        JPanel buttonPanel = new JPanel(new GridLayout(1, 2)); // Main panel with 2 columns
-
-        JPanel leftPanel = new JPanel(new GridLayout(3, 1)); // Left panel with 2 rows
-        leftPanel.setBackground(Color.LIGHT_GRAY); // Background color for visualization
+        JPanel buttonPanel = new JPanel(new GridBagLayout()); // Main panel with 2 columns
+        buttonPanel.setBackground(Common.DARKCYAN);
 
         JButton orderHistoryButton = new JButton("View Order History Report");
         orderHistoryButton.addActionListener(new ActionListener() {
@@ -131,6 +129,7 @@ public class ManagerHomePage extends JPanel {
                 pos.showOrderHistoryPage();
             }
         });
+
         JButton inventoryReportButton = new JButton("View Inventory Report");
         inventoryReportButton.addActionListener(new ActionListener() {
             @Override
@@ -150,13 +149,6 @@ public class ManagerHomePage extends JPanel {
                 dialog.setVisible(true);
             }
         });
-
-        leftPanel.add(orderHistoryButton);
-        leftPanel.add(inventoryReportButton);
-        leftPanel.add(menuItemsButton);
-
-        JPanel rightPanel = new JPanel(new GridLayout(3, 1)); // Right panel with 3 rows
-        rightPanel.setBackground(Color.GRAY); // Background color for visualization
 
         JButton xReportButton = new JButton("Generate X Report");
         xReportButton.addActionListener(new ActionListener() {
@@ -180,12 +172,32 @@ public class ManagerHomePage extends JPanel {
             }
         });
 
-        rightPanel.add(xReportButton);
-        rightPanel.add(zReportButton);
-        rightPanel.add(zzReportButton);
+        GridBagConstraints gbc = new GridBagConstraints();
 
-        buttonPanel.add(leftPanel); // Add left panel to the main panel
-        buttonPanel.add(rightPanel); // Add right panel to the main panel
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.insets = new Insets(20, 20, 20, 20); // Padding between components
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        buttonPanel.add(orderHistoryButton, gbc);
+
+        gbc.gridy = 1;
+        buttonPanel.add(inventoryReportButton, gbc);
+
+        gbc.gridy = 2;
+        buttonPanel.add(menuItemsButton, gbc);
+
+        gbc.gridx = 1;
+        buttonPanel.add(zzReportButton, gbc);
+
+        gbc.gridy = 1;
+        buttonPanel.add(zReportButton, gbc);
+
+        gbc.gridy = 0;
+        buttonPanel.add(xReportButton, gbc);
+
 
         add(buttonPanel, BorderLayout.CENTER);
     }

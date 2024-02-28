@@ -19,7 +19,7 @@ public class PaymentPage extends JPanel {
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH;
-        gbc.insets = new Insets(10, 10, 10, 10); // Padding between components
+        gbc.insets = new Insets(10, 10, 10, 10);
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
 

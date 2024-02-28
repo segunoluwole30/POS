@@ -69,21 +69,18 @@ public class ViewMenuItemsDialog extends JDialog {
     }
 
     private void addMenuItem() {
-
         // Add a new empty row at the end of the table
-        tableModel.addRow(new Object[] { null, "", 0.0, "Entree" });
+        tableModel.addRow(new Object[] { null, "", 5.0, "" });
         int newRow = tableModel.getRowCount() - 1;
 
-        // Ensure the new row is visible and editable
         table.scrollRectToVisible(table.getCellRect(newRow, 0, true));
         table.setRowSelectionInterval(newRow, newRow);
 
         // Make specific cells editable
-        table.editCellAt(newRow, 1);
-        table.editCellAt(newRow, 2);
-        table.editCellAt(newRow, 3);
+        table.editCellAt(newRow, 0); // MenuItemID
+        table.editCellAt(newRow, 2); // Price
+        table.editCellAt(newRow, 3); // Type
 
-        // Request focus on the first editable cell
         Component editor = table.getEditorComponent();
         if (editor != null) {
             editor.requestFocusInWindow();

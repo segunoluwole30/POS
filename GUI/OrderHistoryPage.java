@@ -1,38 +1,50 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+// import java.awt.event.ActionEvent;
+// import java.awt.event.ActionListener;
+// import java.sql.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
+import org.jfree.chart.plot.PiePlot;
+import org.jfree.data.general.DefaultPieDataset;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 public class OrderHistoryPage extends JPanel {
+
+    private static Connection conn;
+    private static POS pos;
     private JTable table;
     private JButton refresh;
     private JPanel navbar;
-    private Connection conn;
-    private POS pos;
+    private JPanel centerPanel;
 
     public OrderHistoryPage(Connection conn, POS pos) {
         this.conn = conn;
         this.pos = pos;
-        initializeUI();
+        setupUI();
     }
 
-    private void initializeUI() {
+    private void setupUI() {
+        // Boilerplate code to setup layout
         setBackground(Common.DARKCYAN);
-        // homePanel.setPreferredSize(new Dimension(Common.WIDTH, Common.HEIGHT));
-        // Creating the top navbar
+        setLayout(new BorderLayout());
+
         navbar = Utils.createHeaderPanel(pos);
         navbar.setPreferredSize(new Dimension(getWidth(), 50));
-
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(10, 10, 10, 10);
-        add(navbar, gbc);
+        add(navbar, BorderLayout.NORTH);
 
         table = new JTable();
 
@@ -86,30 +98,13 @@ public class OrderHistoryPage extends JPanel {
         }
     }
 
-    public void refreshHeader() {
-        // Remove the old navbar using GridBagConstraints
-        GridBagConstraints gbc = getConstraints(navbar);
-        remove(navbar);
-
-        // Directly update the class field `navbar` with a new header panel
-        navbar = Utils.createHeaderPanel(pos);
-
-        // Add the updated navbar to the panel using GridBagConstraints
-        add(navbar, gbc);
-
-        // Revalidate and repaint to ensure UI updates are displayed
-        revalidate();
-        repaint();
-    }
-
-    // Helper method to get GridBagConstraints of a component
-    private GridBagConstraints getConstraints(Component component) {
-        LayoutManager layout = getLayout();
-        if (layout instanceof GridBagLayout) {
-            GridBagLayout gbl = (GridBagLayout) layout;
-            return gbl.getConstraints(component);
-        } else {
-            return null;
-        }
-    }
+    // for testing purposes
+    // public static void main(String[] args) {
+    // XReportPage p = new XReportPage(conn, pos);
+    // JFrame f = new JFrame();
+    // f.setSize(1600, 900);
+    // f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    // f.add(p);
+    // f.setVisible(true);
+    // }
 }

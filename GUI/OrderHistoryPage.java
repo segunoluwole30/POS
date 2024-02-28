@@ -47,16 +47,7 @@ public class OrderHistoryPage extends JPanel {
         add(navbar, BorderLayout.NORTH);
 
         table = new JTable();
-
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 1; // Increase the gridy to move the table below the navbar, still buggy
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.insets = new Insets(10, 10, 10, 10);
-        add(new JScrollPane(table), gbc);
+        loadHistory();
 
         refresh = new JButton("Refresh Report");
         refresh.addActionListener(e -> loadHistory());

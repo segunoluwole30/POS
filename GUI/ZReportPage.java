@@ -28,8 +28,8 @@ public class ZReportPage extends JPanel {
 	public ZReportPage(Connection conn, POS pos) {
 		this.conn = conn;
 		this.pos = pos;
-		generateZChart("Entree", 10);
 		initializeColorSchemes();
+		generateZChart("Entree", 10);
 		setupUI();
 	}
 
@@ -47,7 +47,6 @@ public class ZReportPage extends JPanel {
 								"AND MI.Type = '" + category + "' " +
 								"GROUP BY MI.MenuItemID, MI.Name " +
 								"ORDER BY QuantitySold DESC")) {
-			// Process the query results
 			while (rs.next()) {
 				String menuItemName = rs.getString("MenuItemName");
 				int quantitySold = rs.getInt("QuantitySold");
@@ -55,26 +54,24 @@ public class ZReportPage extends JPanel {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			// Handle any SQL exceptions
 		}
 
 		// Create the pie chart
 		if (generatedChart == null) {
 			JFreeChart chart = ChartFactory.createPieChart(
-					category + " ZReport", // chart title
-					dataset, // data
-					true, // include legend
+					category + " ZReport",
+					dataset, 
+					true, 
 					true,
 					false);
 
 			generatedChart = new ChartPanel(chart);
 		} else {
-			// Otherwise, update the dataset associated with the existing chart
 			JFreeChart chart = generatedChart.getChart();
 			chart.setTitle(category + " ZReport");
 			PiePlot plot = (PiePlot) chart.getPlot();
 
-			Color[] colors = colorSchemes.get("gradientBlue");
+			Color[] colors = colorSchemes.get("purp");
         if (colors != null) {
             for (int i = 0; i < dataset.getItemCount(); i++) {
                 plot.setSectionPaint(dataset.getKey(i), colors[i % colors.length]);
@@ -92,15 +89,13 @@ public class ZReportPage extends JPanel {
 	}
 
 	private void setupUI() {
-		// Setting layout for the panel
+		// Boilerplate code to setup layout
 		setLayout(new BorderLayout());
 
-		// Creating the top navbar
 		navbar = Utils.createHeaderPanel(pos);
 		navbar.setPreferredSize(new Dimension(getWidth(), 50));
 		add(navbar, BorderLayout.NORTH);
 
-		// Creating the centered panel
 		centerPanel = new JPanel(new BorderLayout());
 
 		// Creating three buttons vertically aligned on the left side
@@ -145,21 +140,30 @@ public class ZReportPage extends JPanel {
         Color[] scheme1 = {Color.RED, Color.GREEN, Color.BLUE};
         Color[] scheme2 = {Color.ORANGE, Color.YELLOW, Color.CYAN};
 				Color[] gradientBlueScheme = {new Color(0, 0, 255), new Color(0, 128, 255), new Color(0, 191, 255)};
-        // Add color schemes to the map
+				Color[] smoothColorScheme = {
+					new Color(180, 160, 255), // Light purple
+					new Color(153, 128, 255),
+					new Color(126, 96, 255),
+					new Color(99, 64, 255),
+					new Color(72, 32, 255),
+					new Color(45, 0, 255),
+					new Color(36, 0, 214),
+					new Color(27, 0, 172),
+					new Color(18, 0, 130),
+					new Color(9, 0, 88), // Dark blue
+			};
+
         colorSchemes.put("Scheme 1", scheme1);
         colorSchemes.put("Scheme 2", scheme2);
 				colorSchemes.put("gradientBlue", gradientBlueScheme);
-        // Add more color schemes as needed
+				colorSchemes.put("purp", smoothColorScheme);
+
     }
 
 	public void refreshHeader() {
-		// Remove the old header
 		remove(navbar);
-		// Directly update the class field `navbar` with a new header panel
 		navbar = Utils.createHeaderPanel(pos);
-		// Add the updated navbar to the panel
 		add(navbar, BorderLayout.NORTH);
-		// Revalidate and repaint to ensure UI updates are displayed
 		revalidate();
 		repaint();
 	}

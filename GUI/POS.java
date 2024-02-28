@@ -10,7 +10,7 @@ import java.awt.*;
 public class POS extends JFrame {
     private String employeeID;
     private Connection conn;
-    private JPanel cards; // Panel to hold different pages
+    private JPanel cards;
     private CardLayout cardLayout;
     private ManagerHomePage managerHomePage;
     private XReportPage xReportPage;
@@ -84,16 +84,14 @@ public class POS extends JFrame {
         // Add the card panel to the frame
         add(cards);
 
-        // Show the login page initially
+        // Make sure login page is shown first
         cardLayout.show(cards, "login");
 
-        // Adjust frame properties
         setSize(Common.WIDTH, Common.HEIGHT);
         setLocationRelativeTo(null);
         setVisible(true);
     }
 
-    // Method to switch to the menu page
     public void showMenuPage() {
         cards.add(new MenuPage(conn, this), "menu");
         cardLayout.show(cards, "menu");

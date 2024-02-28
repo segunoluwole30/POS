@@ -1,133 +1,110 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.sql.*;
+// import java.awt.event.ActionEvent;
+// import java.awt.event.ActionListener;
+// import java.sql.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
+import org.jfree.chart.plot.PiePlot;
+import org.jfree.data.general.DefaultPieDataset;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+
 public class OrderHistoryPage extends JPanel {
+
+    private static Connection conn;
+	private static POS pos;
     private JTable table;
     private JButton refresh;
     private JPanel navbar;
-    private Connection conn;
-    private POS pos;
+    private JPanel centerPanel;
 
     public OrderHistoryPage(Connection conn, POS pos) {
         this.conn = conn;
         this.pos = pos;
-        initializeUI();
+        setupUI();
     }
 
-    private void initializeUI() {
-        // JPanel homePanel = new JPanel(new GridBagLayout());
+	private void setupUI() {
+		// Boilerplate code to setup layout
         setBackground(Common.DARKCYAN);
-        // homePanel.setPreferredSize(new Dimension(Common.WIDTH, Common.HEIGHT));
-        // Creating the top navbar
-        navbar = Utils.createHeaderPanel(pos);
-        navbar.setPreferredSize(new Dimension(getWidth(), 50));
+		setLayout(new BorderLayout());
 
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(10, 10, 10, 10);
-        add(navbar, gbc);
-
+		navbar = Utils.createHeaderPanel(pos);
+		navbar.setPreferredSize(new Dimension(getWidth(), 50));
+		add(navbar, BorderLayout.NORTH);
+		
         table = new JTable();
-        
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 1; // Increase the gridy to move the table below the navbar
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.insets = new Insets(10, 10, 10, 10);
-        add(new JScrollPane(table), gbc);
+        loadHistory();
 
         refresh = new JButton("Refresh Report");        
         refresh.addActionListener(e -> loadHistory());
-        
-        gbc.gridy++;
-        gbc.fill = GridBagConstraints.NONE;
-        add(refresh, gbc);
-        
-        loadHistory();
-    }
+
+        // Center Panel contains table and refresh button
+        centerPanel = new JPanel(new BorderLayout());
+        centerPanel.add(new JScrollPane(table));
+		centerPanel.add(refresh, BorderLayout.SOUTH);
+		add(centerPanel, BorderLayout.CENTER);
+	}
+
+	public void refreshHeader() {
+		remove(navbar);
+		navbar = Utils.createHeaderPanel(pos);
+		add(navbar, BorderLayout.NORTH);
+		revalidate();
+		repaint();
+	}
 
     private void loadHistory() {
-        
         String sql = "SELECT t.Date, t.TransactionID, t.Total, string_agg(mi.Name, ', ') AS MenuItems " + 
         "FROM transactions t " +
         "JOIN transactionentry te ON t.TransactionID = te.TransactionID " + 
         "JOIN MenuItems mi ON te.MenuItemID = mi.MenuItemID " + 
         "GROUP BY t.TransactionID " + 
-        "LIMIT 20";
+        "LIMIT 200";
 
         try {
             Statement statement = conn.createStatement();
             ResultSet result = statement.executeQuery(sql);
 
-            // Create a table model and populate it with data from the result set
             DefaultTableModel model = new DefaultTableModel();
             model.setColumnIdentifiers(new String[]{"Date", "Order ID", "Price", "Items"});
 
             while (result.next()) {
-                String date = result.getString("date");
-                int orderID = result.getInt("transactionid");
-                float price = result.getFloat("total");
+                // converting query lines into values for GUI table
+                String date = result.getString("date"); 
+                int orderID = result.getInt("transactionid"); 
+                float price = result.getFloat("total"); 
                 String items = result.getString("menuitems");
-                model.addRow(new Object[]{date, orderID, price, items});
+                model.addRow(new Object[]{date, orderID, price, items}); // adds row to GUI table
             }
 
-            // Set the table model to the JTable
             table.setModel(model);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void refreshHeader() {
-        // Remove the old navbar using GridBagConstraints
-        GridBagConstraints gbc = getConstraints(navbar);
-        remove(navbar);
-
-        // Directly update the class field `navbar` with a new header panel
-        navbar = Utils.createHeaderPanel(pos);
-
-        // Add the updated navbar to the panel using GridBagConstraints
-        add(navbar, gbc);
-
-        // Revalidate and repaint to ensure UI updates are displayed
-        revalidate();
-        repaint();
-    }
-
-    // Helper method to get GridBagConstraints of a component
-    private GridBagConstraints getConstraints(Component component) {
-        LayoutManager layout = getLayout();
-        if (layout instanceof GridBagLayout) {
-            GridBagLayout gbl = (GridBagLayout) layout;
-            return gbl.getConstraints(component);
-        } else {
-            return null;
-        }
-    }
-
-    /* public static void main(String[] args) {
-        JFrame f = new JFrame();
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        OrderHistoryPage p = new OrderHistoryPage(conn, pos);
-        f.getContentPane().add(p);
-
-        f.pack();
-        f.setLocationRelativeTo(null);
-        f.setVisible(true);
-    } */
+	// for testing purposes
+	// public static void main(String[] args) {
+	// XReportPage p = new XReportPage(conn, pos);
+	// JFrame f = new JFrame();
+	// f.setSize(1600, 900);
+	// f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	// f.add(p);
+	// f.setVisible(true);
+	// }
 }

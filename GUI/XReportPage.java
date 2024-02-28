@@ -5,6 +5,7 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 
@@ -12,7 +13,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
+import java.util.HashMap;
+import java.util.Map;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -22,10 +24,12 @@ public class XReportPage extends JPanel {
 	private JPanel centerPanel;
 	private JPanel navbar;
 	private ChartPanel generatedChart;
+	private Map<String, Color[]> colorSchemes;
 
 	public XReportPage(Connection conn, POS pos) {
 		this.conn = conn;
 		this.pos = pos;
+		initializeColorSchemes();
 		generateXChart("Entree", 10);
 		setupUI();
 	}
@@ -53,15 +57,14 @@ public class XReportPage extends JPanel {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			// Handle any SQL exceptions
 		}
 
 		// Create the pie chart
 		if (generatedChart == null) {
 			JFreeChart chart = ChartFactory.createPieChart(
-					category + " XReport", // chart title
-					dataset, // data
-					true, // include legend
+					category + " XReport", 
+					dataset, 
+					true, 
 					true,
 					false);
 
@@ -71,24 +74,29 @@ public class XReportPage extends JPanel {
 			JFreeChart chart = generatedChart.getChart();
 			chart.setTitle(category + " XReport");
 			PiePlot plot = (PiePlot) chart.getPlot();
-			plot.setDataset(dataset);
 
-			// Invalidate the chart panel to trigger repaint
+			Color[] colors = colorSchemes.get("purp");
+        if (colors != null) {
+            for (int i = 0; i < dataset.getItemCount(); i++) {
+                plot.setSectionPaint(dataset.getKey(i), colors[i % colors.length]);
+            }
+        }
+
+			plot.setDataset(dataset);
+			plot.setSimpleLabels(true);
+			plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0}: {2}"));
+
 			generatedChart.invalidate();
 			generatedChart.repaint();
 		}
 	}
 
 	private void setupUI() {
-		// Setting layout for the panel
+		// Boilerplate code to setup layout
 		setLayout(new BorderLayout());
-
-		// Creating the top navbar
 		navbar = Utils.createHeaderPanel(pos);
 		navbar.setPreferredSize(new Dimension(getWidth(), 50));
 		add(navbar, BorderLayout.NORTH);
-
-		// Creating the centered panel
 		centerPanel = new JPanel(new BorderLayout());
 
 		// Creating three buttons vertically aligned on the left side
@@ -126,14 +134,36 @@ public class XReportPage extends JPanel {
 		}
 	}
 
+	private void initializeColorSchemes() {
+        colorSchemes = new HashMap<>();
+
+        // Define some preset color schemes
+        Color[] scheme1 = {Color.RED, Color.GREEN, Color.BLUE};
+        Color[] scheme2 = {Color.ORANGE, Color.YELLOW, Color.CYAN};
+				Color[] gradientBlueScheme = {new Color(0, 0, 255), new Color(0, 128, 255), new Color(0, 191, 255)};
+				Color[] smoothColorScheme = {
+					new Color(180, 160, 255), 
+					new Color(153, 128, 255),
+					new Color(126, 96, 255),
+					new Color(99, 64, 255),
+					new Color(72, 32, 255),
+					new Color(45, 0, 255),
+					new Color(36, 0, 214),
+					new Color(27, 0, 172),
+					new Color(18, 0, 130),
+					new Color(9, 0, 88), 
+			};
+			// Add color schemes to the map
+			colorSchemes.put("Scheme 1", scheme1);
+			colorSchemes.put("Scheme 2", scheme2);
+			colorSchemes.put("gradientBlue", gradientBlueScheme);
+			colorSchemes.put("purp", smoothColorScheme);
+  }
+
 	public void refreshHeader() {
-		// Remove the old header
 		remove(navbar);
-		// Directly update the class field `navbar` with a new header panel
 		navbar = Utils.createHeaderPanel(pos);
-		// Add the updated navbar to the panel
 		add(navbar, BorderLayout.NORTH);
-		// Revalidate and repaint to ensure UI updates are displayed
 		revalidate();
 		repaint();
 	}

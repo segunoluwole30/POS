@@ -40,6 +40,7 @@ public class InventoryPage extends JPanel {
         this.pos = pos;
         setupUI();
     }
+    
 
     private List<String[]> requestInventoryTable(String sqlStatement) {
         List<String[]> tableOutput = new ArrayList<>();
@@ -78,7 +79,6 @@ public class InventoryPage extends JPanel {
 
         // Main Panel contains table and refresh button
         mainPanel = new JPanel(new BorderLayout());
-        mainPanel.add(new JScrollPane(table));
         mainPanel.setBackground(Common.DARKCYAN);
 
         // Current Inventory Table
@@ -98,7 +98,6 @@ public class InventoryPage extends JPanel {
         table.setRowSelectionInterval(1, 1);
         JScrollPane tableScrollPane = new JScrollPane();
         tableScrollPane.setViewportView(table);
-        tableScrollPane.setPreferredSize(new Dimension(tableScrollPane.getPreferredSize().width, Common.HEIGHT / 4));
 
         mainPanel.add(tableScrollPane, BorderLayout.NORTH);
 
@@ -118,14 +117,12 @@ public class InventoryPage extends JPanel {
         table2.getTableHeader().setFont(new Font("Arial", Font.PLAIN, 16));
         JScrollPane tableScrollPane2 = new JScrollPane();
         tableScrollPane2.setViewportView(table2);
-        tableScrollPane2.setPreferredSize(new Dimension(tableScrollPane2.getPreferredSize().width, Common.HEIGHT / 4));
-
-        mainPanel.add(tableScrollPane2, BorderLayout.CENTER);
+        tableScrollPane2.setSize(WIDTH-240, HEIGHT/8);
 
 		// Edit Order and Send Order Buttons
         JButton editOrderButton = new JButton("Edit Order");
         editOrderButton.setBackground(Color.GRAY);
-        editOrderButton.setPreferredSize(new Dimension(120, 120));
+        //editOrderButton.setPreferredSize(new Dimension(120, 120));
         editOrderButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -133,7 +130,45 @@ public class InventoryPage extends JPanel {
             }
         });
 
-        mainPanel.add(editOrderButton, BorderLayout.SOUTH);
+        JPanel LowerPanel = new JPanel(new BorderLayout());
+        LowerPanel.setSize(WIDTH-240, HEIGHT/8);
+        LowerPanel.setBackground(Color.YELLOW);
+
+        JPanel OrderButtons = new JPanel(new BorderLayout());
+        OrderButtons.setSize(480, 960);
+        OrderButtons.setBackground(Color.RED);
+
+        JButton placeOrderButton = new JButton("Place Order");
+        placeOrderButton.setBackground(Color.GREEN);
+        placeOrderButton.setPreferredSize(new Dimension(120, 120));
+        placeOrderButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String restockIDs = "";
+                for (int i = 0; i < tableData2.size() - 1; i++) {
+                    restockIDs += tableData2.get(i)[0] + ", ";
+                }
+                restockIDs += tableData2.get(tableData2.size() - 1);
+
+                String restockQuery = "Update ingredientsinventory SET stock = CASE WHEN ingredientid IN (" + restockIDs
+                        + ") THEN maxstock ELSE stock END WHERE ingredientid IN (" + restockIDs + ");";
+
+                try {
+                    Statement stmt = conn.createStatement();
+                    stmt.executeQuery(restockQuery);
+                } catch (Exception ee) {
+                    JOptionPane.showMessageDialog(null, "Error accessing Database.");
+                }
+            }
+        });
+
+        OrderButtons.add(editOrderButton, BorderLayout.NORTH);
+        OrderButtons.add(placeOrderButton, BorderLayout.SOUTH);
+        
+        LowerPanel.add(OrderButtons, BorderLayout.EAST);
+        LowerPanel.add(tableScrollPane2, BorderLayout.WEST);
+
+        mainPanel.add(LowerPanel, BorderLayout.SOUTH);
 		
         add(mainPanel);
 	}

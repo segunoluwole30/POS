@@ -8,10 +8,22 @@ import java.util.Properties;
 import java.awt.*;
 
 public class POS extends JFrame {
-
+    private String employeeID;
     private Connection conn;
     private JPanel cards; // Panel to hold different pages
     private CardLayout cardLayout;
+    private ManagerHomePage managerHomePage;
+    private XReportPage xReportPage;
+    private ZReportPage zReportPage;
+    private ZZReportPage zzReportPage;
+
+    public void setEmployeeID(String employeeID) {
+        this.employeeID = employeeID;
+    }
+
+    public String getEmployeeID() {
+        return this.employeeID;
+    }
 
     public POS() {
 
@@ -58,13 +70,15 @@ public class POS extends JFrame {
         // Create instances of each page
         LoginPage loginPage = new LoginPage(conn, this);
         MenuPage menuPage = new MenuPage(conn, this);
-        ManagerHomePage managerHomePage = new ManagerHomePage(this);
+        // ManagerHomePage managerHomePage = new ManagerHomePage(conn, this);
+        // XReportPage xReport = new XReportPage(conn, this);
         // Add more pages as needed
 
         // Add pages to the card panel with unique identifiers
         cards.add(loginPage, "login");
         cards.add(menuPage, "menu");
-        cards.add(managerHomePage, "managerHome");
+        // cards.add(managerHomePage, "managerHome");
+        // cards.add(xReportPage, "XReport");
         // Add more pages with unique identifiers
 
         // Add the card panel to the frame
@@ -89,7 +103,43 @@ public class POS extends JFrame {
     }
 
     public void showManagerHomePage() {
+        if (managerHomePage == null) {
+            // Lazy initialization of managerHomePage
+            managerHomePage = new ManagerHomePage(conn, this);
+            cards.add(managerHomePage, "managerHome");
+        }
+        managerHomePage.refreshHeader(); // Now safe to call refreshHeader
         cardLayout.show(cards, "managerHome");
+    }
+
+    public void showXReportPage() {
+        if (xReportPage == null) {
+            // Lazy initialization of managerHomePage
+            xReportPage = new XReportPage(conn, this);
+            cards.add(xReportPage, "XReport");
+        }
+        xReportPage.refreshHeader(); // Now safe to call refreshHeader
+        cardLayout.show(cards, "XReport");
+    }
+
+    public void showZReportPage() {
+        if (zReportPage == null) {
+            // Lazy initialization of managerHomePage
+            zReportPage = new ZReportPage(conn, this);
+            cards.add(zReportPage, "ZReport");
+        }
+        zReportPage.refreshHeader(); // Now safe to call refreshHeader
+        cardLayout.show(cards, "ZReport");
+    }
+
+    public void showZZReportPage() {
+        if (zzReportPage == null) {
+            // Lazy initialization of managerHomePage
+            zzReportPage = new ZZReportPage(conn, this);
+            cards.add(zzReportPage, "ZZReport");
+        }
+        zzReportPage.refreshHeader(); // Now safe to call refreshHeader
+        cardLayout.show(cards, "ZZReport");
     }
 
     public static void main(String[] args) {

@@ -76,7 +76,7 @@ public class XReportPage extends JPanel {
 			chart.setTitle(category + " XReport");
 			PiePlot plot = (PiePlot) chart.getPlot();
 
-			Color[] colors = colorSchemes.get("gradientBlue");
+			Color[] colors = colorSchemes.get("purp");
         if (colors != null) {
             for (int i = 0; i < dataset.getItemCount(); i++) {
                 plot.setSectionPaint(dataset.getKey(i), colors[i % colors.length]);

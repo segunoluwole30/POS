@@ -1,26 +1,13 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-// import java.awt.event.ActionEvent;
-// import java.awt.event.ActionListener;
-// import java.sql.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
-import org.jfree.chart.plot.PiePlot;
-import org.jfree.data.general.DefaultPieDataset;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class OrderHistoryPage extends JPanel {
 
@@ -73,6 +60,7 @@ public class OrderHistoryPage extends JPanel {
                 "JOIN transactionentry te ON t.TransactionID = te.TransactionID " +
                 "JOIN MenuItems mi ON te.MenuItemID = mi.MenuItemID " +
                 "GROUP BY t.TransactionID " +
+                "ORDER BY t.Date DESC " + 
                 "LIMIT 200";
 
         try {
@@ -86,7 +74,7 @@ public class OrderHistoryPage extends JPanel {
                 // converting query lines into values for GUI table
                 String date = result.getString("date");
                 int orderID = result.getInt("transactionid");
-                float price = result.getFloat("total");
+                String price = String.valueOf("$" + result.getFloat("total"));
                 String items = result.getString("menuitems");
                 model.addRow(new Object[] { date, orderID, price, items }); // adds row to GUI table
             }

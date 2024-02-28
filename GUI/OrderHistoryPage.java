@@ -61,11 +61,19 @@ public class OrderHistoryPage extends JPanel {
         refresh = new JButton("Refresh Report");
         refresh.addActionListener(e -> loadHistory());
 
-        gbc.gridy++; // attempts to add button below table and navbar, still buggy
-        gbc.fill = GridBagConstraints.NONE;
-        add(refresh, gbc);
+        // Center Panel contains table and refresh button
+        centerPanel = new JPanel(new BorderLayout());
+        centerPanel.add(new JScrollPane(table));
+        centerPanel.add(refresh, BorderLayout.SOUTH);
+        add(centerPanel, BorderLayout.CENTER);
+    }
 
-        loadHistory();
+    public void refreshHeader() {
+        remove(navbar);
+        navbar = Utils.createHeaderPanel(pos);
+        add(navbar, BorderLayout.NORTH);
+        revalidate();
+        repaint();
     }
 
     private void loadHistory() {

@@ -264,11 +264,22 @@ public class MenuPage extends JPanel {
             String finalOrderTotal = round(transactionTotal) + "";
             String timeStamp = "'" + Utils.getCurrentDate() + " " + Utils.getCurrentTime() + "'";
             String statement = "INSERT INTO transactions VALUES (" + transactionID + ", " + Integer.parseInt(pos.getEmployeeID()) + ", " + Float.parseFloat(finalOrderTotal) + ", " + timeStamp + ");";
-            stmt.executeQuery(statement);
+            //stmt.executeUpdate(statement);
 
             for (int i = 0; i < transactionItems.size(); i++) {
                 int id = idMap.get(transactionItems.get(i));
-                stmt.executeQuery("INSERT INTO transactionentry VALUES (" + id + "," + transactionID + ");");
+                //stmt.executeUpdate("INSERT INTO transactionentry VALUES (" + id + "," + transactionID + ");");
+
+                statement = "SELECT ingredientid, quantity FROM menuitemingredients WHERE menuitemid = " + id; 
+                ResultSet result = stmt.executeQuery(statement);
+                while (result.next()) {
+                    int ingredientId = result.getInt(1);
+                    String quantity = result.getString(2);
+                    Statement s = conn.createStatement();
+                    statement = "UPDATE ingredientsinventory SET stock = stock - " + quantity + " WHERE ingredientid = " + ingredientId;
+                    s.executeUpdate(statement);
+
+                }
             }
 
         } catch (SQLException exc) {

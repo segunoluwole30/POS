@@ -12,12 +12,6 @@ public class POS extends JFrame {
     private Connection conn;
     private JPanel cards;
     private CardLayout cardLayout;
-    private ManagerHomePage managerHomePage;
-    private XReportPage xReportPage;
-    private ZReportPage zReportPage;
-    private ZZReportPage zzReportPage;
-    private OrderHistoryPage orderHistoryPage;
-    private InventoryPage inventoryPage;
 
     public void setEmployeeID(String employeeID) {
         this.employeeID = employeeID;
@@ -69,23 +63,8 @@ public class POS extends JFrame {
         cardLayout = new CardLayout();
         cards = new JPanel(cardLayout);
 
-        // Create instances of each page
-        LoginPage loginPage = new LoginPage(conn, this);
-        // ManagerHomePage managerHomePage = new ManagerHomePage(conn, this);
-        // XReportPage xReport = new XReportPage(conn, this);
-        // Add more pages as needed
-
-        // Add pages to the card panel with unique identifiers
-        cards.add(loginPage, "login");
-        // cards.add(managerHomePage, "managerHome");
-        // cards.add(xReportPage, "XReport");
-        // Add more pages with unique identifiers
-
-        // Add the card panel to the frame
         add(cards);
-
-        // Make sure login page is shown first
-        cardLayout.show(cards, "login");
+        showLoginPage();
 
         setSize(Common.WIDTH, Common.HEIGHT);
         setLocationRelativeTo(null);
@@ -98,61 +77,49 @@ public class POS extends JFrame {
     }
 
     public void showLoginPage() {
+        LoginPage loginPage = new LoginPage(conn, this);
+        cards.add(loginPage, "login");
         cardLayout.show(cards, "login");
     }
 
     public void showManagerHomePage() {
-        if (managerHomePage == null) {
-            managerHomePage = new ManagerHomePage(conn, this);
-            cards.add(managerHomePage, "managerHome");
-        }
+        ManagerHomePage managerHomePage = new ManagerHomePage(conn, this);
+        cards.add(managerHomePage, "managerHome");
         managerHomePage.refreshHeader();
         cardLayout.show(cards, "managerHome");
     }
 
     public void showXReportPage() {
-        if (xReportPage == null) {
-            xReportPage = new XReportPage(conn, this);
-            cards.add(xReportPage, "XReport");
-        }
+        XReportPage xReportPage = new XReportPage(conn, this);
+        cards.add(xReportPage, "XReport");
         xReportPage.refreshHeader();
         cardLayout.show(cards, "XReport");
     }
 
     public void showZReportPage() {
-        if (zReportPage == null) {
-            zReportPage = new ZReportPage(conn, this);
-            cards.add(zReportPage, "ZReport");
-        }
+        ZReportPage zReportPage = new ZReportPage(conn, this);
+        cards.add(zReportPage, "ZReport");
         zReportPage.refreshHeader();
         cardLayout.show(cards, "ZReport");
     }
 
     public void showZZReportPage() {
-        if (zzReportPage == null) {
-            zzReportPage = new ZZReportPage(conn, this);
-            cards.add(zzReportPage, "ZZReport");
-        }
+        ZZReportPage zzReportPage = new ZZReportPage(conn, this);
+        cards.add(zzReportPage, "ZZReport");
         zzReportPage.refreshHeader();
         cardLayout.show(cards, "ZZReport");
     }
 
     public void showOrderHistoryPage() {
-        if (orderHistoryPage == null) {
-            // Lazy initialization of managerHomePage
-            orderHistoryPage = new OrderHistoryPage(conn, this);
-            cards.add(orderHistoryPage, "OrderHistory");
-        }
+        OrderHistoryPage orderHistoryPage = new OrderHistoryPage(conn, this);
+        cards.add(orderHistoryPage, "OrderHistory");
         orderHistoryPage.refreshHeader(); // Now safe to call refreshHeader
         cardLayout.show(cards, "OrderHistory");
     }
 
     public void showInventoryPage() {
-        if (inventoryPage == null) {
-            // Lazy initialization of managerHomePage
-            inventoryPage = new InventoryPage(conn, this);
-            cards.add(inventoryPage, "Inventory");
-        }
+        InventoryPage inventoryPage = new InventoryPage(conn, this);
+        cards.add(inventoryPage, "Inventory");
         inventoryPage.refreshHeader(); // Now safe to call refreshHeader
         cardLayout.show(cards, "Inventory");
     }
@@ -164,5 +131,4 @@ public class POS extends JFrame {
             }
         });
     }
-
 }

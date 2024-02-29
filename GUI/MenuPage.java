@@ -1,7 +1,6 @@
 import javax.swing.*;
 import java.sql.*;
 import java.awt.*;
-import java.sql.*;
 import java.util.*;
 import java.awt.event.*;
 
@@ -264,11 +263,11 @@ public class MenuPage extends JPanel {
             String finalOrderTotal = round(transactionTotal) + "";
             String timeStamp = "'" + Utils.getCurrentDate() + " " + Utils.getCurrentTime() + "'";
             String statement = "INSERT INTO transactions VALUES (" + transactionID + ", " + Integer.parseInt(pos.getEmployeeID()) + ", " + Float.parseFloat(finalOrderTotal) + ", " + timeStamp + ");";
-            //stmt.executeUpdate(statement);
+            stmt.executeUpdate(statement);
 
             for (int i = 0; i < transactionItems.size(); i++) {
                 int id = idMap.get(transactionItems.get(i));
-                //stmt.executeUpdate("INSERT INTO transactionentry VALUES (" + id + "," + transactionID + ");");
+                stmt.executeUpdate("INSERT INTO transactionentry VALUES (" + id + "," + transactionID + ");");
 
                 statement = "SELECT ingredientid, quantity FROM menuitemingredients WHERE menuitemid = " + id; 
                 ResultSet result = stmt.executeQuery(statement);
@@ -278,7 +277,6 @@ public class MenuPage extends JPanel {
                     Statement s = conn.createStatement();
                     statement = "UPDATE ingredientsinventory SET stock = stock - " + quantity + " WHERE ingredientid = " + ingredientId;
                     s.executeUpdate(statement);
-
                 }
             }
 
@@ -287,7 +285,6 @@ public class MenuPage extends JPanel {
         }
 
         pos.showMenuPage();
-
     }
 
     private void addToSummary(String item, double price) {

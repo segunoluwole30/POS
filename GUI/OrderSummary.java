@@ -9,7 +9,6 @@ public class OrderSummary extends JPanel {
     private MenuPage parentPage;
 
     public OrderSummary(MenuPage mp) {
-
         setLayout(new BorderLayout());
         parentPage = mp;
 
@@ -20,7 +19,7 @@ public class OrderSummary extends JPanel {
         topButton.addActionListener(e -> parentPage.cancelButton());
         topButton.setFont(buttonFont);
         topButton.setPreferredSize(new Dimension(300, 75));
-        topButton.setBackground(Color.DARK_GRAY);
+        topButton.setBackground(Color.RED);
         topButton.setOpaque(true);
         add(topButton, BorderLayout.NORTH);
         loadMiddlePanel();
@@ -30,7 +29,7 @@ public class OrderSummary extends JPanel {
         bottomButton.addActionListener(e -> parentPage.payButton());
         bottomButton.setFont(buttonFont);
         bottomButton.setPreferredSize(new Dimension(300, 75));
-        bottomButton.setBackground(Color.DARK_GRAY);
+        bottomButton.setBackground(Color.GREEN);
         bottomButton.setOpaque(true);
         add(bottomButton, BorderLayout.SOUTH);
     }
@@ -40,9 +39,6 @@ public class OrderSummary extends JPanel {
         middlePanel.setLayout(new BoxLayout(middlePanel, BoxLayout.Y_AXIS));
         middlePanel.setPreferredSize(new Dimension(300, 800));
         middlePanel.setBackground(Color.DARK_GRAY);
-
-        // addButton("Burger", "$6.99");
-
         add(middlePanel);
     }
 
@@ -50,7 +46,6 @@ public class OrderSummary extends JPanel {
         JButton b = new JButton(itemName + " $" + parentPage.round(price));
         b.setSize(WIDTH, 150);
         middlePanel.add(b, BorderLayout.CENTER);
-
         b.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -65,5 +60,4 @@ public class OrderSummary extends JPanel {
         middlePanel.revalidate();
         middlePanel.repaint();
     }
-
 }

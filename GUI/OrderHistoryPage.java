@@ -1,8 +1,6 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,8 +9,8 @@ import java.sql.Statement;
 
 public class OrderHistoryPage extends JPanel {
 
-    private static Connection conn;
-    private static POS pos;
+    private Connection conn;
+    private POS pos;
     private JTable table;
     private JButton refresh;
     private JPanel navbar;
@@ -84,14 +82,4 @@ public class OrderHistoryPage extends JPanel {
             e.printStackTrace();
         }
     }
-
-    // for testing purposes
-    // public static void main(String[] args) {
-    // XReportPage p = new XReportPage(conn, pos);
-    // JFrame f = new JFrame();
-    // f.setSize(1600, 900);
-    // f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    // f.add(p);
-    // f.setVisible(true);
-    // }
 }

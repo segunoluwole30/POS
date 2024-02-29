@@ -1,23 +1,13 @@
 import java.util.Date;
-
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
 import java.text.SimpleDateFormat;
-import javax.swing.JFrame;
-import javax.swing.JTextArea;
-import javax.swing.border.Border;
-
-import java.sql.*;
-//import java.util.concurrent.Flow;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-// TODO: Fix Comments esp. lines 66 - 95
 
 public class Utils {
 

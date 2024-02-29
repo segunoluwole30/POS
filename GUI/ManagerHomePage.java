@@ -1,13 +1,9 @@
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
-import javax.swing.border.Border;
-import javax.swing.text.View;
 
 import java.sql.*;
 //import java.util.concurrent.Flow;
@@ -18,13 +14,11 @@ import java.awt.event.ActionListener;
 public class ManagerHomePage extends JPanel {
     private Connection conn;
     private POS pos;
-    private String employeeID;
     private JPanel headerPanel;
 
     public ManagerHomePage(Connection conn, POS pos) {
         this.conn = conn;
         this.pos = pos;
-        this.employeeID = pos.getEmployeeID();
         initializeUI();
     }
 

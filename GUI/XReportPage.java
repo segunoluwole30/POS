@@ -26,30 +26,36 @@ public class XReportPage extends JPanel {
 	private ChartPanel generatedChart;
 	private JPanel chartPanel;
 	private Map<String, Color[]> colorSchemes;
+	private String year;
+	private String month;
+	private String day;
+	private int hour;
 
 	public XReportPage(Connection conn, POS pos) {
 		this.conn = conn;
 		this.pos = pos;
 		initializeColorSchemes();
+		initializeDate();
 		setupUI();
 	}
 
-
-
-	private void generateXChart(String category, int hour) {
+	private void generateXChart(String category, int h) {
 		DefaultPieDataset dataset = new DefaultPieDataset();
 
 		// Execute query to retrieve data from the database
 		try (Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery(
-						"SELECT MI.MenuItemID, MI.Name AS MenuItemName, COUNT(TE.MenuItemID) AS QuantitySold " +
-								"FROM MenuItems MI " +
-								"JOIN TransactionEntry TE ON MI.MenuItemID = TE.MenuItemID " +
-								"JOIN Transactions T ON TE.TransactionID = T.TransactionID " +
-								"WHERE DATE_PART('hour', T.Date) = " + hour + " " +
-								"AND MI.Type = '" + category + "' " +
-								"GROUP BY MI.MenuItemID, MI.Name " +
-								"ORDER BY QuantitySold DESC")) {
+			ResultSet rs = stmt.executeQuery(
+				"SELECT MI.MenuItemID, MI.Name AS MenuItemName, COUNT(TE.MenuItemID) AS QuantitySold " +
+				"FROM MenuItems MI " +
+				"JOIN TransactionEntry TE ON MI.MenuItemID = TE.MenuItemID " +
+				"JOIN Transactions T ON TE.TransactionID = T.TransactionID " +
+				"WHERE DATE_PART('year', T.Date) = " + year + " " + // Filter by year
+				"AND DATE_PART('month', T.Date) = " + month + " " + // Filter by month
+				"AND DATE_PART('day', T.Date) = " + day + " " + // Filter by day
+				"AND DATE_PART('hour', T.Date) = " + hour + " " +
+				"AND MI.Type = '" + category + "' " +
+				"GROUP BY MI.MenuItemID, MI.Name " +
+				"ORDER BY QuantitySold DESC")) {
 
 			// Process the query results
 			while (rs.next()) {
@@ -96,6 +102,59 @@ public class XReportPage extends JPanel {
 		}
 	}
 
+	private void initializeDate() {
+		// Create an array of JLabels and JTextFields for the date and hour inputs
+		JLabel dateLabel = new JLabel("Enter the date (YYYY-MM-DD):");
+		JTextField dateField = new JTextField();
+		JLabel hourLabel = new JLabel("Enter the hour (0-23):");
+		JTextField hourField = new JTextField();
+
+		// Create an array of JComponents to pass to JOptionPane
+		JComponent[] inputs = new JComponent[] {
+				dateLabel, dateField,
+				hourLabel, hourField
+		};
+
+		int result = JOptionPane.showConfirmDialog(this, inputs, "Enter Date and Hour", JOptionPane.OK_CANCEL_OPTION);
+
+		// Check if the user clicked OK
+		if (result == JOptionPane.OK_OPTION) {
+				// Get the date and hour inputs from the text fields
+				String dateInput = dateField.getText();
+				String hourInput = hourField.getText();
+
+				// Validate and process the inputs
+				if (!dateInput.isEmpty() && !hourInput.isEmpty()) {
+						try {
+								// Convert hourInput to an integer
+								hour = Integer.parseInt(hourInput);
+
+								String[] parts = dateInput.split("-");
+
+								// Extract year, month, and day from the parts array
+								year = parts[0];
+								month = parts[1];
+								day = parts[2];
+								
+								// Convert year, month, and day strings to integers
+								// year = Integer.parseInt(yearStr);
+								// month = Integer.parseInt(monthStr);
+								// day = Integer.parseInt(dayStr);
+								// Use the date and hour inputs in your code
+								// Execute the query to retrieve data from the database...
+						} catch (NumberFormatException ex) {
+								JOptionPane.showMessageDialog(this, "Invalid hour input. Please enter a valid integer between 0 and 23.", "Error", JOptionPane.ERROR_MESSAGE);
+								return; // Exit the method if the hour input is invalid
+						}
+				} else {
+						JOptionPane.showMessageDialog(this, "Both date and hour inputs are required.", "Error", JOptionPane.ERROR_MESSAGE);
+						return; // Exit the method if either input is empty
+				}
+		} else {
+				return; // Exit the method if the user clicked Cancel
+		}
+	}
+
 	private void setupUI() {
 		// Boilerplate code to setup layout
 		setLayout(new BorderLayout());
@@ -103,7 +162,7 @@ public class XReportPage extends JPanel {
 		navbar.setPreferredSize(new Dimension(getWidth(), 50));
 		add(navbar, BorderLayout.NORTH);
 		centerPanel = new JPanel(new BorderLayout());
-		centerPanel.setBorder(BorderFactory.createEmptyBorder(50, 130, 50, 50));
+		centerPanel.setBorder(BorderFactory.createEmptyBorder(50, 130, 100, 50));
 
 		// Creating three buttons vertically aligned on the left side
 		JPanel buttonPanel = new JPanel(new GridLayout(3, 1));

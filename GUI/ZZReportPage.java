@@ -23,13 +23,22 @@ public class ZZReportPage extends JPanel {
 	private JPanel centerPanel;
 	private JPanel navbar;
 	private ChartPanel generatedChart;
+	private JPanel chartPanel;
 	private Map<String, Color[]> colorSchemes;
+	
+	private String start_year;
+	private String start_month;
+	private String start_day;
+
+	private String end_year;
+	private String end_month;
+	private String end_day;
 
 	public ZZReportPage(Connection conn, POS pos) {
 		this.conn = conn;
 		this.pos = pos;
 		initializeColorSchemes();
-		generateZZChart("Entree", 10);
+		initializeDate();
 		setupUI();
 	}
 
@@ -38,15 +47,16 @@ public class ZZReportPage extends JPanel {
 
 		// Execute query to retrieve data from the database
 		try (Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery(
-						"SELECT MI.MenuItemID, MI.Name AS MenuItemName, COUNT(TE.MenuItemID) AS QuantitySold " +
-								"FROM MenuItems MI " +
-								"JOIN TransactionEntry TE ON MI.MenuItemID = TE.MenuItemID " +
-								"JOIN Transactions T ON TE.TransactionID = T.TransactionID " +
-								"WHERE DATE_PART('hour', T.Date) = " + hour + " " +
-								"AND MI.Type = '" + category + "' " +
-								"GROUP BY MI.MenuItemID, MI.Name " +
-								"ORDER BY QuantitySold DESC")) {
+			ResultSet rs = stmt.executeQuery(
+					"SELECT MI.MenuItemID, MI.Name AS MenuItemName, COUNT(TE.MenuItemID) AS QuantitySold " +
+					"FROM MenuItems MI " +
+					"JOIN TransactionEntry TE ON MI.MenuItemID = TE.MenuItemID " +
+					"JOIN Transactions T ON TE.TransactionID = T.TransactionID " +
+					"WHERE T.Date >= '" + start_year + "-" + start_month + "-" + start_day + "' " + // Start date condition
+					"AND T.Date <= '" + end_year + "-" + end_month + "-" + end_day + "' " + // End date condition
+					"AND MI.Type = '" + category + "' " +
+					"GROUP BY MI.MenuItemID, MI.Name " +
+					"ORDER BY QuantitySold DESC")) {
 			// Process the query results
 			while (rs.next()) {
 				String menuItemName = rs.getString("MenuItemName");
@@ -60,9 +70,9 @@ public class ZZReportPage extends JPanel {
 		// Create the pie chart
 		if (generatedChart == null) {
 			JFreeChart chart = ChartFactory.createPieChart(
-					category + " ZZReport", // chart title
-					dataset, // data
-					true, // include legend
+					category + " ZZReport",
+					dataset,
+					true,
 					true,
 					false);
 
@@ -84,10 +94,61 @@ public class ZZReportPage extends JPanel {
 			plot.setSimpleLabels(true);
 			plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0}: {2}"));
 
-			// Invalidate the chart panel to trigger repaint
-			generatedChart.invalidate();
-			generatedChart.repaint();
+			chartPanel.removeAll();
+			chartPanel.add(generatedChart, BorderLayout.CENTER);
+
+			revalidate();
+			repaint();
 		}
+	}
+
+	private void initializeDate(){
+    // Create an array of JLabels and JTextFields for the date and hour inputs
+    JLabel start_dateLabel = new JLabel("Enter the start date (YYYY-MM-DD):");
+    JTextField start_dateField = new JTextField();
+		JLabel end_dateLabel = new JLabel("Enter the end date (YYYY-MM-DD):");
+    JTextField end_dateField = new JTextField();
+
+    // Create an array of JComponents to pass to JOptionPane
+    JComponent[] inputs = new JComponent[] {
+        start_dateLabel, start_dateField,
+				end_dateLabel, end_dateField
+    };
+
+    int result = JOptionPane.showConfirmDialog(this, inputs, "Enter Date and Hour", JOptionPane.OK_CANCEL_OPTION);
+
+    // Check if the user clicked OK
+    if (result == JOptionPane.OK_OPTION) {
+        // Get the date and hour inputs from the text fields
+        String s_dateInput = start_dateField.getText();
+				String e_dateInput = end_dateField.getText();
+
+        // Validate and process the inputs
+        if (!s_dateInput.isEmpty() || !e_dateInput.isEmpty()) {
+            try {
+								String[] parts = s_dateInput.split("-");
+								String[] e_parts = e_dateInput.split("-");
+
+								// Extract year, month, and day from the parts array
+								start_year = parts[0];
+								start_month = parts[1];
+								start_day = parts[2];
+
+								end_year = e_parts[0];
+								end_month = e_parts[1];
+								end_day = e_parts[2];
+								
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Invalid hour input. Please enter a valid integer between 0 and 23.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Both date and hour inputs are required.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+    } else {
+        return;
+    }
 	}
 
 	private void setupUI() {
@@ -99,6 +160,7 @@ public class ZZReportPage extends JPanel {
 		navbar.setPreferredSize(new Dimension(getWidth(), 50));
 		add(navbar, BorderLayout.NORTH);
 		centerPanel = new JPanel(new BorderLayout());
+		centerPanel.setBorder(BorderFactory.createEmptyBorder(50, 130, 100, 50));
 
 		// Creating three buttons vertically aligned on the left side
 		JPanel buttonPanel = new JPanel(new GridLayout(3, 1));
@@ -112,11 +174,18 @@ public class ZZReportPage extends JPanel {
 		buttonPanel.add(button2);
 		buttonPanel.add(button3);
 
-		centerPanel.add(generatedChart, BorderLayout.CENTER);
+		chartPanel = new JPanel(new BorderLayout());
+		chartPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 100));
+
+		centerPanel.add(chartPanel, BorderLayout.CENTER);
 		centerPanel.add(buttonPanel, BorderLayout.WEST);
 
+		// Adding navbar and center panel to the main panel
 		add(navbar, BorderLayout.NORTH);
 		add(centerPanel, BorderLayout.CENTER);
+
+		revalidate();
+		repaint();
 	}
 
 	private class ButtonListener implements ActionListener {

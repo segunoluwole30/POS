@@ -23,30 +23,36 @@ public class ZReportPage extends JPanel {
 	private JPanel centerPanel;
 	private JPanel navbar;
 	private ChartPanel generatedChart;
+	private JPanel chartPanel;
 	private Map<String, Color[]> colorSchemes;
+	private String year;
+	private String month;
+	private String day;
 
 	public ZReportPage(Connection conn, POS pos) {
 		this.conn = conn;
 		this.pos = pos;
 		initializeColorSchemes();
-		generateZChart("Entree", 10);
+		initializeDate();
 		setupUI();
 	}
 
-	private void generateZChart(String category, int day) {
+	private void generateZChart(String category, int d) {
 		DefaultPieDataset dataset = new DefaultPieDataset();
 
 		// Execute query to retrieve data from the database
 		try (Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery(
-						"SELECT MI.MenuItemID, MI.Name AS MenuItemName, COUNT(TE.MenuItemID) AS QuantitySold " +
-								"FROM MenuItems MI " +
-								"JOIN TransactionEntry TE ON MI.MenuItemID = TE.MenuItemID " +
-								"JOIN Transactions T ON TE.TransactionID = T.TransactionID " +
-								"WHERE DATE_PART('day', T.Date) = " + day + " " +
-								"AND MI.Type = '" + category + "' " +
-								"GROUP BY MI.MenuItemID, MI.Name " +
-								"ORDER BY QuantitySold DESC")) {
+		ResultSet rs = stmt.executeQuery(
+			"SELECT MI.MenuItemID, MI.Name AS MenuItemName, COUNT(TE.MenuItemID) AS QuantitySold " +
+			"FROM MenuItems MI " +
+			"JOIN TransactionEntry TE ON MI.MenuItemID = TE.MenuItemID " +
+			"JOIN Transactions T ON TE.TransactionID = T.TransactionID " +
+			"WHERE DATE_PART('year', T.Date) = " + year + " " + // Filter by year
+			"AND DATE_PART('month', T.Date) = " + month + " " + // Filter by month
+			"AND DATE_PART('day', T.Date) = " + day + " " + // Filter by day
+			"AND MI.Type = '" + category + "' " +
+			"GROUP BY MI.MenuItemID, MI.Name " +
+			"ORDER BY QuantitySold DESC")) {
 			while (rs.next()) {
 				String menuItemName = rs.getString("MenuItemName");
 				int quantitySold = rs.getInt("QuantitySold");
@@ -82,10 +88,52 @@ public class ZReportPage extends JPanel {
 			plot.setSimpleLabels(true);
 			plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0}: {2}"));
 
-			// Invalidate the chart panel to trigger repaint
-			generatedChart.invalidate();
-			generatedChart.repaint();
+			chartPanel.removeAll();
+			chartPanel.add(generatedChart, BorderLayout.CENTER);
+
+			revalidate();
+			repaint();
 		}
+	}
+
+	private void initializeDate(){
+    // Create an array of JLabels and JTextFields for the date and hour inputs
+    JLabel dateLabel = new JLabel("Enter the date (YYYY-MM-DD):");
+    JTextField dateField = new JTextField();
+
+    // Create an array of JComponents to pass to JOptionPane
+    JComponent[] inputs = new JComponent[] {
+        dateLabel, dateField
+    };
+
+    int result = JOptionPane.showConfirmDialog(this, inputs, "Enter Date and Hour", JOptionPane.OK_CANCEL_OPTION);
+
+    // Check if the user clicked OK
+    if (result == JOptionPane.OK_OPTION) {
+        // Get the date and hour inputs from the text fields
+        String dateInput = dateField.getText();
+
+        // Validate and process the inputs
+        if (!dateInput.isEmpty()) {
+            try {
+								String[] parts = dateInput.split("-");
+
+								// Extract year, month, and day from the parts array
+								year = parts[0];
+								month = parts[1];
+								day = parts[2];
+								
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Invalid hour input. Please enter a valid integer between 0 and 23.", "Error", JOptionPane.ERROR_MESSAGE);
+                return; // Exit the method if the hour input is invalid
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Both date and hour inputs are required.", "Error", JOptionPane.ERROR_MESSAGE);
+            return; // Exit the method if either input is empty
+        }
+    } else {
+        return; // Exit the method if the user clicked Cancel
+    }
 	}
 
 	private void setupUI() {
@@ -95,8 +143,8 @@ public class ZReportPage extends JPanel {
 		navbar = Utils.createHeaderPanel(pos);
 		navbar.setPreferredSize(new Dimension(getWidth(), 50));
 		add(navbar, BorderLayout.NORTH);
-
 		centerPanel = new JPanel(new BorderLayout());
+		centerPanel.setBorder(BorderFactory.createEmptyBorder(50, 130, 100, 50));
 
 		// Creating three buttons vertically aligned on the left side
 		JPanel buttonPanel = new JPanel(new GridLayout(3, 1));
@@ -110,12 +158,18 @@ public class ZReportPage extends JPanel {
 		buttonPanel.add(button2);
 		buttonPanel.add(button3);
 
-		centerPanel.add(generatedChart, BorderLayout.CENTER);
+		chartPanel = new JPanel(new BorderLayout());
+		chartPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 100));
+
+		centerPanel.add(chartPanel, BorderLayout.CENTER);
 		centerPanel.add(buttonPanel, BorderLayout.WEST);
 
 		// Adding navbar and center panel to the main panel
 		add(navbar, BorderLayout.NORTH);
 		add(centerPanel, BorderLayout.CENTER);
+
+		revalidate();
+		repaint();
 	}
 
 	private class ButtonListener implements ActionListener {

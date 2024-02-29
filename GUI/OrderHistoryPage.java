@@ -8,7 +8,6 @@ import java.sql.Statement;
 
 
 public class OrderHistoryPage extends JPanel {
-
     private Connection conn;
     private POS pos;
     private JTable table;

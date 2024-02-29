@@ -142,16 +142,16 @@ public class ZZReportPage extends JPanel {
 			Color[] scheme2 = {Color.ORANGE, Color.YELLOW, Color.CYAN};
 			Color[] gradientBlueScheme = {new Color(0, 0, 255), new Color(0, 128, 255), new Color(0, 191, 255)};
 			Color[] smoothColorScheme = {
-				new Color(180, 160, 255), // Light purple
-				new Color(153, 128, 255),
-				new Color(126, 96, 255),
-				new Color(99, 64, 255),
-				new Color(72, 32, 255),
-				new Color(45, 0, 255),
-				new Color(36, 0, 214),
-				new Color(27, 0, 172),
-				new Color(18, 0, 130),
-				new Color(9, 0, 88), // Dark blue
+				new Color(204, 255, 204), // Lightest green
+				new Color(153, 255, 153),
+				new Color(102, 255, 102),
+				new Color(51, 204, 51),
+				new Color(0, 153, 0),
+				new Color(0, 102, 0),
+				new Color(0, 51, 0),
+				new Color(0, 51, 0),      // Darkest green
+				new Color(0, 51, 0),
+				new Color(0, 51, 0)
 		};
 
 		colorSchemes.put("Scheme 1", scheme1);

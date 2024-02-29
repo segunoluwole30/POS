@@ -24,15 +24,17 @@ public class XReportPage extends JPanel {
 	private JPanel centerPanel;
 	private JPanel navbar;
 	private ChartPanel generatedChart;
+	private JPanel chartPanel;
 	private Map<String, Color[]> colorSchemes;
 
 	public XReportPage(Connection conn, POS pos) {
 		this.conn = conn;
 		this.pos = pos;
 		initializeColorSchemes();
-		generateXChart("Entree", 10);
 		setupUI();
 	}
+
+
 
 	private void generateXChart(String category, int hour) {
 		DefaultPieDataset dataset = new DefaultPieDataset();
@@ -76,18 +78,21 @@ public class XReportPage extends JPanel {
 			PiePlot plot = (PiePlot) chart.getPlot();
 
 			Color[] colors = colorSchemes.get("purp");
-        if (colors != null) {
-            for (int i = 0; i < dataset.getItemCount(); i++) {
-                plot.setSectionPaint(dataset.getKey(i), colors[i % colors.length]);
-            }
-        }
+			if (colors != null) {
+					for (int i = 0; i < dataset.getItemCount(); i++) {
+							plot.setSectionPaint(dataset.getKey(i), colors[i % colors.length]);
+					}
+			}
 
 			plot.setDataset(dataset);
 			plot.setSimpleLabels(true);
 			plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0}: {2}"));
 
-			generatedChart.invalidate();
-			generatedChart.repaint();
+			chartPanel.removeAll();
+			chartPanel.add(generatedChart, BorderLayout.CENTER);
+
+			revalidate();
+			repaint();
 		}
 	}
 
@@ -98,6 +103,7 @@ public class XReportPage extends JPanel {
 		navbar.setPreferredSize(new Dimension(getWidth(), 50));
 		add(navbar, BorderLayout.NORTH);
 		centerPanel = new JPanel(new BorderLayout());
+		centerPanel.setBorder(BorderFactory.createEmptyBorder(50, 130, 50, 50));
 
 		// Creating three buttons vertically aligned on the left side
 		JPanel buttonPanel = new JPanel(new GridLayout(3, 1));
@@ -111,7 +117,11 @@ public class XReportPage extends JPanel {
 		buttonPanel.add(button2);
 		buttonPanel.add(button3);
 
-		centerPanel.add(generatedChart, BorderLayout.CENTER);
+		chartPanel = new JPanel(new BorderLayout());
+		chartPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 100));
+		//chartPanel.add(generatedChart);
+
+		centerPanel.add(chartPanel, BorderLayout.CENTER);
 		centerPanel.add(buttonPanel, BorderLayout.WEST);
 
 		// Adding navbar and center panel to the main panel

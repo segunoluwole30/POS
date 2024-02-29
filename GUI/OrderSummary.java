@@ -7,15 +7,16 @@ public class OrderSummary extends JPanel {
 
     private JPanel middlePanel;
     private MenuPage parentPage;
+    private JButton topButton;
 
     public OrderSummary(MenuPage mp) {
         setLayout(new BorderLayout());
         parentPage = mp;
 
         Font buttonFont = new Font("Arial", Font.BOLD, 20);
-    
+
         // Top button (cancel order)
-        JButton topButton = new JButton("Cancel Order");
+        topButton = new JButton("Logout");
         topButton.addActionListener(e -> parentPage.cancelButton());
         topButton.setFont(buttonFont);
         topButton.setPreferredSize(new Dimension(300, 75));
@@ -59,5 +60,9 @@ public class OrderSummary extends JPanel {
         // Might not be needed
         middlePanel.revalidate();
         middlePanel.repaint();
+    }
+
+    public void refreshTopButton(String label) {
+        topButton.setText(label);
     }
 }

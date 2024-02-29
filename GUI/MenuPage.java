@@ -17,12 +17,12 @@ public class MenuPage extends JPanel {
     private Map<String, Double> priceMap;
     private Map<String, Integer> idMap;
     private ArrayList<String> transactionItems;
-    private boolean currentlyPaying;
     private String currentEmployeeName;
     private String currentRole;
     private String paymentType;
     private int transactionID;
     private double transactionTotal;
+    private boolean currentlyPaying;
 
     public MenuPage(Connection con, POS pos) {
         this.conn = con;
@@ -323,6 +323,7 @@ public class MenuPage extends JPanel {
             remove(navbar);
             revalidate();
             loadPayPanel();
+            orderSummary.refreshTopButton("Cancel Order");
             repaint();
             currentlyPaying = true;
         }
@@ -334,6 +335,7 @@ public class MenuPage extends JPanel {
             revalidate();
             loadNavbar();
             loadMiddlePanel();
+            orderSummary.refreshTopButton("Logout");
             repaint();    
             currentlyPaying = false;
             paymentType = "";

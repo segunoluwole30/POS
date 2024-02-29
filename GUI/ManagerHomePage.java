@@ -122,7 +122,10 @@ public class ManagerHomePage extends JPanel {
         JPanel buttonPanel = new JPanel(new GridBagLayout()); // Main panel with 2 columns
         buttonPanel.setBackground(Common.DARKCYAN);
 
+        Font buttonFont = new Font("Arial", Font.BOLD, 30);
+
         JButton orderHistoryButton = new JButton("View Order History Report");
+        orderHistoryButton.setFont(buttonFont);
         orderHistoryButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -131,6 +134,7 @@ public class ManagerHomePage extends JPanel {
         });
 
         JButton inventoryReportButton = new JButton("View Inventory Report");
+        inventoryReportButton.setFont(buttonFont);
         inventoryReportButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -139,6 +143,7 @@ public class ManagerHomePage extends JPanel {
         });
 
         JButton menuItemsButton = new JButton("Edit Menu Items");
+        menuItemsButton.setFont(buttonFont);
         menuItemsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -151,13 +156,16 @@ public class ManagerHomePage extends JPanel {
         });
 
         JButton xReportButton = new JButton("Generate X Report");
+        xReportButton.setFont(buttonFont);
         xReportButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 pos.showXReportPage();
             }
         });
+
         JButton zReportButton = new JButton("Generate Z Report");
+        zReportButton.setFont(buttonFont);
         zReportButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -165,6 +173,7 @@ public class ManagerHomePage extends JPanel {
             }
         });
         JButton zzReportButton = new JButton("Generate ZZ Report");
+        zzReportButton.setFont(buttonFont);
         zzReportButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -212,15 +221,4 @@ public class ManagerHomePage extends JPanel {
         revalidate();
         repaint();
     }
-
-    // for testing purposes
-    // public static void main(String[] args) {
-    // ManagerHomePage p = new ManagerHomePage(null);
-    // JFrame f = new JFrame();
-    // f.setSize(1600, 900);
-    // f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    // f.add(p);
-    // f.setVisible(true);
-    // }
-
 }

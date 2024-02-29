@@ -39,7 +39,7 @@ public class XReportPage extends JPanel {
 		setupUI();
 	}
 
-	private void generateXChart(String category, int h) {
+	private void generateXChart(String category) {
 		DefaultPieDataset dataset = new DefaultPieDataset();
 
 		// Execute query to retrieve data from the database
@@ -169,12 +169,19 @@ public class XReportPage extends JPanel {
 		JButton button1 = new JButton("Entree XReport");
 		JButton button2 = new JButton("Drink XReport");
 		JButton button3 = new JButton("Dessert XReport");
-		button1.addActionListener(new ButtonListener("Entree", 8));
-		button2.addActionListener(new ButtonListener("Drink", 12));
-		button3.addActionListener(new ButtonListener("Dessert", 18));
+		JButton button4 = new JButton("Function 1");
+		JButton button5 = new JButton("Function 2");
+		JButton button6 = new JButton("Function 3");
+		button1.addActionListener(new ButtonListener("Entree"));
+		button2.addActionListener(new ButtonListener("Drink"));
+		button3.addActionListener(new ButtonListener("Dessert"));
+		//TODO: add action listener to generate charts for 4-6
 		buttonPanel.add(button1);
 		buttonPanel.add(button2);
 		buttonPanel.add(button3);
+		buttonPanel.add(button4);
+		buttonPanel.add(button5);
+		buttonPanel.add(button6);
 
 		chartPanel = new JPanel(new BorderLayout());
 		chartPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 100));
@@ -190,16 +197,14 @@ public class XReportPage extends JPanel {
 
 	private class ButtonListener implements ActionListener {
 		private String category;
-		private int hour;
 
-		public ButtonListener(String category, int hour) {
+		public ButtonListener(String category) {
 			this.category = category;
-			this.hour = hour;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			generateXChart(category, hour);
+			generateXChart(category);
 		}
 	}
 

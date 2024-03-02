@@ -10,8 +10,10 @@ import org.jfree.data.general.DefaultPieDataset;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.awt.event.ActionEvent;
@@ -23,6 +25,7 @@ public class ZReportPage extends JPanel {
 	private JPanel centerPanel;
 	private JPanel navbar;
 	private ChartPanel generatedChart;
+	private JTable generatedTable;
 	private JPanel chartPanel;
 	private Map<String, Color[]> colorSchemes;
 	private String year;
@@ -37,7 +40,7 @@ public class ZReportPage extends JPanel {
 		setupUI();
 	}
 
-	private void generateZChart(String category, int d) {
+	private void generateZChart(String category) {
 		DefaultPieDataset dataset = new DefaultPieDataset();
 
 		// Execute query to retrieve data from the database
@@ -96,6 +99,179 @@ public class ZReportPage extends JPanel {
 		}
 	}
 
+	private void generateSalesReport() {
+		
+		try {
+			Statement statement = conn.createStatement();
+			ResultSet result = statement.executeQuery(
+				"SELECT MI.MenuItemID, MI.Name AS MenuItemName, COUNT(TE.MenuItemID) AS QuantitySold " +
+				"FROM MenuItems MI " +
+				"JOIN TransactionEntry TE ON MI.MenuItemID = TE.MenuItemID " +
+				"JOIN Transactions T ON TE.TransactionID = T.TransactionID " +
+				"WHERE DATE_PART('year', T.Date) = " + year + " " + // Filter by year
+				"AND DATE_PART('month', T.Date) = " + month + " " + // Filter by month
+				"AND DATE_PART('day', T.Date) = " + day + " " + // Filter by day
+				"GROUP BY MI.MenuItemID, MI.Name " +
+				"ORDER BY QuantitySold DESC");
+	
+			ResultSetMetaData metaData = result.getMetaData();
+			int columnCount = metaData.getColumnCount();
+	
+			ArrayList<String[]> rows = new ArrayList<>();
+	
+			while (result.next()) {
+					String[] row = new String[columnCount];
+					for (int i = 1; i <= columnCount; i++) {
+							row[i - 1] = result.getString(i);
+					}
+					rows.add(row);
+			}
+	
+			// Convert the list of rows to a 2D array
+			String[][] data = new String[rows.size()][];
+			for (int i = 0; i < rows.size(); i++) {
+					data[i] = rows.get(i);
+			}
+	
+			String[] columnEntries = new String[columnCount];
+			for (int i = 0; i < columnCount; i++) {
+					columnEntries[i] = metaData.getColumnName(i + 1);
+			}
+	
+			generatedTable = new JTable(data, columnEntries);
+	
+			JScrollPane salesReportScrollPane = new JScrollPane();
+			salesReportScrollPane.setViewportView(generatedTable);
+			salesReportScrollPane.setPreferredSize(new Dimension(salesReportScrollPane.getPreferredSize().width, Common.HEIGHT / 4));
+	
+			chartPanel.removeAll();
+			chartPanel.add(salesReportScrollPane, BorderLayout.CENTER);
+	
+			revalidate();
+			repaint();
+	
+	} catch (SQLException e) {
+			e.printStackTrace();
+			// Handle SQL exception here, such as displaying an error message
+	}
+	}
+
+	private void generateProductUsageReport() {
+		try {
+			Statement statement = conn.createStatement();
+			ResultSet result = statement.executeQuery("SELECT ii.Name AS InventoryItem, SUM(mii.Quantity) AS UsedQuantity " +
+																									"FROM Transactions t " +
+																									"JOIN TransactionEntry te ON t.TransactionID = te.TransactionID " +
+																									"JOIN MenuItems mi ON te.MenuItemID = mi.MenuItemID " +
+																									"JOIN MenuItemIngredients mii ON mi.MenuItemID = mii.MenuItemID " +
+																									"JOIN IngredientsInventory ii ON mii.IngredientID = ii.IngredientID " +
+																									"WHERE DATE_PART('year', T.Date) = " + year + " " + // Filter by year
+																									"AND DATE_PART('month', T.Date) = " + month + " " + // Filter by month
+																									"AND DATE_PART('day', T.Date) = " + day + " " + // Filter by day
+																									"GROUP BY ii.Name " +
+                                                	"ORDER BY UsedQuantity DESC;");
+	
+			ResultSetMetaData metaData = result.getMetaData();
+			int columnCount = metaData.getColumnCount();
+	
+			ArrayList<String[]> rows = new ArrayList<>();
+	
+			while (result.next()) {
+					String[] row = new String[columnCount];
+					for (int i = 1; i <= columnCount; i++) {
+							row[i - 1] = result.getString(i);
+					}
+					rows.add(row);
+			}
+	
+			// Convert the list of rows to a 2D array
+			String[][] data = new String[rows.size()][];
+			for (int i = 0; i < rows.size(); i++) {
+					data[i] = rows.get(i);
+			}
+	
+			String[] columnEntries = new String[columnCount];
+			for (int i = 0; i < columnCount; i++) {
+					columnEntries[i] = metaData.getColumnName(i + 1);
+			}
+	
+			generatedTable = new JTable(data, columnEntries);
+	
+			JScrollPane salesReportScrollPane = new JScrollPane();
+			salesReportScrollPane.setViewportView(generatedTable);
+			salesReportScrollPane.setPreferredSize(new Dimension(salesReportScrollPane.getPreferredSize().width, Common.HEIGHT / 4));
+	
+			chartPanel.removeAll();
+			chartPanel.add(salesReportScrollPane, BorderLayout.CENTER);
+	
+			revalidate();
+			repaint();
+	
+	} catch (SQLException e) {
+			e.printStackTrace();
+			// Handle SQL exception here, such as displaying an error message
+	}
+	}
+
+	private void generateBestPairsReport() {
+		
+		try {
+			Statement statement = conn.createStatement();
+			ResultSet result = statement.executeQuery(
+        "SELECT mi1.Name AS MenuItem1, mi2.Name AS MenuItem2, COUNT(*) AS Frequency " +
+        "FROM TransactionEntry te1 " +
+        "JOIN TransactionEntry te2 ON te1.TransactionID = te2.TransactionID AND te1.MenuItemID < te2.MenuItemID " +
+        "JOIN MenuItems mi1 ON te1.MenuItemID = mi1.MenuItemID " +
+        "JOIN MenuItems mi2 ON te2.MenuItemID = mi2.MenuItemID " +
+        "JOIN Transactions t ON te1.TransactionID = t.TransactionID " +
+        "WHERE DATE_PART('year', t.Date) = " + year + " " + // Filter by year
+        "AND DATE_PART('month', t.Date) = " + month + " " + // Filter by month
+        "AND DATE_PART('day', t.Date) = " + day + " " + // Filter by day
+        "GROUP BY mi1.Name, mi2.Name " +
+        "ORDER BY Frequency DESC");
+	
+			ResultSetMetaData metaData = result.getMetaData();
+			int columnCount = metaData.getColumnCount();
+	
+			ArrayList<String[]> rows = new ArrayList<>();
+	
+			while (result.next()) {
+					String[] row = new String[columnCount];
+					for (int i = 1; i <= columnCount; i++) {
+							row[i - 1] = result.getString(i);
+					}
+					rows.add(row);
+			}
+	
+			// Convert the list of rows to a 2D array
+			String[][] data = new String[rows.size()][];
+			for (int i = 0; i < rows.size(); i++) {
+					data[i] = rows.get(i);
+			}
+	
+			String[] columnEntries = new String[columnCount];
+			for (int i = 0; i < columnCount; i++) {
+					columnEntries[i] = metaData.getColumnName(i + 1);
+			}
+	
+			generatedTable = new JTable(data, columnEntries);
+	
+			JScrollPane salesReportScrollPane = new JScrollPane();
+			salesReportScrollPane.setViewportView(generatedTable);
+			salesReportScrollPane.setPreferredSize(new Dimension(salesReportScrollPane.getPreferredSize().width, Common.HEIGHT / 4));
+	
+			chartPanel.removeAll();
+			chartPanel.add(salesReportScrollPane, BorderLayout.CENTER);
+	
+			revalidate();
+			repaint();
+	
+	} catch (SQLException e) {
+			e.printStackTrace();
+			// Handle SQL exception here, such as displaying an error message
+	}
+	}
+	
 	private void initializeDate(){
     // Create an array of JLabels and JTextFields for the date and hour inputs
     JLabel dateLabel = new JLabel("Enter the date (YYYY-MM-DD):");
@@ -151,12 +327,30 @@ public class ZReportPage extends JPanel {
 		JButton button1 = new JButton("Entree ZReport");
 		JButton button2 = new JButton("Drink ZReport");
 		JButton button3 = new JButton("Dessert ZReport");
-		button1.addActionListener(new ButtonListener("Entree", 8));
-		button2.addActionListener(new ButtonListener("Drink", 12));
-		button3.addActionListener(new ButtonListener("Dessert", 18));
+		JButton button4 = new JButton("Sales Report");
+		JButton button5 = new JButton("Product Usage");
+		JButton button6 = new JButton("Excess Report");
+		JButton button7 = new JButton("Best Product Combos");
+		JButton button8 = new JButton("Cool Button 1");
+		JButton button9 = new JButton("Cool Button 2");
+
+		button1.addActionListener(new ButtonListener("Entree", "pie_chart"));
+		button2.addActionListener(new ButtonListener("Drink", "pie_chart"));
+		button3.addActionListener(new ButtonListener("Dessert", "pie_chart"));
+		button4.addActionListener(new ButtonListener("n/a", "sales_report"));
+		button5.addActionListener(new ButtonListener("n/a", "product_usage"));
+		button6.addActionListener(new ButtonListener("n/a", "excess_report"));
+		button7.addActionListener(new ButtonListener("n/a", "sells_together"));
+
 		buttonPanel.add(button1);
 		buttonPanel.add(button2);
 		buttonPanel.add(button3);
+		buttonPanel.add(button4);
+		buttonPanel.add(button5);
+		buttonPanel.add(button6);
+		buttonPanel.add(button7);
+		buttonPanel.add(button8);
+		buttonPanel.add(button9);
 
 		chartPanel = new JPanel(new BorderLayout());
 		chartPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 100));
@@ -167,23 +361,38 @@ public class ZReportPage extends JPanel {
 		// Adding navbar and center panel to the main panel
 		add(navbar, BorderLayout.NORTH);
 		add(centerPanel, BorderLayout.CENTER);
-
-		revalidate();
-		repaint();
 	}
 
 	private class ButtonListener implements ActionListener {
 		private String category;
-		private int hour;
+		private String action;
 
-		public ButtonListener(String category, int hour) {
+		public ButtonListener(String category, String action) {
 			this.category = category;
-			this.hour = hour;
+			this.action = action;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			generateZChart(category, hour);
+			if (action == "pie_chart"){
+				generateZChart(category);
+			}
+			else if (action == "sales_report"){
+				//Given a time window, display the sales by item from the order history.
+				generateSalesReport();
+			}
+			else if (action == "product_usage"){
+				//Given a time window, display a chart (table, graph, diagram) that depicts the amount of inventory used during that time period.
+				generateProductUsageReport();
+			}
+			else if (action == "excess_report"){
+				//Given a timestamp, display the list of items that only sold less than 10% of their inventory between the timestamp and the current time, assuming no restocks have happened during the window.
+				//generateExcessReport()
+			}
+			else if (action == "sells_together"){
+				//Given a time window, display a list of pairs of menu items that sell together often, popular or not, sorted by most frequent.
+				generateBestPairsReport();
+			}
 		}
 	}
 

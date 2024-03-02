@@ -3,11 +3,14 @@ import javax.swing.event.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ViewMenuItemsDialog extends JDialog {
     private JTable table;
-    private JButton addButton, deleteButton;
+    private JButton addButton, deleteButton, editIngredientsButton;
     private DefaultTableModel tableModel;
+    private List<Integer> menuItemIds = new ArrayList<>(); // store menu item id's for database operations
     private Connection conn;
 
     public ViewMenuItemsDialog(Frame owner, Connection conn) {
@@ -15,17 +18,19 @@ public class ViewMenuItemsDialog extends JDialog {
         this.conn = conn;
         initializeUI();
         refreshTableData();
+        repaint();
     }
 
     private void initializeUI() {
         setLayout(new BorderLayout());
 
-        tableModel = new DefaultTableModel(new String[] { "MenuItemID", "Name", "Price", "Type" }, 0) {
+        tableModel = new DefaultTableModel(new String[] { "Name", "Price", "Type" }, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return column != 0; // ID column is not editable
+                return true;
             }
         };
+
         table = new JTable(tableModel);
         table.setModel(tableModel);
 
@@ -64,30 +69,53 @@ public class ViewMenuItemsDialog extends JDialog {
         deleteButton.addActionListener(e -> deleteMenuItem());
         buttonPanel.add(deleteButton);
 
+        editIngredientsButton = new JButton("Edit Ingredients");
+        editIngredientsButton.addActionListener(e -> editIngredients());
+        editIngredientsButton.setEnabled(false); // Initially disabled
+        buttonPanel.add(editIngredientsButton);
+
+        table.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                boolean rowSelected = table.getSelectedRow() >= 0;
+                editIngredientsButton.setEnabled(rowSelected);
+            }
+        });
+
         add(buttonPanel, BorderLayout.SOUTH);
         setSize(500, 300);
     }
 
     private void addMenuItem() {
-        // Add a new empty row at the end of the table
-        tableModel.addRow(new Object[] { null, "", 5.0, "" });
-        int newRow = tableModel.getRowCount() - 1;
-
-        table.scrollRectToVisible(table.getCellRect(newRow, 0, true));
-        table.setRowSelectionInterval(newRow, newRow);
-
-        // Make specific cells editable
-        table.editCellAt(newRow, 0); // MenuItemID
-        table.editCellAt(newRow, 2); // Price
-        table.editCellAt(newRow, 3); // Type
-
-        Component editor = table.getEditorComponent();
-        if (editor != null) {
-            editor.requestFocusInWindow();
+        // Prompt user for new item details
+        String name = JOptionPane.showInputDialog(this, "Enter item name:");
+        if (name == null || name.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Item name is required.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
 
-        table.revalidate();
-        table.repaint();
+        String priceAsString = JOptionPane.showInputDialog(this, "Enter item price:");
+        float price;
+        try {
+            price = Float.parseFloat(priceAsString);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Invalid price format.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String[] types = { "Entree", "Sides", "Drink", "Dessert" }; // Example types, adjust as necessary
+        String type = (String) JOptionPane.showInputDialog(this, "Select item type:",
+                "Item Type", JOptionPane.QUESTION_MESSAGE,
+                null, types, types[0]);
+        if (type == null) {
+            JOptionPane.showMessageDialog(this, "Item type is required.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Now insert the new item into the database
+        insertNewItem(name, price, type);
+
+        // Refresh the table to show the newly added item
+        refreshTableData();
     }
 
     private void insertNewItem(String name, float price, String type) {
@@ -98,14 +126,22 @@ public class ViewMenuItemsDialog extends JDialog {
             pstmt.setString(3, type);
 
             int affectedRows = pstmt.executeUpdate();
-            if (affectedRows > 0) {
-                JOptionPane.showMessageDialog(this, "Item added successfully.");
-            } else {
-                JOptionPane.showMessageDialog(this, "No item was added.");
+            if (affectedRows == 0) {
+                throw new SQLException("Creating item failed, no rows affected.");
             }
+
+            try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    menuItemIds.add(generatedKeys.getInt(1)); // Store the new MenuItemID
+                } else {
+                    throw new SQLException("Creating item failed, no ID obtained.");
+                }
+            }
+            JOptionPane.showMessageDialog(this, "Item added successfully.");
         } catch (SQLException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Database error: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Database error: " + e.getMessage(), "Error",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -115,8 +151,8 @@ public class ViewMenuItemsDialog extends JDialog {
             int confirmation = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this item?",
                     "Confirm Deletion", JOptionPane.YES_NO_OPTION);
             if (confirmation == JOptionPane.YES_OPTION) {
-                Object itemId = tableModel.getValueAt(selectedRow, 0);
-                deleteItemFromDatabase(itemId);
+                int menuItemId = menuItemIds.get(selectedRow); // Get the ID from the list
+                deleteItemFromDatabase(menuItemId);
                 refreshTableData();
             }
         } else {
@@ -182,8 +218,22 @@ public class ViewMenuItemsDialog extends JDialog {
         }
     }
 
+    private void editIngredients() {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow != -1) {
+            Integer menuItemId = menuItemIds.get(selectedRow); // Get MenuItemID from the list
+            IngredientsDialog ingredientsDialog = new IngredientsDialog(
+                    (Frame) SwingUtilities.getWindowAncestor(ViewMenuItemsDialog.this), conn, menuItemId);
+            ingredientsDialog.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a menu item first.", "No Selection",
+                    JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
     public void refreshTableData() {
         tableModel.setRowCount(0); // Clear existing data
+        menuItemIds.clear();
 
         String query = "SELECT * FROM MenuItems;";
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
@@ -192,7 +242,9 @@ public class ViewMenuItemsDialog extends JDialog {
                 String name = rs.getString("Name");
                 float price = rs.getFloat("Price");
                 String type = rs.getString("Type");
-                tableModel.addRow(new Object[] { id, name, price, type });
+
+                menuItemIds.add(id);
+                tableModel.addRow(new Object[] { name, price, type });
             }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error fetching menu items: " + e.getMessage(), "Database Error",

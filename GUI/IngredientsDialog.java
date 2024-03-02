@@ -5,6 +5,9 @@ import java.awt.event.*;
 import java.sql.*;
 import java.util.*;
 
+//TO-DO
+// If new ingredient not in inventory, request manager for units of ingredient and current and max stock values of the ingredient
+
 public class IngredientsDialog extends JDialog {
     private JTable ingredientsTable;
     private DefaultTableModel tableModel;
@@ -106,59 +109,71 @@ public class IngredientsDialog extends JDialog {
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
-
         try {
-            // Check if the ingredient exists in the database and get its ID
             Integer ingredientId = getOrAddIngredientId(newIngredient);
-
-            // Now that we have the ingredient ID, we can proceed to add it to the table
-            // model
             if (ingredientId != null) {
                 tableModel.addRow(new Object[] { newIngredient, quantity });
+                ingredientsTable.revalidate();
+                ingredientsTable.repaint();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error interacting with database: " + e.getMessage(), "Database Error",
-                    JOptionPane.ERROR_MESSAGE);
         }
 
+        catch (
+
+        SQLException e) {
+            JOptionPane.showMessageDialog(this, "Database error: " + e.getMessage(), "Database Error",
+                    JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
         newIngredientNameField.setText("");
         quantityField.setText("");
     }
 
     private Integer getOrAddIngredientId(String ingredientName) throws SQLException {
-        // First, check if the ingredient is already in our map (and thus in the
-        // database)
         if (ingredientNameToIdMap.containsKey(ingredientName)) {
             return ingredientNameToIdMap.get(ingredientName);
         }
 
-        // If not in the map, check the database
-        String checkSql = "SELECT IngredientID FROM IngredientsInventory WHERE Name = ?";
-        try (PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
-            checkStmt.setString(1, ingredientName);
-            ResultSet rs = checkStmt.executeQuery();
-            if (rs.next()) {
-                int ingredientId = rs.getInt("IngredientID");
-                ingredientNameToIdMap.put(ingredientName, ingredientId);
-                return ingredientId;
-            }
+        // Prompt for additional information if the ingredient is new
+        String units = JOptionPane.showInputDialog(this, "Enter units for " + ingredientName + ":");
+        if (units == null || units.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Units are required for a new ingredient.", "Input Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+        String stockStr = JOptionPane.showInputDialog(this, "Enter current stock for " + ingredientName + ":");
+        float stock;
+        try {
+            stock = Float.parseFloat(stockStr);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Invalid format for stock.", "Input Error", JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+        String maxStockStr = JOptionPane.showInputDialog(this, "Enter max stock for " + ingredientName + ":");
+        float maxStock;
+        try {
+            maxStock = Float.parseFloat(maxStockStr);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Invalid format for max stock.", "Input Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return null;
         }
 
-        // If not in the database, insert it
-        String insertSql = "INSERT INTO IngredientsInventory (Name) VALUES (?) RETURNING IngredientID";
-        try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
-            insertStmt.setString(1, ingredientName);
-            ResultSet rs = insertStmt.executeQuery();
+        // Insert the new ingredient with additional details into IngredientsInventory
+        String sql = "INSERT INTO IngredientsInventory (Name, Units, Stock, MaxStock) VALUES (?, ?, ?, ?) RETURNING IngredientID";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, ingredientName);
+            pstmt.setString(2, units);
+            pstmt.setFloat(3, stock);
+            pstmt.setFloat(4, maxStock);
+            ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 int newIngredientId = rs.getInt("IngredientID");
                 ingredientNameToIdMap.put(ingredientName, newIngredientId);
                 return newIngredientId;
             }
         }
-
-        // If we reach here, something went wrong
-        return null;
+        return null; // If we reach here, something went wrong
     }
 
     private void removeSelectedIngredients() {

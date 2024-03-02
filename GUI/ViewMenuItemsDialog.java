@@ -111,7 +111,6 @@ public class ViewMenuItemsDialog extends JDialog {
             return;
         }
 
-        // Now insert the new item into the database
         insertNewItem(name, price, type);
 
         // Refresh the table to show the newly added item

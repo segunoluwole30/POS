@@ -20,10 +20,11 @@ public class IngredientsDialog extends JDialog {
         this.menuItemId = menuItemId;
         initializeUI();
         loadCurrentIngredients();
+        mapNamesToIds();
     }
 
     private void initializeUI() {
-        tableModel = new DefaultTableModel(new Object[] { "Ingredient", "Quantity" }, 0) {
+        tableModel = new DefaultTableModel(new Object[] { "Ingredient", "Quantity", "Units" }, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return true; // Make the table cells editable
@@ -68,7 +69,7 @@ public class IngredientsDialog extends JDialog {
     }
 
     private void loadCurrentIngredients() {
-        String sql = "SELECT i.Name, mi.Quantity FROM MenuItemIngredients mi " +
+        String sql = "SELECT i.Name, mi.Quantity, i.Units FROM MenuItemIngredients mi " +
                 "JOIN IngredientsInventory i ON mi.IngredientID = i.IngredientID " +
                 "WHERE mi.MenuItemID = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -77,7 +78,8 @@ public class IngredientsDialog extends JDialog {
             while (rs.next()) {
                 String name = rs.getString("Name");
                 float quantity = rs.getFloat("Quantity");
-                tableModel.addRow(new Object[] { name, quantity });
+                String units = rs.getString("Units");
+                tableModel.addRow(new Object[] { name, quantity, units });
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -88,24 +90,75 @@ public class IngredientsDialog extends JDialog {
 
     private void addNewIngredient() {
         String newIngredient = newIngredientNameField.getText().trim();
-        String quantity = quantityField.getText().trim();
-        if (!newIngredient.isEmpty() && !quantity.isEmpty()) {
-            // Check if ingredient already exists in the table
-            for (int i = 0; i < tableModel.getRowCount(); i++) {
-                if (tableModel.getValueAt(i, 0).equals(newIngredient)) {
-                    JOptionPane.showMessageDialog(this,
-                            "Ingredient already added. Please update its quantity if needed.", "Validation Error",
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-            }
-            tableModel.addRow(new Object[] { newIngredient, quantity });
-            newIngredientNameField.setText("");
-            quantityField.setText("");
-        } else {
+        String quantityText = quantityField.getText().trim();
+
+        if (newIngredient.isEmpty() || quantityText.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Ingredient name and quantity cannot be empty.", "Validation Error",
                     JOptionPane.ERROR_MESSAGE);
+            return;
         }
+
+        float quantity;
+        try {
+            quantity = Float.parseFloat(quantityText);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Invalid format for quantity.", "Input Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+            // Check if the ingredient exists in the database and get its ID
+            Integer ingredientId = getOrAddIngredientId(newIngredient);
+
+            // Now that we have the ingredient ID, we can proceed to add it to the table
+            // model
+            if (ingredientId != null) {
+                tableModel.addRow(new Object[] { newIngredient, quantity });
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error interacting with database: " + e.getMessage(), "Database Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+
+        newIngredientNameField.setText("");
+        quantityField.setText("");
+    }
+
+    private Integer getOrAddIngredientId(String ingredientName) throws SQLException {
+        // First, check if the ingredient is already in our map (and thus in the
+        // database)
+        if (ingredientNameToIdMap.containsKey(ingredientName)) {
+            return ingredientNameToIdMap.get(ingredientName);
+        }
+
+        // If not in the map, check the database
+        String checkSql = "SELECT IngredientID FROM IngredientsInventory WHERE Name = ?";
+        try (PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
+            checkStmt.setString(1, ingredientName);
+            ResultSet rs = checkStmt.executeQuery();
+            if (rs.next()) {
+                int ingredientId = rs.getInt("IngredientID");
+                ingredientNameToIdMap.put(ingredientName, ingredientId);
+                return ingredientId;
+            }
+        }
+
+        // If not in the database, insert it
+        String insertSql = "INSERT INTO IngredientsInventory (Name) VALUES (?) RETURNING IngredientID";
+        try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
+            insertStmt.setString(1, ingredientName);
+            ResultSet rs = insertStmt.executeQuery();
+            if (rs.next()) {
+                int newIngredientId = rs.getInt("IngredientID");
+                ingredientNameToIdMap.put(ingredientName, newIngredientId);
+                return newIngredientId;
+            }
+        }
+
+        // If we reach here, something went wrong
+        return null;
     }
 
     private void removeSelectedIngredients() {

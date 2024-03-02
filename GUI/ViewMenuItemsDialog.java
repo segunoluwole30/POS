@@ -161,11 +161,28 @@ public class ViewMenuItemsDialog extends JDialog {
     }
 
     private void deleteItemFromDatabase(Object itemId) {
+        // First, delete any associated ingredients from the MenuItemIngredients table
+        String deleteAssociatedIngredientsSql = "DELETE FROM MenuItemIngredients WHERE MenuItemID = ?";
+        try (PreparedStatement pstmtIngredients = conn.prepareStatement(deleteAssociatedIngredientsSql)) {
+            pstmtIngredients.setInt(1, (Integer) itemId);
+            pstmtIngredients.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error deleting associated ingredients: " + e.getMessage(),
+                    "Database Error", JOptionPane.ERROR_MESSAGE);
+            return; // Return early if there was a problem deleting associated ingredients
+        }
+
+        // Then, delete the item from the MenuItems table
         String sql = "DELETE FROM MenuItems WHERE MenuItemID = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, (Integer) itemId);
-            pstmt.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Item deleted successfully.");
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows > 0) {
+                JOptionPane.showMessageDialog(null, "Item deleted successfully.");
+            } else {
+                JOptionPane.showMessageDialog(null, "No item was deleted.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error deleting item: " + e.getMessage(), "Database Error",
                     JOptionPane.ERROR_MESSAGE);

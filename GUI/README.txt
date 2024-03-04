@@ -1,2 +1,4 @@
-compile: javac -cp ".;lib/*" POS.java
-run: java -cp ".:../GUI/lib/*" POS
+javac .\ViewMenuItemsDialog.java
+javac .\IngredientsDialog.java
+javac -cp ".;lib/*" POS.java
+java -cp ".;../GUI/lib/*" POS

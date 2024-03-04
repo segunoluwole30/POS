@@ -102,7 +102,7 @@ public class ViewMenuItemsDialog extends JDialog {
             return;
         }
 
-        String[] types = { "Entree", "Sides", "Drink", "Dessert" }; // Example types, adjust as necessary
+        String[] types = { "Entree", "Side", "Drink", "Dessert" }; // Example types, adjust as necessary
         String type = (String) JOptionPane.showInputDialog(this, "Select item type:",
                 "Item Type", JOptionPane.QUESTION_MESSAGE,
                 null, types, types[0]);

@@ -6,7 +6,7 @@ import java.sql.*;
 import java.util.*;
 
 //TO-DO
-// If new ingredient not in inventory, request manager for units of ingredient and current and max stock values of the ingredient
+// repaint table after pressing add ingredient so units appears
 
 public class IngredientsDialog extends JDialog {
     private JTable ingredientsTable;

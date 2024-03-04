@@ -9,7 +9,7 @@ def write_to_csv(data, filename, fieldnames):
         writer.writerows(data)
 
 
-menu_items_fieldnames = ['MenuItemID', 'Name', 'Price']
+menu_items_fieldnames = ['MenuItemID', 'Name', 'Price', 'Type']
 
 ingredients_fieldnames = ['IngredientID', 'Name', 'Stock', 'MaxStock', 'Units']
 

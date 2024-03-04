@@ -6,13 +6,14 @@ CREATE TABLE Employees (
 );
 
 CREATE TABLE MenuItems (
-    MenuItemID INT PRIMARY KEY,
+    MenuItemID SERIAL PRIMARY KEY,
     Name VARCHAR(255),
-    Price FLOAT
+    Price FLOAT,
+    Type TEXT
 );
 
 CREATE TABLE IngredientsInventory (
-    IngredientID INT PRIMARY KEY,
+    IngredientID SERIAL PRIMARY KEY,
     Name VARCHAR(255),
     Stock FLOAT,
     MaxStock FLOAT,
@@ -38,9 +39,14 @@ CREATE TABLE MenuItemIngredients (
     MenuItemID INT,
     IngredientID INT,
     Quantity FLOAT,
-    Units VARCHAR(255),
     FOREIGN KEY (MenuItemID) REFERENCES MenuItems(MenuItemID),
     FOREIGN KEY (IngredientID) REFERENCES IngredientsInventory(IngredientID)
+);
+
+CREATE TABLE Reports (
+    ReportID INT,
+    Type TEXT,
+    Date TIMESTAMP
 );
 
 \copy MenuItems FROM '../project-2-315/menuitems.csv' DELIMITER ',' CSV HEADER;
@@ -50,5 +56,9 @@ CREATE TABLE MenuItemIngredients (
 \copy MenuItemIngredients FROM '../project-2-315/menuitemingredients.csv' DELIMITER ',' CSV HEADER;
 
 \copy Employees FROM '../project-2-315/employees.csv' DELIMITER ',' CSV HEADER;
+
+SELECT setval('menuitems_menuitemid_seq', (SELECT MAX(menuitemid) FROM menuitems));
+
+SELECT setval('ingredientsinventory_ingredientid_seq', (SELECT MAX(ingredientid) FROM ingredientsinventory));
 
 

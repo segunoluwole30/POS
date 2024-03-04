@@ -36,12 +36,19 @@ public class XReportPage extends JPanel {
 	private String day;
 	private int hour;
 
+	private boolean goBack = false;
+
 	public XReportPage(Connection conn, POS pos) {
 		this.conn = conn;
 		this.pos = pos;
 		initializeColorSchemes();
 		initializeDate();
-		setupUI();
+		if(goBack){
+			pos.showManagerHomePage();
+		}
+		else{
+			setupUI();
+		}
 	}
 
 	private void generateXChart(String category) {
@@ -287,7 +294,7 @@ public class XReportPage extends JPanel {
 		// Create an array of JLabels and JTextFields for the date and hour inputs
 		JLabel dateLabel = new JLabel("Enter the date (YYYY-MM-DD):");
 		JTextField dateField = new JTextField();
-		JLabel hourLabel = new JLabel("Enter the hour (0-23):");
+		JLabel hourLabel = new JLabel("Enter the hour (8-20):");
 		JTextField hourField = new JTextField();
 
 		// Create an array of JComponents to pass to JOptionPane
@@ -324,16 +331,20 @@ public class XReportPage extends JPanel {
 								// Use the date and hour inputs in your code
 								// Execute the query to retrieve data from the database...
 						} catch (NumberFormatException ex) {
-								JOptionPane.showMessageDialog(this, "Invalid hour input. Please enter a valid integer between 0 and 23.", "Error", JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(this, "Invalid hour input. Please enter a valid integer between 8 and 20.", "Error", JOptionPane.ERROR_MESSAGE);
 								return; // Exit the method if the hour input is invalid
 						}
 				} else {
 						JOptionPane.showMessageDialog(this, "Both date and hour inputs are required.", "Error", JOptionPane.ERROR_MESSAGE);
 						return; // Exit the method if either input is empty
 				}
-		} else {
-				return; // Exit the method if the user clicked Cancel
+		} 
+		else if(result == JOptionPane.CANCEL_OPTION){
+			goBack = true;
 		}
+		else {
+        return;
+    }
 	}
 
 	private void setupUI() {

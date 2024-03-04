@@ -37,12 +37,19 @@ public class ZZReportPage extends JPanel {
 	private String end_month;
 	private String end_day;
 
+	private boolean goBack = false;
+
 	public ZZReportPage(Connection conn, POS pos) {
 		this.conn = conn;
 		this.pos = pos;
 		initializeColorSchemes();
 		initializeDate();
-		setupUI();
+		if(goBack){
+			pos.showManagerHomePage();
+		}
+		else{
+			setupUI();
+		}
 	}
 
 	private void generateZZChart(String category) {
@@ -288,8 +295,7 @@ public class ZZReportPage extends JPanel {
 				end_dateLabel, end_dateField
     };
 
-    int result = JOptionPane.showConfirmDialog(this, inputs, "Enter Date and Hour", JOptionPane.OK_CANCEL_OPTION);
-
+    int result = JOptionPane.showConfirmDialog(this, inputs, "Enter Date Range", JOptionPane.OK_CANCEL_OPTION);
     // Check if the user clicked OK
     if (result == JOptionPane.OK_OPTION) {
         // Get the date and hour inputs from the text fields
@@ -312,14 +318,18 @@ public class ZZReportPage extends JPanel {
 								end_day = e_parts[2];
 								
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "Invalid hour input. Please enter a valid integer between 0 and 23.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Invalid hour input. Please enter a valid integer between 8 and 20.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
         } else {
             JOptionPane.showMessageDialog(this, "Both date and hour inputs are required.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-    } else {
+    }
+		else if(result == JOptionPane.CANCEL_OPTION){
+			goBack = true;
+		}
+		else {
         return;
     }
 	}

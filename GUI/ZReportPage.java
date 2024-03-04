@@ -32,12 +32,20 @@ public class ZReportPage extends JPanel {
 	private String month;
 	private String day;
 
+	private boolean goBack = false;
+
 	public ZReportPage(Connection conn, POS pos) {
 		this.conn = conn;
 		this.pos = pos;
 		initializeColorSchemes();
 		initializeDate();
-		setupUI();
+		System.out.println(goBack);	
+		if(goBack){
+			pos.showManagerHomePage();
+		}
+		else{
+			setupUI();
+		}	
 	}
 
 	private void generateZChart(String category) {
@@ -282,7 +290,7 @@ public class ZReportPage extends JPanel {
         dateLabel, dateField
     };
 
-    int result = JOptionPane.showConfirmDialog(this, inputs, "Enter Date and Hour", JOptionPane.OK_CANCEL_OPTION);
+    int result = JOptionPane.showConfirmDialog(this, inputs, "Enter Date", JOptionPane.OK_CANCEL_OPTION);
 
     // Check if the user clicked OK
     if (result == JOptionPane.OK_OPTION) {
@@ -300,15 +308,19 @@ public class ZReportPage extends JPanel {
 								day = parts[2];
 								
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "Invalid hour input. Please enter a valid integer between 0 and 23.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Invalid hour input. Please enter a valid integer between 8 and 20.", "Error", JOptionPane.ERROR_MESSAGE);
                 return; // Exit the method if the hour input is invalid
             }
         } else {
             JOptionPane.showMessageDialog(this, "Both date and hour inputs are required.", "Error", JOptionPane.ERROR_MESSAGE);
             return; // Exit the method if either input is empty
         }
-    } else {
-        return; // Exit the method if the user clicked Cancel
+    }
+		else if(result == JOptionPane.CANCEL_OPTION){
+			goBack = true;
+		}
+		else {
+        return;
     }
 	}
 

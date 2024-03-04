@@ -319,11 +319,11 @@ public class ZZReportPage extends JPanel {
 								
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this, "Invalid hour input. Please enter a valid integer between 8 and 20.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
+                goBack = true;
             }
         } else {
             JOptionPane.showMessageDialog(this, "Both date and hour inputs are required.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
+            goBack = true;
         }
     }
 		else if(result == JOptionPane.CANCEL_OPTION){

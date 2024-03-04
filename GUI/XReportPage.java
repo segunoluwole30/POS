@@ -319,24 +319,17 @@ public class XReportPage extends JPanel {
 
 								String[] parts = dateInput.split("-");
 
-								// Extract year, month, and day from the parts array
 								year = parts[0];
 								month = parts[1];
 								day = parts[2];
-								
-								// Convert year, month, and day strings to integers
-								// year = Integer.parseInt(yearStr);
-								// month = Integer.parseInt(monthStr);
-								// day = Integer.parseInt(dayStr);
-								// Use the date and hour inputs in your code
-								// Execute the query to retrieve data from the database...
+							
 						} catch (NumberFormatException ex) {
 								JOptionPane.showMessageDialog(this, "Invalid hour input. Please enter a valid integer between 8 and 20.", "Error", JOptionPane.ERROR_MESSAGE);
-								return; // Exit the method if the hour input is invalid
+								goBack = true;
 						}
 				} else {
 						JOptionPane.showMessageDialog(this, "Both date and hour inputs are required.", "Error", JOptionPane.ERROR_MESSAGE);
-						return; // Exit the method if either input is empty
+						goBack = true;
 				}
 		} 
 		else if(result == JOptionPane.CANCEL_OPTION){

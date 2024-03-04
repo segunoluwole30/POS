@@ -90,7 +90,7 @@ public class MenuPage extends JPanel {
         itemPanel.setPreferredSize(new Dimension(900, 700));
         setItemPanel("Entree");
 
-        middlePanel.add(itemPanel);
+        middlePanel.add(new JScrollPane(itemPanel));
         add(middlePanel);
     }
 

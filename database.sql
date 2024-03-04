@@ -13,7 +13,7 @@ CREATE TABLE MenuItems (
 );
 
 CREATE TABLE IngredientsInventory (
-    IngredientID INT PRIMARY KEY,
+    IngredientID SERIAL PRIMARY KEY,
     Name VARCHAR(255),
     Stock FLOAT,
     MaxStock FLOAT,
@@ -56,5 +56,9 @@ CREATE TABLE Reports (
 \copy MenuItemIngredients FROM '../project-2-315/menuitemingredients.csv' DELIMITER ',' CSV HEADER;
 
 \copy Employees FROM '../project-2-315/employees.csv' DELIMITER ',' CSV HEADER;
+
+SELECT setval('menuitems_menuitemid_seq', (SELECT MAX(menuitemid) FROM menuitems));
+
+SELECT setval('ingredientsinventory_ingredientid_seq', (SELECT MAX(ingredientid) FROM ingredientsinventory));
 
 

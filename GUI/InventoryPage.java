@@ -105,14 +105,15 @@ public class InventoryPage extends JPanel {
         String[] columnEntries = {"Ingredient ID", "Name", "Current Stock", "Max Stock", "Units"};
         
         // > table
-        DefaultTableModel tableModel = new DefaultTableModel(rowEntries, columnEntries) {
+        DefaultTableModel tableModel = new DefaultTableModel(new String[] { "Name", "Price", "Type" }, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                // Make all cells editable, or apply your own logic
-                return true; 
+                return true;
             }
         };
+
         JTable inventoryTable = new JTable(tableModel);
+        inventoryTable.setModel(tableModel);  
 
         inventoryTable.setEnabled(false);
         inventoryTable.setRowHeight(Common.HEIGHT / 16);
@@ -131,6 +132,38 @@ public class InventoryPage extends JPanel {
         inventoryPanel.add(inventoryTitle, gbc);
         gbc.gridy++;
         inventoryPanel.add(inventoryTableScrollPane, gbc);
+
+        // Listen to cell edits
+        tableModel.addTableModelListener(e -> {
+            if (e.getType() == TableModelEvent.UPDATE) {
+                int row = e.getFirstRow();
+                int column = e.getColumn();
+                Object id = tableModel.getValueAt(row, 0);
+
+                if (id == null || id.toString().isEmpty()) {
+                    // This is a new row, handle the insert operation
+                    String name = tableModel.getValueAt(row, 1).toString();
+                    float price = Float.parseFloat(tableModel.getValueAt(row, 2).toString());
+                    String type = tableModel.getValueAt(row, 3).toString();
+                    insertNewItem(name, price, type);
+                    //refreshTableData();
+                } else {
+                    // Existing row, handle the update operation
+                    Object value = tableModel.getValueAt(row, column);
+                    //updateMenuItemInDatabase(id, column, value);
+                }
+            }
+        });
+
+        JButton addButton = new JButton("Add New Row");
+        addButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                tableModel.addRow(new Object[]{"", "", "", "", ""}); // Adjust based on your data structure
+            }
+        });
+
+        JButton deleteButton = new JButton("Delete");
+        //deleteButton.addActionListener(e -> deleteMenuItem());
 
         // Create panel for Restocking Suggestions (Next Order Suggestion)
         JPanel suggestionsPanel = new JPanel(new GridBagLayout());
@@ -198,39 +231,6 @@ public class InventoryPage extends JPanel {
         gbc.gridy++;
         suggestionsPanel.add(placeOrderButton, gbc);
 
-        JButton addButton = new JButton("Add New Row");
-        addButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                tableModel.addRow(new Object[]{"", "", "", "", ""}); // Adjust based on your data structure
-            }
-        });
-
-        suggestionsPanel.add(addButton, gbc);
-
-        JButton deleteButton = new JButton("Delete Selected Item");
-        deleteButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                int selectedRow = inventoryTable.getSelectedRow();
-                if (selectedRow != -1) {
-                    String id = (String) tableModel.getValueAt(selectedRow, 0); // Assuming first column is ID
-                    tableModel.removeRow(selectedRow);
-                    // Add code to delete the row from the database using `id`
-                }
-            }
-        });
-
-        tableModel.addTableModelListener(new TableModelListener() {
-            public void tableChanged(TableModelEvent e) {
-            if (e.getType() == TableModelEvent.UPDATE) {
-                int row = e.getFirstRow();
-                int column = e.getColumn();
-                Object data = tableModel.getValueAt(row, column);
-                String id = (String) tableModel.getValueAt(row, 0); // Assuming first column is ID
-                // Update database based on `id` and new `data`
-                    }
-                }
-            });
-
         gbc.gridx = 0; // Adjust gridx and gridy as needed for layout
         gbc.gridy = 3; // Position where the buttons should be in the grid
         inventoryPanel.add(addButton, gbc); // Or add to another panel as desired
@@ -263,6 +263,46 @@ public class InventoryPage extends JPanel {
             return gbl.getConstraints(component);
         } else {
             return null;
+        }
+    }
+
+    private void insertNewItem(String name, float price, String type) {
+        String sql = "INSERT INTO MenuItems (Name, Price, Type) VALUES (?, ?, ?)";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            pstmt.setString(1, name);
+            pstmt.setFloat(2, price);
+            pstmt.setString(3, type);
+
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Creating item failed, no rows affected.");
+            }
+
+            try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    //menuItemIds.add(generatedKeys.getInt(1)); // Store the new MenuItemID
+                } else {
+                    throw new SQLException("Creating item failed, no ID obtained.");
+                }
+            }
+            JOptionPane.showMessageDialog(this, "Item added successfully.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Database error: " + e.getMessage(), "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void editIngredients(JTable table) {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow != -1) {
+            //Integer menuItemId = menuItemIds.get(selectedRow); // Get MenuItemID from the list
+            /*IngredientsDialog ingredientsDialog = new IngredientsDialog(
+                    (Frame) SwingUtilities.getWindowAncestor(ViewMenuItemsDialog.this), conn, menuItemId);
+            ingredientsDialog.setVisible(true);*/
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a menu item first.", "No Selection",
+                    JOptionPane.WARNING_MESSAGE);
         }
     }
 

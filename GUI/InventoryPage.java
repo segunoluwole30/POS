@@ -1,6 +1,8 @@
 import java.sql.*;
 import java.awt.*;
 import javax.swing.*;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
 import java.util.List;
@@ -196,7 +198,7 @@ public class InventoryPage extends JPanel {
         gbc.gridy++;
         suggestionsPanel.add(placeOrderButton, gbc);
 
-        JButton addButton = new JButton("Add Item");
+        JButton addButton = new JButton("Add New Row");
         addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 tableModel.addRow(new Object[]{"", "", "", "", ""}); // Adjust based on your data structure
@@ -204,8 +206,37 @@ public class InventoryPage extends JPanel {
         });
 
         suggestionsPanel.add(addButton, gbc);
-         
-        
+
+        JButton deleteButton = new JButton("Delete Selected Item");
+        deleteButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = inventoryTable.getSelectedRow();
+                if (selectedRow != -1) {
+                    String id = (String) tableModel.getValueAt(selectedRow, 0); // Assuming first column is ID
+                    tableModel.removeRow(selectedRow);
+                    // Add code to delete the row from the database using `id`
+                }
+            }
+        });
+
+        tableModel.addTableModelListener(new TableModelListener() {
+        public void tableChanged(TableModelEvent e) {
+        if (e.getType() == TableModelEvent.UPDATE) {
+            int row = e.getFirstRow();
+            int column = e.getColumn();
+            Object data = tableModel.getValueAt(row, column);
+            String id = (String) tableModel.getValueAt(row, 0); // Assuming first column is ID
+            // Update database based on `id` and new `data`
+                }
+            }
+        });
+
+        gbc.gridx = 1; // Adjust gridx and gridy as needed for layout
+        gbc.gridy = 2; // Position where the buttons should be in the grid
+        inventoryPanel.add(addButton, gbc); // Or add to another panel as desired
+
+        gbc.gridx = 2; // Adjust for layout
+        inventoryPanel.add(deleteButton, gbc); // Or add to another panel
         }
 
     public void refreshHeader() {

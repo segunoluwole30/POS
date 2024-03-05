@@ -220,22 +220,22 @@ public class InventoryPage extends JPanel {
         });
 
         tableModel.addTableModelListener(new TableModelListener() {
-        public void tableChanged(TableModelEvent e) {
-        if (e.getType() == TableModelEvent.UPDATE) {
-            int row = e.getFirstRow();
-            int column = e.getColumn();
-            Object data = tableModel.getValueAt(row, column);
-            String id = (String) tableModel.getValueAt(row, 0); // Assuming first column is ID
-            // Update database based on `id` and new `data`
+            public void tableChanged(TableModelEvent e) {
+            if (e.getType() == TableModelEvent.UPDATE) {
+                int row = e.getFirstRow();
+                int column = e.getColumn();
+                Object data = tableModel.getValueAt(row, column);
+                String id = (String) tableModel.getValueAt(row, 0); // Assuming first column is ID
+                // Update database based on `id` and new `data`
+                    }
                 }
-            }
-        });
+            });
 
-        gbc.gridx = 1; // Adjust gridx and gridy as needed for layout
-        gbc.gridy = 2; // Position where the buttons should be in the grid
+        gbc.gridx = 0; // Adjust gridx and gridy as needed for layout
+        gbc.gridy = 3; // Position where the buttons should be in the grid
         inventoryPanel.add(addButton, gbc); // Or add to another panel as desired
 
-        gbc.gridx = 2; // Adjust for layout
+        gbc.gridx = 1; // Adjust for layout
         inventoryPanel.add(deleteButton, gbc); // Or add to another panel
         }
 

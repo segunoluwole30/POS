@@ -11,17 +11,37 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * @author Segun Oluwole
+ */
 public class ManagerHomePage extends JPanel {
     private Connection conn;
     private POS pos;
     private JPanel headerPanel;
 
+    /**
+     * This is the constructor for the ManagerHomePage object. It creates a
+     * ManagerHomePage
+     * object that can be used to navigate the Manager pages. The conn argument must
+     * be an already established
+     * SQL database connection, and the pos argument must be an already established
+     * object.
+     * 
+     * @param conn, a sql Connection object that represents the connection to the
+     *              database
+     * @param ,     the POS object that acts as the main driver for the program
+     */
     public ManagerHomePage(Connection conn, POS pos) {
         this.conn = conn;
         this.pos = pos;
         initializeUI();
     }
 
+    /**
+     * Creates all the Java Swing components and adds them to the Manager Home Page
+     * 
+     * @param none
+     */
     private void initializeUI() {
         setLayout(new BorderLayout());
         setBackground(Common.DARKCYAN);
@@ -29,11 +49,21 @@ public class ManagerHomePage extends JPanel {
         displayButtons();
     }
 
+    /**
+     * Calls the createHeaderPanel() function and adds the panel to the main JPanel
+     * 
+     * @param none
+     */
     private void displayManagerHeader() {
         JPanel headerPanel = createHeaderPanel();
         add(headerPanel, BorderLayout.NORTH);
     }
 
+    /**
+     * Creates the header panel that will be displayed across all manager pages
+     * 
+     * @param none
+     */
     private JPanel createHeaderPanel() {
 
         headerPanel = new JPanel(new BorderLayout());
@@ -112,6 +142,11 @@ public class ManagerHomePage extends JPanel {
         return headerPanel;
     }
 
+    /**
+     * Displays buttons on Manager Home Page
+     * 
+     * @param none
+     */
     private void displayButtons() {
         JPanel buttonPanel = new JPanel(new GridBagLayout()); // Main panel with 2 columns
         buttonPanel.setBackground(Common.DARKCYAN);
@@ -201,10 +236,14 @@ public class ManagerHomePage extends JPanel {
         gbc.gridy = 0;
         buttonPanel.add(xReportButton, gbc);
 
-
         add(buttonPanel, BorderLayout.CENTER);
     }
 
+    /**
+     * Refreshes header to update time
+     * 
+     * @param none
+     */
     public void refreshHeader() {
         // Remove the old header
         remove(headerPanel);

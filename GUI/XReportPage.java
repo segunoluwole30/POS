@@ -348,6 +348,7 @@ public class XReportPage extends JPanel {
 		add(navbar, BorderLayout.NORTH);
 		centerPanel = new JPanel(new BorderLayout());
 		centerPanel.setBorder(BorderFactory.createEmptyBorder(50, 130, 100, 50));
+		centerPanel.setBackground(Common.DARKCYAN);
 
 		// Creating three buttons vertically aligned on the left side
 		JPanel buttonPanel = new JPanel(new GridLayout(3, 1));

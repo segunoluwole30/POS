@@ -10,6 +10,13 @@ public class LoginPage extends JPanel {
     private Connection conn;
     private POS pos;
 
+
+    /* 
+     * @param conn, a sql Connection object that represents the connection to the database
+     * @param pos, the POS object that acts as the main driver for the program
+     * @return returns a LoginPage object
+     * @see Login Page
+    */
     public LoginPage(Connection conn, POS pos) {
         this.conn = conn;
         this.pos = pos;

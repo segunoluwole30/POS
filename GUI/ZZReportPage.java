@@ -9,10 +9,16 @@ import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +35,9 @@ public class ZZReportPage extends JPanel {
 	private JPanel chartPanel;
 	private Map<String, Color[]> colorSchemes;
 	
+	private Timestamp startTimestamp;
+	private Timestamp endTimestamp;
+
 	private String start_year;
 	private String start_month;
 	private String start_day;
@@ -282,6 +291,103 @@ public class ZZReportPage extends JPanel {
 	}
 	}
 
+	private void generateExcessReport() {
+		try {
+				String query = "WITH BeginningInventory AS (" +
+												"    SELECT" +
+												"        ii.IngredientID," +
+												"        ii.Name," +
+												"        ii.Stock AS BeginningStock" +
+												"    FROM" +
+												"        IngredientsInventory ii" +
+												")," +
+												"EndingInventory AS (" +
+												"    SELECT" +
+												"        t.TransactionID," +
+												"        te.MenuItemID," +
+												"        mii.IngredientID," +
+												"        SUM(mii.Quantity) AS SoldQuantity" +
+												"    FROM" +
+												"        Transactions t" +
+												"    JOIN" +
+												"        TransactionEntry te ON t.TransactionID = te.TransactionID" +
+												"    JOIN" +
+												"        MenuItemIngredients mii ON te.MenuItemID = mii.MenuItemID" +
+												"    WHERE" +
+												"        t.Date BETWEEN ? AND ?" +
+												"    GROUP BY" +
+												"        t.TransactionID," +
+												"        te.MenuItemID," +
+												"        mii.IngredientID" +
+												")," +
+												"InventorySold AS (" +
+												"    SELECT" +
+												"        ei.IngredientID," +
+												"        ei.Name," +
+												"        (ei.BeginningStock - COALESCE(SUM(es.SoldQuantity), 0)) / ei.BeginningStock AS SoldPercentage" +
+												"    FROM" +
+												"        BeginningInventory ei" +
+												"    LEFT JOIN" +
+												"        EndingInventory es ON ei.IngredientID = es.IngredientID" +
+												"    GROUP BY" +
+												"        ei.IngredientID," +
+												"        ei.Name," +
+												"        ei.BeginningStock" +
+												")" +
+												"SELECT" +
+												"    *" +
+												"FROM" +
+												"    InventorySold" +
+												" WHERE" +
+												"    SoldPercentage < 0.1;";
+
+			PreparedStatement statement = conn.prepareStatement(query);
+			statement.setTimestamp(1, startTimestamp);
+			statement.setTimestamp(2, endTimestamp);
+			ResultSet result = statement.executeQuery();
+
+			ResultSetMetaData metaData = result.getMetaData();
+			int columnCount = metaData.getColumnCount();
+	
+			ArrayList<String[]> rows = new ArrayList<>();
+	
+			while (result.next()) {
+					String[] row = new String[columnCount];
+					for (int i = 1; i <= columnCount; i++) {
+							row[i - 1] = result.getString(i);
+					}
+					rows.add(row);
+			}
+	
+			// Convert the list of rows to a 2D array
+			String[][] data = new String[rows.size()][];
+			for (int i = 0; i < rows.size(); i++) {
+					data[i] = rows.get(i);
+			}
+	
+			String[] columnEntries = new String[columnCount];
+			for (int i = 0; i < columnCount; i++) {
+					columnEntries[i] = metaData.getColumnName(i + 1);
+			}
+	
+			generatedTable = new JTable(data, columnEntries);
+	
+			JScrollPane salesReportScrollPane = new JScrollPane();
+			salesReportScrollPane.setViewportView(generatedTable);
+			salesReportScrollPane.setPreferredSize(new Dimension(salesReportScrollPane.getPreferredSize().width, Common.HEIGHT / 4));
+	
+			chartPanel.removeAll();
+			chartPanel.add(salesReportScrollPane, BorderLayout.CENTER);
+	
+			revalidate();
+			repaint();
+	
+	} catch (SQLException e) {
+			e.printStackTrace();
+			// Handle SQL exception here, such as displaying an error message
+	}
+	}
+
 	private void initializeDate(){
     // Create an array of JLabels and JTextFields for the date and hour inputs
     JLabel start_dateLabel = new JLabel("Enter the start date (YYYY-MM-DD):");
@@ -301,6 +407,14 @@ public class ZZReportPage extends JPanel {
         // Get the date and hour inputs from the text fields
         String s_dateInput = start_dateField.getText();
 				String e_dateInput = end_dateField.getText();
+
+				String startTime = "00:00:00"; // Hardcoded start time
+				String endTime = "23:59:59"; // Hardcoded end time
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+				LocalDateTime startDateTime = LocalDateTime.parse(s_dateInput + " " + startTime, formatter);
+				LocalDateTime endDateTime = LocalDateTime.parse(e_dateInput + " " + endTime, formatter);
+				startTimestamp = Timestamp.valueOf(startDateTime);
+				endTimestamp = Timestamp.valueOf(endDateTime);
 
         // Validate and process the inputs
         if (!s_dateInput.isEmpty() || !e_dateInput.isEmpty()) {
@@ -408,7 +522,7 @@ public class ZZReportPage extends JPanel {
 			}
 			else if (action == "excess_report"){
 				//Given a timestamp, display the list of items that only sold less than 10% of their inventory between the timestamp and the current time, assuming no restocks have happened during the window.
-				//generateExcessReport()
+				generateExcessReport();
 			}
 			else if (action == "sells_together"){
 				//Given a time window, display a list of pairs of menu items that sell together often, popular or not, sorted by most frequent.

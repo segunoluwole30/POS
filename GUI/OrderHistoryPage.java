@@ -31,11 +31,12 @@ public class OrderHistoryPage extends JPanel {
 
         table = new JTable();
         loadHistory();
-        table.getColumnModel().getColumn(0).setWidth(1);
-        table.getColumnModel().getColumn(1).setWidth(1);
-        table.getColumnModel().getColumn(2).setWidth(1);
+        table.getColumnModel().getColumn(0).setWidth(50);
+        table.getColumnModel().getColumn(1).setWidth(50);
+        table.getColumnModel().getColumn(2).setWidth(50);
 
         refresh = new JButton("Refresh Report");
+        refresh.setFont(new Font("Arial", Font.BOLD, 20));
         refresh.addActionListener(e -> loadHistory());
 
         // Center Panel contains table and refresh button
@@ -53,6 +54,7 @@ public class OrderHistoryPage extends JPanel {
         centerPanel.add(new JScrollPane(table), gbc);
 
         gbc.gridy = 1;
+        gbc.insets = new Insets(20, 80, 20, 80);
         centerPanel.add(refresh, gbc);
         add(centerPanel, BorderLayout.CENTER);
     }

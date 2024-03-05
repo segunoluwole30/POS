@@ -1,6 +1,8 @@
 import java.sql.*;
 import java.awt.*;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
@@ -93,18 +95,28 @@ public class InventoryPage extends JPanel {
         inventoryTitle.setOpaque(false);
         inventoryTitle.setEditable(false);
         // > get table data
-        List<String[]> tableData = requestInventoryTable("SELECT * FROM ingredientsinventory;");
+        List<String[]> tableData = requestInventoryTable("SELECT * FROM ingredientsinventory ORDER BY ingredientid;");
         String[][] rowEntries = new String[tableData.size()][];
         for(int i = 0; i < tableData.size(); i++){
             rowEntries[i] = tableData.get(i);
         }
         String[] columnEntries = {"Ingredient ID", "Name", "Current Stock", "Max Stock", "Units"};
+        
         // > table
-        JTable inventoryTable = new JTable(rowEntries, columnEntries);
+        DefaultTableModel tableModel = new DefaultTableModel(rowEntries, columnEntries) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                // Make all cells editable, or apply your own logic
+                return true; 
+            }
+        };
+        JTable inventoryTable = new JTable(tableModel);
+
         inventoryTable.setEnabled(false);
         inventoryTable.setRowHeight(Common.HEIGHT / 16);
         inventoryTable.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         inventoryTable.getTableHeader().setFont(new Font("Times New Roman", Font.PLAIN, 16));
+        
         // > scroll pane for table
         JScrollPane inventoryTableScrollPane = new JScrollPane();
         inventoryTableScrollPane.setViewportView(inventoryTable);
@@ -183,80 +195,18 @@ public class InventoryPage extends JPanel {
         suggestionsPanel.add(suggestionsTableScrollPane, gbc);
         gbc.gridy++;
         suggestionsPanel.add(placeOrderButton, gbc);
+
+        JButton addButton = new JButton("Add Item");
+        addButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                tableModel.addRow(new Object[]{"", "", "", "", ""}); // Adjust based on your data structure
+            }
+        });
+
+        suggestionsPanel.add(addButton, gbc);
+         
         
-        // // Next Order Suggestion Title Panel
-        // GridBagConstraints constraintsTitle2 = new GridBagConstraints();
-        // constraintsTitle2.gridx = 0;
-        // constraintsTitle2.gridy = 2;
-        // constraintsTitle2.weightx = 1.0;
-        // constraintsTitle2.anchor = GridBagConstraints.CENTER;
-        // JPanel titlePanel2 = new JPanel();
-        // JTextArea title2 = new JTextArea();
-        // title2.setText("Next Order Suggestion");
-        // title2.setFont(new Font("Times New Roman", Font.PLAIN, 28));
-        // title2.setOpaque(false);
-        // titlePanel2.setOpaque(false);
-        // title2.setEditable(false);
-        
-        // // Next Order Suggestion Scroll Pane
-        // GridBagConstraints constraintsTable2 = new GridBagConstraints();
-        // constraintsTable2.gridx = 0;
-        // constraintsTable2.gridy = 3;
-        // constraintsTable2.weightx = 1.0;
-        // constraintsTable2.insets = new Insets(0, 20, 0, 0);
-        // constraintsTable2.fill = GridBagConstraints.BOTH;
-        // constraintsTable2.anchor = GridBagConstraints.CENTER;
-        // List<String[]> tableData2 = requestInventoryTable("SELECT * FROM ingredientsinventory ORDER BY stock / maxstock ASC LIMIT 10;");
-        // String[][] rowEntries2 = new String[tableData2.size()][];
-        // for(int i = 0; i < tableData2.size(); i++){
-        //     rowEntries2[i] = tableData2.get(i);
-        // }
-        // String[] columnNames2 = {"Ingredient ID", "Name", "Current Stock", "Max Stock", "Units"};
-        // JTable table2 = new JTable(rowEntries2, columnNames2);
-        // table2.setOpaque(false);
-        // table2.setEnabled(false);
-        // table2.setRowHeight(Common.HEIGHT / 16);
-        // table2.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        // table2.getTableHeader().setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        // JScrollPane tableScrollPane2 = new JScrollPane();
-        // tableScrollPane2.setViewportView(table2);
-        // tableScrollPane2.setPreferredSize(new Dimension(tableScrollPane2.getPreferredSize().width, Common.HEIGHT / 4));
-
-        // // Edit Order and Send Order Buttons
-        // GridBagConstraints constraintsOrderButtons = new GridBagConstraints();
-        // constraintsOrderButtons.gridx = 1;
-        // constraintsOrderButtons.gridy = 3;
-        // constraintsOrderButtons.weighty = 1.0;
-        // constraintsOrderButtons.insets = new Insets(0, 0, 0, 20);
-        // JPanel orderButtonsPanel = new JPanel(new GridBagLayout());
-
-        // GridBagConstraints constraintsEditOrderButton = new GridBagConstraints();
-        // constraintsEditOrderButton.gridx = 0;
-        // constraintsEditOrderButton.gridy = 0;
-        // constraintsEditOrderButton.weighty = 1.0;
-        // JButton editOrderButton = new JButton("Edit Order");
-        // editOrderButton.setBackground(Color.GRAY);
-        // editOrderButton.setPreferredSize(new Dimension(120, 120));
-        // editOrderButton.addActionListener(new ActionListener() {
-        //     @Override
-        //     public void actionPerformed(ActionEvent e) {
-
-        //     }
-        // });
-
-        // // Add everything together
-        // add(mainPanel, constraintsMain);
-        // mainPanel.add(bodyPanel, constraintsBody);
-        // bodyPanel.add(titlePanel, constraintsTitle);
-        // titlePanel.add(title);
-        // bodyPanel.add(tableScrollPane, constraintsTable);
-        // bodyPanel.add(titlePanel2, constraintsTitle2);
-        // titlePanel2.add(title2);
-        // bodyPanel.add(tableScrollPane2, constraintsTable2);
-        // bodyPanel.add(orderButtonsPanel, constraintsOrderButtons);
-        // orderButtonsPanel.add(editOrderButton, constraintsEditOrderButton);
-        // orderButtonsPanel.add(placeOrderButton, constraintsPlaceOrderButton);
-    }
+        }
 
     public void refreshHeader() {
         // Remove the old navbar using GridBagConstraints

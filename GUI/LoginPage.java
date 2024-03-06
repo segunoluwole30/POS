@@ -4,12 +4,27 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.sql.*;
 
+/**
+ * @author Segun Oluwole
+ */
 public class LoginPage extends JPanel {
     private JPasswordField idField;
     private JButton loginButton;
     private Connection conn;
     private POS pos;
 
+    /**
+     * This is the contructor for the LoginPage object. It creates a LoginPage
+     * object that can
+     * is used to login to the POS system. The conn argument must be an already
+     * established
+     * SQL database connection, and the pos argument must be an already created POS
+     * object.
+     * 
+     * @param conn, a sql Connection object that represents the connection to the
+     *              database
+     * @param pos,  the POS object that acts as the main driver for the program
+     */
     public LoginPage(Connection conn, POS pos) {
         this.conn = conn;
         this.pos = pos;
@@ -17,6 +32,11 @@ public class LoginPage extends JPanel {
 
     }
 
+    /**
+     * Creates all the Java Swing components and adds them to the Login Page
+     * 
+     * @param none
+     */
     private void initializeUI() {
 
         setBackground(Common.MAROON);
@@ -74,6 +94,16 @@ public class LoginPage extends JPanel {
 
     }
 
+    /**
+     * Queries the database for all the employees and looks through
+     * all the results to chekc if the entered login ID exists. If it does exist,
+     * it logs in and brings the user to the menu page. If it doesn't, it gives the
+     * user
+     * an error message and allows for another ID to be entered.
+     * 
+     * @param none
+     * @throws SQLException, if an invalid employee ID is entered
+     */
     private void login() {
         // Perform database check here
         String enteredID = new String(idField.getPassword());

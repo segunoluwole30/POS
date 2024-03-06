@@ -5,9 +5,14 @@ import java.awt.event.*;
 import java.sql.*;
 import java.util.*;
 
-//TO-DO
-// repaint table after pressing add ingredient so units appears
-
+/**
+ * A dialog for managing ingredients associated with a specific menu item in a
+ * Point of Sale (POS) system.
+ * Users can add, edit, and remove ingredients, including setting their
+ * quantities. This dialog
+ * supports adding new ingredients to the system, including specifying initial
+ * stock levels and units.
+ */
 public class IngredientsDialog extends JDialog {
     private JTable ingredientsTable;
     private DefaultTableModel tableModel;
@@ -17,6 +22,16 @@ public class IngredientsDialog extends JDialog {
     private int menuItemId;
     private Map<String, Integer> ingredientNameToIdMap = new HashMap<>();
 
+    /**
+     * Constructs an IngredientsDialog for managing the ingredients of a specific
+     * menu item.
+     * 
+     * @param owner      The parent frame to which this dialog is attached.
+     * @param conn       The database connection used for fetching and updating
+     *                   ingredient data.
+     * @param menuItemId The ID of the menu item whose ingredients are being
+     *                   managed.
+     */
     public IngredientsDialog(Frame owner, Connection conn, int menuItemId) {
         super(owner, "Select Ingredients", true);
         this.conn = conn;
@@ -26,6 +41,11 @@ public class IngredientsDialog extends JDialog {
         mapNamesToIds();
     }
 
+    /**
+     * Initializes the user interface, including the table for ingredient management
+     * and buttons for performing various actions (e.g., adding or removing
+     * ingredients).
+     */
     private void initializeUI() {
         tableModel = new DefaultTableModel(new Object[] { "Ingredient", "Quantity", "Units" }, 0) {
             @Override
@@ -71,6 +91,10 @@ public class IngredientsDialog extends JDialog {
         setSize(500, 400);
     }
 
+    /**
+     * Loads the current ingredients for the menu item from the database and
+     * displays them in the table.
+     */
     private void loadCurrentIngredients() {
         String sql = "SELECT i.Name, mi.Quantity, i.Units FROM MenuItemIngredients mi " +
                 "JOIN IngredientsInventory i ON mi.IngredientID = i.IngredientID " +
@@ -91,6 +115,10 @@ public class IngredientsDialog extends JDialog {
         }
     }
 
+    /**
+     * Adds a new ingredient to the table, prompting the user for units and
+     * stock information if the ingredient is not already known to the system.
+     */
     private void addNewIngredient() {
         String newIngredient = newIngredientNameField.getText().trim();
         String quantityText = quantityField.getText().trim();
@@ -129,6 +157,16 @@ public class IngredientsDialog extends JDialog {
         quantityField.setText("");
     }
 
+    /**
+     * Retrieves the ID of an ingredient by its name, adding a new ingredient to
+     * the database if necessary. This method prompts the user for additional
+     * information (units and stock levels) when adding a new ingredient.
+     * 
+     * @param ingredientName The name of the ingredient to look up or add.
+     * @return The ID of the ingredient, or {@code null} if the operation is
+     *         cancelled.
+     * @throws SQLException If a database access error occurs.
+     */
     private Integer getOrAddIngredientId(String ingredientName) throws SQLException {
         if (ingredientNameToIdMap.containsKey(ingredientName)) {
             return ingredientNameToIdMap.get(ingredientName);
@@ -176,6 +214,10 @@ public class IngredientsDialog extends JDialog {
         return null; // If we reach here, something went wrong
     }
 
+    /**
+     * Removes the selected ingredients from the table, allowing users to delete
+     * ingredients from a menu item's recipe.
+     */
     private void removeSelectedIngredients() {
         int[] selectedRows = ingredientsTable.getSelectedRows();
         for (int i = selectedRows.length - 1; i >= 0; i--) {
@@ -183,6 +225,11 @@ public class IngredientsDialog extends JDialog {
         }
     }
 
+    /**
+     * Saves the current set of ingredients and their quantities to the database,
+     * updating the menu item's ingredient list. This method first clears existing
+     * ingredient associations for the menu item before inserting the updated list.
+     */
     private void saveIngredients() {
         try {
             // Attempt to delete existing associations
@@ -236,6 +283,11 @@ public class IngredientsDialog extends JDialog {
         setVisible(false);
     }
 
+    /**
+     * Maps ingredient names to their corresponding IDs in the database,
+     * facilitating
+     * lookups and associations between menu items and ingredients.
+     */
     private void mapNamesToIds() {
         String sql = "SELECT IngredientID, Name FROM IngredientsInventory";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {

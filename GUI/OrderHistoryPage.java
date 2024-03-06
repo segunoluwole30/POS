@@ -23,7 +23,6 @@ public class OrderHistoryPage extends JPanel {
 
     private void setupUI() {
         // Boilerplate code to setup layout
-        setBackground(Common.DARKCYAN);
         setLayout(new BorderLayout());
 
         navbar = Utils.createHeaderPanel(pos);
@@ -32,14 +31,31 @@ public class OrderHistoryPage extends JPanel {
 
         table = new JTable();
         loadHistory();
+        table.getColumnModel().getColumn(0).setWidth(50);
+        table.getColumnModel().getColumn(1).setWidth(50);
+        table.getColumnModel().getColumn(2).setWidth(50);
 
         refresh = new JButton("Refresh Report");
+        refresh.setFont(new Font("Arial", Font.BOLD, 20));
         refresh.addActionListener(e -> loadHistory());
 
         // Center Panel contains table and refresh button
-        centerPanel = new JPanel(new BorderLayout());
-        centerPanel.add(new JScrollPane(table));
-        centerPanel.add(refresh, BorderLayout.SOUTH);
+        centerPanel = new JPanel(new GridBagLayout());
+        centerPanel.setBackground(Common.DARKCYAN);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.insets = new Insets(40, 80, 20, 80);
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        centerPanel.add(new JScrollPane(table), gbc);
+
+        gbc.gridy = 1;
+        gbc.insets = new Insets(20, 80, 20, 80);
+        centerPanel.add(refresh, gbc);
         add(centerPanel, BorderLayout.CENTER);
     }
 

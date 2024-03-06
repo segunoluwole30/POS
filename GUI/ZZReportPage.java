@@ -46,6 +46,12 @@ public class ZZReportPage extends JPanel {
 
 	private boolean goBack = false;
 
+	/**
+   * Constructs a ZZReportPage object.
+   *
+   * @param conn The database connection.
+   * @param pos  The POS object.
+   */
 	public ZZReportPage(Connection conn, POS pos) {
 		this.conn = conn;
 		this.pos = pos;
@@ -59,10 +65,14 @@ public class ZZReportPage extends JPanel {
 		}
 	}
 
+	/**
+	 * Generates a pie chart based on the specified category.
+	 *
+	 * @param category The category for which the pie chart is generated.
+	 */
 	private void generateZZChart(String category) {
 		DefaultPieDataset dataset = new DefaultPieDataset();
 
-		// Execute query to retrieve data from the database
 		try (Statement stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery(
 					"SELECT MI.MenuItemID, MI.Name AS MenuItemName, COUNT(TE.MenuItemID) AS QuantitySold " +
@@ -74,7 +84,6 @@ public class ZZReportPage extends JPanel {
 					"AND MI.Type = '" + category + "' " +
 					"GROUP BY MI.MenuItemID, MI.Name " +
 					"ORDER BY QuantitySold DESC")) {
-			// Process the query results
 			while (rs.next()) {
 				String menuItemName = rs.getString("MenuItemName");
 				int quantitySold = rs.getInt("QuantitySold");
@@ -119,6 +128,9 @@ public class ZZReportPage extends JPanel {
 		}
 	}
 
+	/**
+	 * Generates a sales report based on the specified time window.
+	 */
 	private void generateSalesReport() {
 		
 		try {
@@ -171,10 +183,12 @@ public class ZZReportPage extends JPanel {
 	
 	} catch (SQLException e) {
 			e.printStackTrace();
-			// Handle SQL exception here, such as displaying an error message
-	}
+		}
 	}
 
+	/**
+	 * Generates a sales report based on the specified time window.
+	 */
 	private void generateProductUsageReport() {
 		try {
 			Statement statement = conn.createStatement();
@@ -227,10 +241,12 @@ public class ZZReportPage extends JPanel {
 	
 	} catch (SQLException e) {
 			e.printStackTrace();
-			// Handle SQL exception here, such as displaying an error message
-	}
+		}
 	}
 
+	/**
+	 * Generates a report on the best pairs of products sold together frequently.
+	 */
 	private void generateBestPairsReport() {
 		
 		try {
@@ -289,6 +305,9 @@ public class ZZReportPage extends JPanel {
 	}
 	}
 
+	/**
+	 * Generates an excess report based on the specified time window.
+	 */
 	private void generateExcessReport() {
 		try {
 			String query = "WITH StockChanges AS (" +
@@ -374,6 +393,9 @@ public class ZZReportPage extends JPanel {
 	}
 	}
 
+	/**
+	 * Initializes the date input fields and retrieves user input.
+	 */
 	private void initializeDate(){
     // Create an array of JLabels and JTextFields for the date and hour inputs
     JLabel start_dateLabel = new JLabel("Enter the start date (YYYY-MM-DD):");
@@ -381,14 +403,12 @@ public class ZZReportPage extends JPanel {
 		JLabel end_dateLabel = new JLabel("Enter the end date (YYYY-MM-DD):");
     JTextField end_dateField = new JTextField();
 
-    // Create an array of JComponents to pass to JOptionPane
     JComponent[] inputs = new JComponent[] {
         start_dateLabel, start_dateField,
 				end_dateLabel, end_dateField
     };
 
     int result = JOptionPane.showConfirmDialog(this, inputs, "Enter Date Range", JOptionPane.OK_CANCEL_OPTION);
-    // Check if the user clicked OK
     if (result == JOptionPane.OK_OPTION) {
         // Get the date and hour inputs from the text fields
         String s_dateInput = start_dateField.getText();
@@ -434,6 +454,9 @@ public class ZZReportPage extends JPanel {
     }
 	}
 
+	/**
+	 * Sets up the user interface for the ZZReportPage.
+	 */
 	private void setupUI() {
 		// Boilerplate code to setup layout
 		setLayout(new BorderLayout());
@@ -446,7 +469,6 @@ public class ZZReportPage extends JPanel {
 		centerPanel.setBorder(BorderFactory.createEmptyBorder(50, 130, 100, 50));
 		centerPanel.setBackground(Common.DARKCYAN);
 
-		// Creating three buttons vertically aligned on the left side
 		JPanel buttonPanel = new JPanel(new GridLayout(3, 1));
 		JButton button1 = new JButton("Entree ZZReport");
 		JButton button2 = new JButton("Drink ZZReport");
@@ -485,10 +507,19 @@ public class ZZReportPage extends JPanel {
 		add(centerPanel, BorderLayout.CENTER);
 	}
 
+	/**
+	 * ActionListener implementation for handling button clicks.
+	 */
 	private class ButtonListener implements ActionListener {
 		private String category;
 		private String action;
 
+		/**
+		 * Constructs a ButtonListener object.
+		 *
+		 * @param category The category associated with the button.
+		 * @param action   The action associated with the button.
+		 */
 		public ButtonListener(String category, String action) {
 			this.category = category;
 			this.action = action;
@@ -517,6 +548,10 @@ public class ZZReportPage extends JPanel {
 			}
 		}
 	}
+
+	/**
+	 * Initializes color schemes for charts.
+	 */
 	private void initializeColorSchemes() {
 		colorSchemes = new HashMap<>();
 
@@ -543,6 +578,9 @@ public class ZZReportPage extends JPanel {
 		colorSchemes.put("purp", smoothColorScheme);
   }
 
+	/**
+	 * Refreshes the header panel of the ZZReportPage.
+	 */
 	public void refreshHeader() {
 		remove(navbar);
 		navbar = Utils.createHeaderPanel(pos);

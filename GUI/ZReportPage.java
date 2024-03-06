@@ -40,6 +40,12 @@ public class ZReportPage extends JPanel {
 
 	private boolean goBack = false;
 
+	/**
+	 * Constructor for ZReportPage class.
+	 * 
+	 * @param conn The database connection
+	 * @param pos The POS instance
+	 */
 	public ZReportPage(Connection conn, POS pos) {
 		this.conn = conn;
 		this.pos = pos;
@@ -54,6 +60,11 @@ public class ZReportPage extends JPanel {
 		}	
 	}
 
+	/**
+	 * Generates a pie chart based on the given category.
+	 * 
+	 * @param category The category for which the chart is generated
+	 */
 	private void generateZChart(String category) {
 		DefaultPieDataset dataset = new DefaultPieDataset();
 
@@ -113,6 +124,9 @@ public class ZReportPage extends JPanel {
 		}
 	}
 
+	/**
+	 * Generates a sales report based on the given criteria.
+	 */
 	private void generateSalesReport() {
 		
 		try {
@@ -170,6 +184,9 @@ public class ZReportPage extends JPanel {
 	}
 	}
 
+	/**
+	 * Generates a product usage report based on the given criteria.
+	 */
 	private void generateProductUsageReport() {
 		try {
 			Statement statement = conn.createStatement();
@@ -227,6 +244,9 @@ public class ZReportPage extends JPanel {
 	}
 	}
 
+	/**
+	 * Generates a report on best product combinations based on the given criteria.
+	 */
 	private void generateBestPairsReport() {
 		
 		try {
@@ -286,6 +306,9 @@ public class ZReportPage extends JPanel {
 	}
 	}
 	
+	/**
+	 * Generates a report on excess inventory based on the given criteria.
+	 */
 	private void generateExcessReport() {
 		try {
 			String query = "WITH StockChanges AS (" +
@@ -371,6 +394,9 @@ public class ZReportPage extends JPanel {
 	}
 	}
 
+	/**
+	 * Initializes the date and hour for generating reports.
+	 */
 	private void initializeDate(){
     // Create an array of JLabels and JTextFields for the date and hour inputs
     JLabel dateLabel = new JLabel("Enter the date (YYYY-MM-DD):");
@@ -423,6 +449,9 @@ public class ZReportPage extends JPanel {
     }
 	}
 
+	/**
+	 * Sets up the UI components for the report page.
+	 */
 	private void setupUI() {
 		// Boilerplate code to setup layout
 		setLayout(new BorderLayout());
@@ -475,15 +504,29 @@ public class ZReportPage extends JPanel {
 		add(centerPanel, BorderLayout.CENTER);
 	}
 
+	/**
+	 * ActionListener implementation for handling button clicks.
+	 */
 	private class ButtonListener implements ActionListener {
 		private String category;
 		private String action;
 
+		/**
+		 * Constructor for ButtonListener.
+		 * 
+		 * @param category The category associated with the button
+		 * @param action The action associated with the button
+		 */
 		public ButtonListener(String category, String action) {
 			this.category = category;
 			this.action = action;
 		}
 
+		/**
+		 * Action performed when a button is clicked.
+		 * 
+		 * @param e The ActionEvent object
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (action == "pie_chart"){
@@ -508,6 +551,9 @@ public class ZReportPage extends JPanel {
 		}
 	}
 
+	/**
+	 * Initializes color schemes for the charts.
+	 */
 	private void initializeColorSchemes() {
         colorSchemes = new HashMap<>();
 
@@ -535,6 +581,9 @@ public class ZReportPage extends JPanel {
 
     }
 
+	/**
+	 * Refreshes the header panel of the report page.
+	 */
 	public void refreshHeader() {
 		remove(navbar);
 		navbar = Utils.createHeaderPanel(pos);
@@ -542,5 +591,4 @@ public class ZReportPage extends JPanel {
 		revalidate();
 		repaint();
 	}
-
 }

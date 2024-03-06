@@ -44,6 +44,11 @@ public class XReportPage extends JPanel {
 
 	private boolean goBack = false;
 
+	/**
+	 * Constructor for XReportPage class.
+	 * @param conn The connection to the database.
+	 * @param pos The POS system instance.
+	 */
 	public XReportPage(Connection conn, POS pos) {
 		this.conn = conn;
 		this.pos = pos;
@@ -57,6 +62,10 @@ public class XReportPage extends JPanel {
 		}
 	}
 
+	/**
+	 * Generates a pie chart based on the given category.
+	 * @param category The category of items for which the report is generated.
+	 */
 	private void generateXChart(String category) {
 		DefaultPieDataset dataset = new DefaultPieDataset();
 
@@ -120,6 +129,9 @@ public class XReportPage extends JPanel {
 		}
 	}
 
+	/**
+ 	 * Generates a sales report based on the given criteria.
+ 	 */
 	private void generateSalesReport() {
 		
 		try {
@@ -177,7 +189,10 @@ public class XReportPage extends JPanel {
 			// Handle SQL exception here, such as displaying an error message
 	}
 	}
-
+	
+	/**
+	 * Generates a product usage report based on the given criteria.
+	 */
 	private void generateProductUsageReport() {
 		try {
 			Statement statement = conn.createStatement();
@@ -236,6 +251,9 @@ public class XReportPage extends JPanel {
 	}
 	}
 
+	/**
+	 * Generates a report on best product combinations based on the given criteria.
+	 */
 	private void generateBestPairsReport() {
 		
 		try {
@@ -296,6 +314,9 @@ public class XReportPage extends JPanel {
 	}
 	}
 
+	/**
+	 * Generates a report on excess inventory based on the given criteria.
+	 */
 	private void generateExcessReport() {
 		try {
 			String query = "WITH StockChanges AS (" +
@@ -381,6 +402,9 @@ public class XReportPage extends JPanel {
 	}
 	}
 
+	/**
+	 * Initializes the date and hour for generating reports.
+	 */
 	private void initializeDate() {
 		// Create an array of JLabels and JTextFields for the date and hour inputs
 		JLabel dateLabel = new JLabel("Enter the date (YYYY-MM-DD):");
@@ -440,6 +464,9 @@ public class XReportPage extends JPanel {
     }
 	}
 
+	/**
+	 * Sets up the UI components for the report page.
+	 */
 	private void setupUI() {
 		// Boilerplate code to setup layout
 		setLayout(new BorderLayout());
@@ -492,15 +519,29 @@ public class XReportPage extends JPanel {
 		add(centerPanel, BorderLayout.CENTER);
 	}
 
+	/**
+ 	 * ActionListener implementation for handling button clicks.
+ 	 */
 	private class ButtonListener implements ActionListener {
 		private String category;
 		private String action;
 
+		/**
+		 * Constructor for ButtonListener.
+		 * 
+		 * @param category The category associated with the button
+		 * @param action The action associated with the button
+		 */
 		public ButtonListener(String category, String action) {
 			this.category = category;
 			this.action = action;
 		}
 
+		/**
+ 		 * Action performed when a button is clicked.
+ 		 * 
+ 		 * @param e The ActionEvent object
+ 		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (action == "pie_chart"){
@@ -525,6 +566,9 @@ public class XReportPage extends JPanel {
 		}
 	}
 
+	/**
+	 * Initializes color schemes for the charts.
+	 */
 	private void initializeColorSchemes() {
         colorSchemes = new HashMap<>();
 
@@ -551,6 +595,9 @@ public class XReportPage extends JPanel {
 			colorSchemes.put("purp", smoothColorScheme);
   }
 
+	/**
+	 * Refreshes the header panel of the report page.
+	 */
 	public void refreshHeader() {
 		remove(navbar);
 		navbar = Utils.createHeaderPanel(pos);

@@ -15,8 +15,6 @@ import java.sql.Timestamp;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -329,8 +327,6 @@ public class ZZReportPage extends JPanel {
 			" WHERE" +
 			"    StockChangePercentage < 0.1;";
 
-
-
 			PreparedStatement statement = conn.prepareStatement(query);
 			statement.setTimestamp(1, startTimestamp);
 			statement.setTimestamp(2, endTimestamp);
@@ -398,8 +394,8 @@ public class ZZReportPage extends JPanel {
         String s_dateInput = start_dateField.getText();
 				String e_dateInput = end_dateField.getText();
 
-				String startTime = "00:00:00"; // Hardcoded start time
-				String endTime = "23:59:59"; // Hardcoded end time
+				String startTime = "08:00:00"; // Hardcoded start time
+				String endTime = "20:00:00"; // Hardcoded end time
 				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 				LocalDateTime startDateTime = LocalDateTime.parse(s_dateInput + " " + startTime, formatter);
 				LocalDateTime endDateTime = LocalDateTime.parse(e_dateInput + " " + endTime, formatter);

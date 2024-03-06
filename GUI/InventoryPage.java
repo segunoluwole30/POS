@@ -197,6 +197,8 @@ public class InventoryPage extends JPanel {
                     Statement stmt = conn.createStatement();
                     stmt.executeUpdate(restockQuery);
                     suggestionsTable.repaint();
+                    inventoryTable.refreshTableData();
+                    inventoryTable.table.repaint();
                 } catch (Exception ee) {
                     JOptionPane.showMessageDialog(null, "Error accessing Database.");
                 }

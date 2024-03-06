@@ -194,14 +194,12 @@ public class InventoryPage extends JPanel {
         suggestionsTitle.setFont(new Font("Times New Roman", Font.PLAIN, 28));
         suggestionsTitle.setOpaque(false);
         suggestionsTitle.setEditable(false);
-
         // > get table data
-        tableData = requestInventoryTable("SELECT * FROM ingredientsInventory WHERE stock / maxstock < 0.2 ORDER BY stock / maxstock ASC;");
+        tableData = requestInventoryTable("SELECT * FROM ingredientsInventory WHERE stock / maxstock < 0.6 ORDER BY stock / maxstock ASC;");
         rowEntries = new String[tableData.size()][];
         for (int i = 0; i < tableData.size(); i++) {
             rowEntries[i] = tableData.get(i);
         }
-
         // > table
         suggestionsTable = new JTable(rowEntries, columnEntries);
         suggestionsTable.setEnabled(false);
@@ -227,20 +225,18 @@ public class InventoryPage extends JPanel {
                         restockIDs += tableDataCopy.get(i)[0] + ", ";
                     }
                     restockIDs += tableDataCopy.get(tableDataCopy.size() - 1)[0];
-
-                    // TODO: Update query to properly restock
                     String restockQuery = "UPDATE ingredientsinventory SET stock = CASE WHEN ingredientid IN ("
                             + restockIDs + ") THEN maxstock ELSE stock END WHERE ingredientid IN (" + restockIDs
                             + ");";
-
                     Statement stmt = conn.createStatement();
                     stmt.executeUpdate(restockQuery);
+                    suggestionsTable.repaint();
                 } catch (Exception ee) {
                     JOptionPane.showMessageDialog(null, "Error accessing Database.");
                 }
             }
         });
-        // > set gbc constraints to be used for both
+        // > set gbc constraints to be used for the Inventory Report
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -276,6 +272,10 @@ public class InventoryPage extends JPanel {
 
         gbc.gridx = 1; // Adjust for layout
         inventoryPanel.add(deleteButton, gbc); // Or add to another panel
+    }
+
+    private void createNavbar(){
+        
     }
 
     public void refreshHeader() {

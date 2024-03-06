@@ -154,7 +154,7 @@ public class InventoryPage extends JPanel {
 
         // Create label and table for Inventory Report
         // > text area
-        JTextArea suggestionsTitle = new JTextArea("Next Order Suggestions");
+        JTextArea suggestionsTitle = new JTextArea("Restock Report");
         suggestionsTitle.setFont(new Font("Times New Roman", Font.PLAIN, 28));
         suggestionsTitle.setOpaque(false);
         suggestionsTitle.setEditable(false);
@@ -165,6 +165,7 @@ public class InventoryPage extends JPanel {
         for (int i = 0; i < tableData.size(); i++) {
             rowEntries[i] = tableData.get(i);
         }
+        
         // > table
         suggestionsTable = new JTable(rowEntries, columnEntries);
         suggestionsTable.setEnabled(false);

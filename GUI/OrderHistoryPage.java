@@ -48,9 +48,10 @@ public class OrderHistoryPage extends JPanel {
 
         table = new JTable();
         loadHistory();
-        table.getColumnModel().getColumn(0).setWidth(50);
-        table.getColumnModel().getColumn(1).setWidth(50);
-        table.getColumnModel().getColumn(2).setWidth(50);
+        table.getColumnModel().getColumn(0).setMinWidth(150);
+        table.getColumnModel().getColumn(0).setMaxWidth(250);
+        table.getColumnModel().getColumn(1).setMaxWidth(60);
+        table.getColumnModel().getColumn(2).setMaxWidth(60);
 
         refresh = new JButton("Refresh Report");
         refresh.setFont(new Font("Arial", Font.BOLD, 20));

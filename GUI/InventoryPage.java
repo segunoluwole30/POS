@@ -11,40 +11,40 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class InventoryPage extends JPanel {
-    
+
     private Connection conn;
     private POS pos;
+
+    // UI Elements
     private JPanel navbar;
     private JPanel mainPanel;
+    private JTable inventoryTableDisplay;
+    private JTable suggestionsTable;
+    private JButton addButton, deleteButton;
+    private DefaultTableModel tableModel;
 
+    // Data Members
+    private List<Integer> ItemIDs = new ArrayList<>(); // store menu item id's for database operations
+    private List<String[]> tableData = new ArrayList<>();
+
+    private String InventoryQuery = "SELECT * FROM ingredientsinventory ORDER BY ingredientid;";
+    private String SuggestionQuery = "";
+
+    private SmartTable inventoryTable;
+
+    // Constructor
     public InventoryPage(Connection conn, POS pos) {
         this.conn = conn;
         this.pos = pos;
+        inventoryTable = new SmartTable(conn, InventoryQuery);
+        inventoryTable.refreshTableData();
         initializeUI();
-    }
+        repaint();
 
-    private List<String[]> requestInventoryTable(String sqlStatement){
-        List<String[]> tableOutput = new ArrayList<>();
-        try {
-        Statement stmt = conn.createStatement();
-        ResultSet result = stmt.executeQuery(sqlStatement);
-        while (result.next()) {
-            String[] str = {String.valueOf(result.getInt("ingredientid")), 
-                            result.getString("name"), 
-                            String.valueOf(result.getInt("stock")), 
-                            String.valueOf(result.getInt("maxstock")), 
-                            result.getString("units")};
-            tableOutput.add(str);
-        }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error accessing Database.");
-        }
-
-        return tableOutput;
     }
 
     private void initializeUI() {
-        // Use GridBayLayout for page layout
+        // Use GridBagLayout for page layout
         setBackground(Common.DARKCYAN);
         setLayout(new GridBagLayout());
 
@@ -73,8 +73,7 @@ public class InventoryPage extends JPanel {
         // Create the body which will store tables and buttons
         JPanel bodyPanel = new JPanel(new GridBagLayout());
         bodyPanel.setBackground(Color.lightGray);
-        bodyPanel.setPreferredSize(new Dimension(Common.WIDTH * 15/16, Common.HEIGHT * 13/16));
-        //gbc = new GridBagConstraints(); //By default, gridbagconstraints will place a component in the middle
+        bodyPanel.setPreferredSize(new Dimension(Common.WIDTH * 15 / 16, Common.HEIGHT * 13 / 16));
         gbc = new GridBagConstraints();
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -90,80 +89,59 @@ public class InventoryPage extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         bodyPanel.add(inventoryPanel, gbc);
 
-        // Create label and table for Inventory Report
-        // > text area
+        // Create label for Inventory Report
         JTextArea inventoryTitle = new JTextArea("Inventory Report");
         inventoryTitle.setFont(new Font("Times New Roman", Font.PLAIN, 28));
         inventoryTitle.setOpaque(false);
         inventoryTitle.setEditable(false);
-        // > get table data
-        List<String[]> tableData = requestInventoryTable("SELECT * FROM ingredientsinventory ORDER BY ingredientid;");
-        String[][] rowEntries = new String[tableData.size()][];
-        for(int i = 0; i < tableData.size(); i++){
-            rowEntries[i] = tableData.get(i);
-        }
-        String[] columnEntries = {"Ingredient ID", "Name", "Current Stock", "Max Stock", "Units"};
-        
-        // > table
-        DefaultTableModel tableModel = new DefaultTableModel(new String[] { "Name", "Price", "Type" }, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return true;
-            }
-        };
 
-        JTable inventoryTable = new JTable(tableModel);
-        inventoryTable.setModel(tableModel);  
+        inventoryTableDisplay = new JTable(inventoryTable.tableModel);
 
-        inventoryTable.setEnabled(false);
-        inventoryTable.setRowHeight(Common.HEIGHT / 16);
-        inventoryTable.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        inventoryTable.getTableHeader().setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        
+        inventoryTableDisplay.setRowHeight(Common.HEIGHT / 16);
+        inventoryTableDisplay.setFont(new Font("Times New Roman", Font.PLAIN, 16));
+        inventoryTableDisplay.getTableHeader().setFont(new Font("Times New Roman", Font.PLAIN, 16));
+
         // > scroll pane for table
-        JScrollPane inventoryTableScrollPane = new JScrollPane();
-        inventoryTableScrollPane.setViewportView(inventoryTable);
-        inventoryTableScrollPane.setPreferredSize(new Dimension(inventoryTableScrollPane.getPreferredSize().width, Common.HEIGHT / 4));
+        JScrollPane InventoryScrollPane = new JScrollPane(inventoryTableDisplay);
+        InventoryScrollPane
+                .setPreferredSize(new Dimension(InventoryScrollPane.getPreferredSize().width, Common.HEIGHT / 4));
+
         // > set gbc constraints to be used for both
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
+
         // > display components
         inventoryPanel.add(inventoryTitle, gbc);
         gbc.gridy++;
-        inventoryPanel.add(inventoryTableScrollPane, gbc);
-
-        // Listen to cell edits
-        tableModel.addTableModelListener(e -> {
-            if (e.getType() == TableModelEvent.UPDATE) {
-                int row = e.getFirstRow();
-                int column = e.getColumn();
-                Object id = tableModel.getValueAt(row, 0);
-
-                if (id == null || id.toString().isEmpty()) {
-                    // This is a new row, handle the insert operation
-                    String name = tableModel.getValueAt(row, 1).toString();
-                    float price = Float.parseFloat(tableModel.getValueAt(row, 2).toString());
-                    String type = tableModel.getValueAt(row, 3).toString();
-                    insertNewItem(name, price, type);
-                    //refreshTableData();
-                } else {
-                    // Existing row, handle the update operation
-                    Object value = tableModel.getValueAt(row, column);
-                    //updateMenuItemInDatabase(id, column, value);
-                }
-            }
-        });
+        inventoryPanel.add(InventoryScrollPane, gbc);
 
         JButton addButton = new JButton("Add New Row");
         addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                tableModel.addRow(new Object[]{"", "", "", "", ""}); // Adjust based on your data structure
+                inventoryTable.tableModel.addRow(new Object[] { "", "", "", "", "" }); // Adjust based on your data structure
             }
         });
 
-        JButton deleteButton = new JButton("Delete");
-        //deleteButton.addActionListener(e -> deleteMenuItem());
+        JButton deleteButton = new JButton("Delete Selected Item");
+        deleteButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = inventoryTable.table.getSelectedRow();
+                if (selectedRow != -1) {
+                    Object id = tableModel.getValueAt(selectedRow, 0); // Assuming first column is ID
+                    inventoryTable.tableModel.removeRow(selectedRow);
+                    inventoryTable.deleteItemFromDatabase(id);
+                    // Add code to delete the row from the database using `id`
+                }
+            }
+        });
+
+        gbc.gridx = 0; // Adjust gridx and gridy as needed for layout
+        gbc.gridy = 3; // Position where the buttons should be in the grid
+        inventoryPanel.add(addButton, gbc); // Or add to another panel as desired
+
+        gbc.gridx = 1; // Adjust for layout
+        inventoryPanel.add(deleteButton, gbc); // Or add to another panel
 
         // Create panel for Restocking Suggestions (Next Order Suggestion)
         JPanel suggestionsPanel = new JPanel(new GridBagLayout());
@@ -173,20 +151,23 @@ public class InventoryPage extends JPanel {
         gbc.gridy = 1;
         gbc.insets = new Insets(50, 0, 0, 0);
         bodyPanel.add(suggestionsPanel, gbc);
+
         // Create label and table for Inventory Report
         // > text area
-        JTextArea suggestionsTitle = new JTextArea("Next Order Suggestions");
+        JTextArea suggestionsTitle = new JTextArea("Restock Report");
         suggestionsTitle.setFont(new Font("Times New Roman", Font.PLAIN, 28));
         suggestionsTitle.setOpaque(false);
         suggestionsTitle.setEditable(false);
         // > get table data
-        tableData = requestInventoryTable("SELECT * FROM ingredientsinventory ORDER BY stock / maxstock ASC LIMIT 10;");
-        rowEntries = new String[tableData.size()][];
-        for(int i = 0; i < tableData.size(); i++){
+        tableData = requestInventoryTable("SELECT * FROM ingredientsInventory WHERE stock / maxstock < 0.6 ORDER BY stock / maxstock ASC;");
+        String[][] rowEntries = new String[tableData.size()][];
+        String[] columnEntries = { "Ingredient ID", "Name", "Current Stock", "Max Stock", "Units" };
+        for (int i = 0; i < tableData.size(); i++) {
             rowEntries[i] = tableData.get(i);
         }
+        
         // > table
-        JTable suggestionsTable = new JTable(rowEntries, columnEntries);
+        suggestionsTable = new JTable(rowEntries, columnEntries);
         suggestionsTable.setEnabled(false);
         suggestionsTable.setRowHeight(Common.HEIGHT / 16);
         suggestionsTable.setFont(new Font("Times New Roman", Font.PLAIN, 16));
@@ -194,7 +175,8 @@ public class InventoryPage extends JPanel {
         // > scroll pane for table
         JScrollPane suggestionsTableScrollPane = new JScrollPane();
         suggestionsTableScrollPane.setViewportView(suggestionsTable);
-        suggestionsTableScrollPane.setPreferredSize(new Dimension(suggestionsTableScrollPane.getPreferredSize().width, Common.HEIGHT / 4));
+        suggestionsTableScrollPane.setPreferredSize(
+                new Dimension(suggestionsTableScrollPane.getPreferredSize().width, Common.HEIGHT / 4));
         // > button for updating stock
         JButton placeOrderButton = new JButton("Place Order");
         placeOrderButton.setBackground(Color.GREEN);
@@ -205,22 +187,24 @@ public class InventoryPage extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 try {
                     String restockIDs = "";
-                    for(int i = 0; i < tableDataCopy.size() - 1; i++){
+                    for (int i = 0; i < tableDataCopy.size() - 1; i++) {
                         restockIDs += tableDataCopy.get(i)[0] + ", ";
                     }
-                    restockIDs += tableDataCopy.get(tableDataCopy.size() - 1);
-
-                    String restockQuery = "UPDATE ingredientsinventory SET stock = CASE WHEN ingredientid IN (" + restockIDs + ") THEN stock + 1 ELSE stock END WHERE ingredientid IN (" + restockIDs + ");";
-
+                    restockIDs += tableDataCopy.get(tableDataCopy.size() - 1)[0];
+                    String restockQuery = "UPDATE ingredientsinventory SET stock = CASE WHEN ingredientid IN ("
+                            + restockIDs + ") THEN maxstock ELSE stock END WHERE ingredientid IN (" + restockIDs
+                            + ");";
                     Statement stmt = conn.createStatement();
-                    stmt.executeQuery(restockQuery);
-                } 
-                catch (Exception ee) {
+                    stmt.executeUpdate(restockQuery);
+                    suggestionsTable.repaint();
+                    inventoryTable.refreshTableData();
+                    inventoryTable.table.repaint();
+                } catch (Exception ee) {
                     JOptionPane.showMessageDialog(null, "Error accessing Database.");
                 }
             }
         });
-        // > set gbc constraints to be used for both
+        // > set gbc constraints to be used for the Inventory Report
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -231,13 +215,7 @@ public class InventoryPage extends JPanel {
         gbc.gridy++;
         suggestionsPanel.add(placeOrderButton, gbc);
 
-        gbc.gridx = 0; // Adjust gridx and gridy as needed for layout
-        gbc.gridy = 3; // Position where the buttons should be in the grid
-        inventoryPanel.add(addButton, gbc); // Or add to another panel as desired
-
-        gbc.gridx = 1; // Adjust for layout
-        inventoryPanel.add(deleteButton, gbc); // Or add to another panel
-        }
+    }
 
     public void refreshHeader() {
         // Remove the old navbar using GridBagConstraints
@@ -255,7 +233,27 @@ public class InventoryPage extends JPanel {
         repaint();
     }
 
-        // Helper method to get GridBagConstraints of a component
+    private List<String[]> requestInventoryTable(String sqlStatement) {
+        List<String[]> tableData = new ArrayList<>();
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet result = stmt.executeQuery(sqlStatement);
+            while (result.next()) {
+                String[] str = { String.valueOf(result.getInt("ingredientid")),
+                        result.getString("name"),
+                        String.valueOf(result.getInt("stock")),
+                        String.valueOf(result.getInt("maxstock")),
+                        result.getString("units") };
+                tableData.add(str);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error accessing Database.");
+        }
+
+        return tableData;
+    }
+
+    // Helper method to get GridBagConstraints of a component
     private GridBagConstraints getConstraints(Component component) {
         LayoutManager layout = getLayout();
         if (layout instanceof GridBagLayout) {
@@ -265,56 +263,4 @@ public class InventoryPage extends JPanel {
             return null;
         }
     }
-
-    private void insertNewItem(String name, float price, String type) {
-        String sql = "INSERT INTO MenuItems (Name, Price, Type) VALUES (?, ?, ?)";
-        try (PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            pstmt.setString(1, name);
-            pstmt.setFloat(2, price);
-            pstmt.setString(3, type);
-
-            int affectedRows = pstmt.executeUpdate();
-            if (affectedRows == 0) {
-                throw new SQLException("Creating item failed, no rows affected.");
-            }
-
-            try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    //menuItemIds.add(generatedKeys.getInt(1)); // Store the new MenuItemID
-                } else {
-                    throw new SQLException("Creating item failed, no ID obtained.");
-                }
-            }
-            JOptionPane.showMessageDialog(this, "Item added successfully.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Database error: " + e.getMessage(), "Error",
-                    JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private void editIngredients(JTable table) {
-        int selectedRow = table.getSelectedRow();
-        if (selectedRow != -1) {
-            //Integer menuItemId = menuItemIds.get(selectedRow); // Get MenuItemID from the list
-            /*IngredientsDialog ingredientsDialog = new IngredientsDialog(
-                    (Frame) SwingUtilities.getWindowAncestor(ViewMenuItemsDialog.this), conn, menuItemId);
-            ingredientsDialog.setVisible(true);*/
-        } else {
-            JOptionPane.showMessageDialog(this, "Please select a menu item first.", "No Selection",
-                    JOptionPane.WARNING_MESSAGE);
-        }
-    }
-
-    // public static void main(String[] args) {
-    //     JFrame f = new JFrame();
-    //     f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-    //     InventoryPage p = new InventoryPage(conn, pos);
-    //     f.getContentPane().add(p);
-
-    //     f.pack();
-    //     f.setLocationRelativeTo(null);
-    //     f.setVisible(true);
-    // }
 }

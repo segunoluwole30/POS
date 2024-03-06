@@ -26,7 +26,7 @@ public class InventoryPage extends JPanel {
     private List<Integer> itemIDs = new ArrayList<>(); // store menu item id's for database operations
 
     private String inventoryQuery = "SELECT * FROM ingredientsinventory ORDER BY ingredientid;";
-    private String suggestionQuery = "SELECT * FROM ingredientsInventory WHERE stock / maxstock < 1 ORDER BY stock / maxstock ASC;";
+    private String suggestionQuery = "SELECT * FROM ingredientsInventory WHERE stock / maxstock < 0.2 ORDER BY stock / maxstock ASC;";
 
     private SmartTable suggestionTable;
 

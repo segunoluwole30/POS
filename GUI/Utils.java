@@ -9,18 +9,49 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Utility class providing helper methods for common operations within the POS
+ * application,
+ * such as fetching the current date and time, and creating standardized header
+ * panels for UI consistency.
+ * This class is designed to be used statically and does not require
+ * instantiation, hence the absence of
+ * an explicit constructor.
+ * 
+ * @author Segun Oluwole
+ */
 public class Utils {
 
+    /**
+     * Returns the current date in "yyyy-MM-dd" format.
+     *
+     * @return A string representing the current date.
+     */
     public static String getCurrentDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         return sdf.format(new Date());
     }
 
+    /**
+     * Returns the current time in "HH:mm:ss" format.
+     *
+     * @return A string representing the current time.
+     */
     public static String getCurrentTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         return sdf.format(new Date());
     }
 
+    /**
+     * Creates and returns a standardized header panel used across various pages of
+     * the POS application.
+     * The header includes a back button, the manager's ID, the current date and
+     * time, and a log out button.
+     *
+     * @param pos The POS object, providing context and functionality for the
+     *            actions performed by the header buttons.
+     * @return A JPanel object configured as the header panel.
+     */
     public static JPanel createHeaderPanel(final POS pos) {
 
         JPanel headerPanel = new JPanel(new BorderLayout());
@@ -77,7 +108,6 @@ public class Utils {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Perform action to log out
                 pos.showLoginPage();
             }
         });

@@ -58,7 +58,7 @@ public class InventoryPage extends JPanel {
         setBackground(Common.DARKCYAN);
         setLayout(new GridBagLayout());
 
-        // Creating the top navbar
+        // Create the top navbar
         navbar = Utils.createHeaderPanel(pos);
         navbar.setPreferredSize(new Dimension(getWidth(), 50));
         GridBagConstraints gbc = new GridBagConstraints();
@@ -196,7 +196,7 @@ public class InventoryPage extends JPanel {
         suggestionsTitle.setEditable(false);
 
         // > get table data
-        tableData = requestInventoryTable("SELECT * FROM ingredientsinventory ORDER BY stock / maxstock ASC LIMIT 10;");
+        tableData = requestInventoryTable("SELECT * FROM ingredientsInventory WHERE stock / maxstock < 0.2 ORDER BY stock / maxstock ASC;");
         rowEntries = new String[tableData.size()][];
         for (int i = 0; i < tableData.size(); i++) {
             rowEntries[i] = tableData.get(i);
@@ -226,14 +226,15 @@ public class InventoryPage extends JPanel {
                     for (int i = 0; i < tableDataCopy.size() - 1; i++) {
                         restockIDs += tableDataCopy.get(i)[0] + ", ";
                     }
-                    restockIDs += tableDataCopy.get(tableDataCopy.size() - 1);
+                    restockIDs += tableDataCopy.get(tableDataCopy.size() - 1)[0];
 
+                    // TODO: Update query to properly restock
                     String restockQuery = "UPDATE ingredientsinventory SET stock = CASE WHEN ingredientid IN ("
-                            + restockIDs + ") THEN stock + 1 ELSE stock END WHERE ingredientid IN (" + restockIDs
+                            + restockIDs + ") THEN maxstock ELSE stock END WHERE ingredientid IN (" + restockIDs
                             + ");";
 
                     Statement stmt = conn.createStatement();
-                    stmt.executeQuery(restockQuery);
+                    stmt.executeUpdate(restockQuery);
                 } catch (Exception ee) {
                     JOptionPane.showMessageDialog(null, "Error accessing Database.");
                 }

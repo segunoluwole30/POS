@@ -293,53 +293,43 @@ public class ZZReportPage extends JPanel {
 
 	private void generateExcessReport() {
 		try {
-				String query = "WITH BeginningInventory AS (" +
-												"    SELECT" +
-												"        ii.IngredientID," +
-												"        ii.Name," +
-												"        ii.Stock AS BeginningStock" +
-												"    FROM" +
-												"        IngredientsInventory ii" +
-												")," +
-												"EndingInventory AS (" +
-												"    SELECT" +
-												"        t.TransactionID," +
-												"        te.MenuItemID," +
-												"        mii.IngredientID," +
-												"        SUM(mii.Quantity) AS SoldQuantity" +
-												"    FROM" +
-												"        Transactions t" +
-												"    JOIN" +
-												"        TransactionEntry te ON t.TransactionID = te.TransactionID" +
-												"    JOIN" +
-												"        MenuItemIngredients mii ON te.MenuItemID = mii.MenuItemID" +
-												"    WHERE" +
-												"        t.Date BETWEEN ? AND ?" +
-												"    GROUP BY" +
-												"        t.TransactionID," +
-												"        te.MenuItemID," +
-												"        mii.IngredientID" +
-												")," +
-												"InventorySold AS (" +
-												"    SELECT" +
-												"        ei.IngredientID," +
-												"        ei.Name," +
-												"        (ei.BeginningStock - COALESCE(SUM(es.SoldQuantity), 0)) / ei.BeginningStock AS SoldPercentage" +
-												"    FROM" +
-												"        BeginningInventory ei" +
-												"    LEFT JOIN" +
-												"        EndingInventory es ON ei.IngredientID = es.IngredientID" +
-												"    GROUP BY" +
-												"        ei.IngredientID," +
-												"        ei.Name," +
-												"        ei.BeginningStock" +
-												")" +
-												"SELECT" +
-												"    *" +
-												"FROM" +
-												"    InventorySold" +
-												" WHERE" +
-												"    SoldPercentage < 0.1;";
+			String query = "WITH StockChanges AS (" +
+			"    SELECT" +
+			"        ii.IngredientID," +
+			"        ii.Name," +
+			"        ii.MaxStock," +
+			"        ii.Stock AS StartingStock," +
+			"        COALESCE(SUM(mii.Quantity), 0) AS SoldQuantity," +
+			"        ii.MaxStock - COALESCE(SUM(mii.Quantity), 0) AS EndingStock" +
+			"    FROM" +
+			"        IngredientsInventory ii" +
+			"    LEFT JOIN" +
+			"        MenuItemIngredients mii ON ii.IngredientID = mii.IngredientID" +
+			"    LEFT JOIN" +
+			"        TransactionEntry te ON mii.MenuItemID = te.MenuItemID" +
+			"        AND te.TransactionID IN (" +
+			"            SELECT TransactionID" +
+			"            FROM Transactions" +
+			"            WHERE Date BETWEEN ? AND ?" +
+			"        )" +
+			"    GROUP BY" +
+			"        ii.IngredientID, ii.Name, ii.MaxStock, ii.Stock" +
+			")," +
+			"InventoryChanges AS (" +
+			"    SELECT" +
+			"        *," +
+			"        (SoldQuantity) / MaxStock AS StockChangePercentage" +
+			"    FROM" +
+			"        StockChanges" +
+			")" +
+			"SELECT" +
+			"    *" +
+			"FROM" +
+			"    InventoryChanges" +
+			" WHERE" +
+			"    StockChangePercentage < 0.1;";
+
+
 
 			PreparedStatement statement = conn.prepareStatement(query);
 			statement.setTimestamp(1, startTimestamp);

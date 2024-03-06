@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
- * SmartTable class extends JPanel to create a dynamic table connected to a database.
- * It allows users to insert, update, and delete records in a database through a graphical interface.
+ * SmartTable class extends JPanel to create a dynamic table connected to a
+ * database.
+ * It allows users to insert, update, and delete records in a database through a
+ * graphical interface.
  */
 
 public class SmartTable extends JPanel {
@@ -21,8 +23,10 @@ public class SmartTable extends JPanel {
     private String Query = "";
 
     /**
-     * Constructor to initialize the SmartTable with a database connection and a query.
-     * @param conn The database connection object.
+     * Constructor to initialize the SmartTable with a database connection and a
+     * query.
+     * 
+     * @param conn  The database connection object.
      * @param Query The SQL query used to fetch data to populate the table.
      */
     public SmartTable(Connection conn, String Query) {
@@ -36,7 +40,6 @@ public class SmartTable extends JPanel {
         };
 
         table = new JTable(tableModel);
-        table.setModel(tableModel);
 
         // Listen to cell edits
         tableModel.addTableModelListener(e -> {
@@ -65,10 +68,11 @@ public class SmartTable extends JPanel {
 
     /**
      * Inserts a new item into the database and updates the table.
-     * @param name The name of the new item.
-     * @param stock The stock level of the new item.
+     * 
+     * @param name     The name of the new item.
+     * @param stock    The stock level of the new item.
      * @param maxstock The maximum stock level of the new item.
-     * @param units The units of measure for the new item.
+     * @param units    The units of measure for the new item.
      */
     public void insertNewItem(String name, float stock, float maxstock, String units) {
         String sql = "INSERT INTO IngredientsInventory (Name, Stock, MaxStock, Units) VALUES (?, ?, ?, ?)";
@@ -138,9 +142,10 @@ public class SmartTable extends JPanel {
 
     /**
      * Updates a specific item's attribute in the database.
-     * @param id The ID of the item to update.
+     * 
+     * @param id     The ID of the item to update.
      * @param column The column index of the attribute to update.
-     * @param value The new value for the attribute.
+     * @param value  The new value for the attribute.
      */
     public void updateMenuItemInDatabase(Object id, int column, Object value) {
         String columnName;

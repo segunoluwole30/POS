@@ -6,13 +6,6 @@ import javax.swing.table.DefaultTableModel;
 import java.util.List;
 import java.util.ArrayList;
 
-/**
- * SmartTable class extends JPanel to create a dynamic table connected to a
- * database.
- * It allows users to insert, update, and delete records in a database through a
- * graphical interface.
- */
-
 public class SmartTable extends JPanel {
 
     // Data Members
@@ -22,13 +15,7 @@ public class SmartTable extends JPanel {
     private List<Integer> ItemIDs = new ArrayList<>(); // store menu item id's for database operations
     private String Query = "";
 
-    /**
-     * Constructor to initialize the SmartTable with a database connection and a
-     * query.
-     * 
-     * @param conn  The database connection object.
-     * @param Query The SQL query used to fetch data to populate the table.
-     */
+    // Constructor
     public SmartTable(Connection conn, String Query) {
         this.Query = Query;
         this.conn = conn;
@@ -40,6 +27,7 @@ public class SmartTable extends JPanel {
         };
 
         table = new JTable(tableModel);
+        table.setModel(tableModel);
 
         // Listen to cell edits
         tableModel.addTableModelListener(e -> {
@@ -66,14 +54,6 @@ public class SmartTable extends JPanel {
         });
     }
 
-    /**
-     * Inserts a new item into the database and updates the table.
-     * 
-     * @param name     The name of the new item.
-     * @param stock    The stock level of the new item.
-     * @param maxstock The maximum stock level of the new item.
-     * @param units    The units of measure for the new item.
-     */
     public void insertNewItem(String name, float stock, float maxstock, String units) {
         String sql = "INSERT INTO IngredientsInventory (Name, Stock, MaxStock, Units) VALUES (?, ?, ?, ?)";
         try (PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -102,9 +82,6 @@ public class SmartTable extends JPanel {
         }
     }
 
-    /**
-     * Deletes the selected item from the table and database.
-     */
     public void deleteItem() {
         int selectedRow = table.getSelectedRow();
         if (selectedRow >= 0) {
@@ -120,9 +97,6 @@ public class SmartTable extends JPanel {
         }
     }
 
-    /**
-     * Deletes the selected item from the table and database.
-     */
     public void deleteItemFromDatabase(Object itemId) {
         String sql = "DELETE FROM IngredientsInventory WHERE IngredientID = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -140,13 +114,6 @@ public class SmartTable extends JPanel {
         }
     }
 
-    /**
-     * Updates a specific item's attribute in the database.
-     * 
-     * @param id     The ID of the item to update.
-     * @param column The column index of the attribute to update.
-     * @param value  The new value for the attribute.
-     */
     public void updateMenuItemInDatabase(Object id, int column, Object value) {
         String columnName;
         String sql;
@@ -206,9 +173,6 @@ public class SmartTable extends JPanel {
         }
     }
 
-    /**
-     * Refreshes the table data by re-querying the database.
-     */
     public void refreshTableData() {
         tableModel.setRowCount(0); // Clear existing data
         ItemIDs.clear();

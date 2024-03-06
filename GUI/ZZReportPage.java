@@ -93,7 +93,6 @@ public class ZZReportPage extends JPanel {
 			e.printStackTrace();
 		}
 
-		// Create the pie chart
 		if (generatedChart == null) {
 			JFreeChart chart = ChartFactory.createPieChart(
 					category + " ZZReport",
@@ -104,7 +103,6 @@ public class ZZReportPage extends JPanel {
 
 			generatedChart = new ChartPanel(chart);
 		} else {
-			// Otherwise, update the dataset associated with the existing chart
 			JFreeChart chart = generatedChart.getChart();
 			chart.setTitle(category + " ZZReport");
 			PiePlot plot = (PiePlot) chart.getPlot();
@@ -192,16 +190,17 @@ public class ZZReportPage extends JPanel {
 	private void generateProductUsageReport() {
 		try {
 			Statement statement = conn.createStatement();
-			ResultSet result = statement.executeQuery("SELECT ii.Name AS InventoryItem, SUM(mii.Quantity) AS UsedQuantity " +
-																									"FROM Transactions t " +
-																									"JOIN TransactionEntry te ON t.TransactionID = te.TransactionID " +
-																									"JOIN MenuItems mi ON te.MenuItemID = mi.MenuItemID " +
-																									"JOIN MenuItemIngredients mii ON mi.MenuItemID = mii.MenuItemID " +
-																									"JOIN IngredientsInventory ii ON mii.IngredientID = ii.IngredientID " +
-																									"WHERE T.Date >= '" + start_year + "-" + start_month + "-" + start_day + "' " + // Start date condition
-																									"AND T.Date <= '" + end_year + "-" + end_month + "-" + end_day + "' " + // End date condition
-																									"GROUP BY ii.Name " +
-                                                	"ORDER BY UsedQuantity DESC;");
+			ResultSet result = statement.executeQuery(
+				"SELECT ii.Name AS InventoryItem, SUM(mii.Quantity) AS UsedQuantity " +
+				"FROM Transactions t " +
+				"JOIN TransactionEntry te ON t.TransactionID = te.TransactionID " +
+				"JOIN MenuItems mi ON te.MenuItemID = mi.MenuItemID " +
+				"JOIN MenuItemIngredients mii ON mi.MenuItemID = mii.MenuItemID " +
+				"JOIN IngredientsInventory ii ON mii.IngredientID = ii.IngredientID " +
+				"WHERE T.Date >= '" + start_year + "-" + start_month + "-" + start_day + "' " + // Start date condition
+				"AND T.Date <= '" + end_year + "-" + end_month + "-" + end_day + "' " + // End date condition
+				"GROUP BY ii.Name " +
+				"ORDER BY UsedQuantity DESC;");
 	
 			ResultSetMetaData metaData = result.getMetaData();
 			int columnCount = metaData.getColumnCount();
@@ -248,7 +247,6 @@ public class ZZReportPage extends JPanel {
 	 * Generates a report on the best pairs of products sold together frequently.
 	 */
 	private void generateBestPairsReport() {
-		
 		try {
 			Statement statement = conn.createStatement();
 			ResultSet result = statement.executeQuery(
@@ -301,8 +299,7 @@ public class ZZReportPage extends JPanel {
 	
 	} catch (SQLException e) {
 			e.printStackTrace();
-			// Handle SQL exception here, such as displaying an error message
-	}
+		}
 	}
 
 	/**
@@ -310,7 +307,8 @@ public class ZZReportPage extends JPanel {
 	 */
 	private void generateExcessReport() {
 		try {
-			String query = "WITH StockChanges AS (" +
+			String query = "" +
+			"WITH StockChanges AS (" +
 			"    SELECT" +
 			"        ii.IngredientID," +
 			"        ii.Name," +
@@ -389,8 +387,7 @@ public class ZZReportPage extends JPanel {
 	
 	} catch (SQLException e) {
 			e.printStackTrace();
-			// Handle SQL exception here, such as displaying an error message
-	}
+		}
 	}
 
 	/**
@@ -410,7 +407,6 @@ public class ZZReportPage extends JPanel {
 
     int result = JOptionPane.showConfirmDialog(this, inputs, "Enter Date Range", JOptionPane.OK_CANCEL_OPTION);
     if (result == JOptionPane.OK_OPTION) {
-        // Get the date and hour inputs from the text fields
         String s_dateInput = start_dateField.getText();
 				String e_dateInput = end_dateField.getText();
 
@@ -422,13 +418,11 @@ public class ZZReportPage extends JPanel {
 				startTimestamp = Timestamp.valueOf(startDateTime);
 				endTimestamp = Timestamp.valueOf(endDateTime);
 
-        // Validate and process the inputs
         if (!s_dateInput.isEmpty() || !e_dateInput.isEmpty()) {
             try {
 								String[] parts = s_dateInput.split("-");
 								String[] e_parts = e_dateInput.split("-");
 
-								// Extract year, month, and day from the parts array
 								start_year = parts[0];
 								start_month = parts[1];
 								start_day = parts[2];
@@ -461,7 +455,6 @@ public class ZZReportPage extends JPanel {
 		// Boilerplate code to setup layout
 		setLayout(new BorderLayout());
 
-		// Creating the top navbar
 		navbar = Utils.createHeaderPanel(pos);
 		navbar.setPreferredSize(new Dimension(getWidth(), 50));
 		add(navbar, BorderLayout.NORTH);
@@ -479,6 +472,7 @@ public class ZZReportPage extends JPanel {
 		JButton button7 = new JButton("Best Product Combos");
 		JButton button8 = new JButton("Cool Button 1");
 		JButton button9 = new JButton("Cool Button 2");
+
 		button1.addActionListener(new ButtonListener("Entree", "pie_chart"));
 		button2.addActionListener(new ButtonListener("Drink", "pie_chart"));
 		button3.addActionListener(new ButtonListener("Dessert", "pie_chart"));
@@ -486,6 +480,7 @@ public class ZZReportPage extends JPanel {
 		button5.addActionListener(new ButtonListener("n/a", "product_usage"));
 		button6.addActionListener(new ButtonListener("n/a", "excess_report"));
 		button7.addActionListener(new ButtonListener("n/a", "sells_together"));
+		
 		buttonPanel.add(button1);
 		buttonPanel.add(button2);
 		buttonPanel.add(button3);

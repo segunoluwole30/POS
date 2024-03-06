@@ -75,9 +75,9 @@ public class ZReportPage extends JPanel {
 			"FROM MenuItems MI " +
 			"JOIN TransactionEntry TE ON MI.MenuItemID = TE.MenuItemID " +
 			"JOIN Transactions T ON TE.TransactionID = T.TransactionID " +
-			"WHERE DATE_PART('year', T.Date) = " + year + " " + // Filter by year
-			"AND DATE_PART('month', T.Date) = " + month + " " + // Filter by month
-			"AND DATE_PART('day', T.Date) = " + day + " " + // Filter by day
+			"WHERE DATE_PART('year', T.Date) = " + year + " " +
+			"AND DATE_PART('month', T.Date) = " + month + " " +
+			"AND DATE_PART('day', T.Date) = " + day + " " +
 			"AND MI.Type = '" + category + "' " +
 			"GROUP BY MI.MenuItemID, MI.Name " +
 			"ORDER BY QuantitySold DESC")) {
@@ -90,7 +90,6 @@ public class ZReportPage extends JPanel {
 			e.printStackTrace();
 		}
 
-		// Create the pie chart
 		if (generatedChart == null) {
 			JFreeChart chart = ChartFactory.createPieChart(
 					category + " ZReport",
@@ -128,7 +127,6 @@ public class ZReportPage extends JPanel {
 	 * Generates a sales report based on the given criteria.
 	 */
 	private void generateSalesReport() {
-		
 		try {
 			Statement statement = conn.createStatement();
 			ResultSet result = statement.executeQuery(
@@ -136,9 +134,9 @@ public class ZReportPage extends JPanel {
 				"FROM MenuItems MI " +
 				"JOIN TransactionEntry TE ON MI.MenuItemID = TE.MenuItemID " +
 				"JOIN Transactions T ON TE.TransactionID = T.TransactionID " +
-				"WHERE DATE_PART('year', T.Date) = " + year + " " + // Filter by year
-				"AND DATE_PART('month', T.Date) = " + month + " " + // Filter by month
-				"AND DATE_PART('day', T.Date) = " + day + " " + // Filter by day
+				"WHERE DATE_PART('year', T.Date) = " + year + " " +
+				"AND DATE_PART('month', T.Date) = " + month + " " +
+				"AND DATE_PART('day', T.Date) = " + day + " " +
 				"GROUP BY MI.MenuItemID, MI.Name " +
 				"ORDER BY QuantitySold DESC");
 	
@@ -180,8 +178,7 @@ public class ZReportPage extends JPanel {
 	
 	} catch (SQLException e) {
 			e.printStackTrace();
-			// Handle SQL exception here, such as displaying an error message
-	}
+		}
 	}
 
 	/**
@@ -190,17 +187,18 @@ public class ZReportPage extends JPanel {
 	private void generateProductUsageReport() {
 		try {
 			Statement statement = conn.createStatement();
-			ResultSet result = statement.executeQuery("SELECT ii.Name AS InventoryItem, SUM(mii.Quantity) AS UsedQuantity " +
-																									"FROM Transactions t " +
-																									"JOIN TransactionEntry te ON t.TransactionID = te.TransactionID " +
-																									"JOIN MenuItems mi ON te.MenuItemID = mi.MenuItemID " +
-																									"JOIN MenuItemIngredients mii ON mi.MenuItemID = mii.MenuItemID " +
-																									"JOIN IngredientsInventory ii ON mii.IngredientID = ii.IngredientID " +
-																									"WHERE DATE_PART('year', T.Date) = " + year + " " + // Filter by year
-																									"AND DATE_PART('month', T.Date) = " + month + " " + // Filter by month
-																									"AND DATE_PART('day', T.Date) = " + day + " " + // Filter by day
-																									"GROUP BY ii.Name " +
-                                                	"ORDER BY UsedQuantity DESC;");
+			ResultSet result = statement.executeQuery(
+				"SELECT ii.Name AS InventoryItem, SUM(mii.Quantity) AS UsedQuantity " +
+				"FROM Transactions t " +
+				"JOIN TransactionEntry te ON t.TransactionID = te.TransactionID " +
+				"JOIN MenuItems mi ON te.MenuItemID = mi.MenuItemID " +
+				"JOIN MenuItemIngredients mii ON mi.MenuItemID = mii.MenuItemID " +
+				"JOIN IngredientsInventory ii ON mii.IngredientID = ii.IngredientID " +
+				"WHERE DATE_PART('year', T.Date) = " + year + " " +
+				"AND DATE_PART('month', T.Date) = " + month + " " +
+				"AND DATE_PART('day', T.Date) = " + day + " " +
+				"GROUP BY ii.Name " +
+				"ORDER BY UsedQuantity DESC;");
 	
 			ResultSetMetaData metaData = result.getMetaData();
 			int columnCount = metaData.getColumnCount();
@@ -240,15 +238,13 @@ public class ZReportPage extends JPanel {
 	
 	} catch (SQLException e) {
 			e.printStackTrace();
-			// Handle SQL exception here, such as displaying an error message
-	}
+		}
 	}
 
 	/**
 	 * Generates a report on best product combinations based on the given criteria.
 	 */
 	private void generateBestPairsReport() {
-		
 		try {
 			Statement statement = conn.createStatement();
 			ResultSet result = statement.executeQuery(
@@ -258,9 +254,9 @@ public class ZReportPage extends JPanel {
         "JOIN MenuItems mi1 ON te1.MenuItemID = mi1.MenuItemID " +
         "JOIN MenuItems mi2 ON te2.MenuItemID = mi2.MenuItemID " +
         "JOIN Transactions t ON te1.TransactionID = t.TransactionID " +
-        "WHERE DATE_PART('year', t.Date) = " + year + " " + // Filter by year
-        "AND DATE_PART('month', t.Date) = " + month + " " + // Filter by month
-        "AND DATE_PART('day', t.Date) = " + day + " " + // Filter by day
+        "WHERE DATE_PART('year', t.Date) = " + year + " " +
+        "AND DATE_PART('month', t.Date) = " + month + " " +
+        "AND DATE_PART('day', t.Date) = " + day + " " +
         "GROUP BY mi1.Name, mi2.Name " +
         "ORDER BY Frequency DESC");
 	
@@ -302,8 +298,7 @@ public class ZReportPage extends JPanel {
 	
 	} catch (SQLException e) {
 			e.printStackTrace();
-			// Handle SQL exception here, such as displaying an error message
-	}
+		}
 	}
 	
 	/**
@@ -311,7 +306,8 @@ public class ZReportPage extends JPanel {
 	 */
 	private void generateExcessReport() {
 		try {
-			String query = "WITH StockChanges AS (" +
+			String query = "" +
+			"WITH StockChanges AS (" +
 			"    SELECT" +
 			"        ii.IngredientID," +
 			"        ii.Name," +
@@ -390,8 +386,7 @@ public class ZReportPage extends JPanel {
 	
 	} catch (SQLException e) {
 			e.printStackTrace();
-			// Handle SQL exception here, such as displaying an error message
-	}
+		}
 	}
 
 	/**
@@ -409,9 +404,7 @@ public class ZReportPage extends JPanel {
 
     int result = JOptionPane.showConfirmDialog(this, inputs, "Enter Date", JOptionPane.OK_CANCEL_OPTION);
 
-    // Check if the user clicked OK
     if (result == JOptionPane.OK_OPTION) {
-        // Get the date and hour inputs from the text fields
         String dateInput = dateField.getText();
 
 				String startTime = "08:00:00"; // Hardcoded start time
@@ -422,12 +415,10 @@ public class ZReportPage extends JPanel {
 				startTimestamp = Timestamp.valueOf(startDateTime);
 				endTimestamp = Timestamp.valueOf(endDateTime);
 
-        // Validate and process the inputs
         if (!dateInput.isEmpty()) {
             try {
 								String[] parts = dateInput.split("-");
 
-								// Extract year, month, and day from the parts array
 								year = parts[0];
 								month = parts[1];
 								day = parts[2];
@@ -463,7 +454,6 @@ public class ZReportPage extends JPanel {
 		centerPanel.setBorder(BorderFactory.createEmptyBorder(50, 130, 100, 50));
 		centerPanel.setBackground(Common.DARKCYAN);
 
-		// Creating three buttons vertically aligned on the left side
 		JPanel buttonPanel = new JPanel(new GridLayout(3, 1));
 		JButton button1 = new JButton("Entree ZReport");
 		JButton button2 = new JButton("Drink ZReport");

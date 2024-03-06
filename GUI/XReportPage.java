@@ -1,9 +1,6 @@
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-
 import java.awt.*;
 
-import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -17,28 +14,35 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Timestamp;
 
 public class XReportPage extends JPanel {
-	private static Connection conn;
-	private static POS pos;
+	private Connection conn;
+	private POS pos;
+
 	private JPanel centerPanel;
 	private JPanel navbar;
-	private ChartPanel generatedChart;
-	private JTable generatedTable;
 	private JPanel chartPanel;
+	private JTable generatedTable;
+	private ChartPanel generatedChart;
+
 	private Map<String, Color[]> colorSchemes;
+
 	private String year;
 	private String month;
 	private String day;
 	private int hour;
+
 	private Timestamp startTimestamp;
 	private Timestamp endTimestamp;
 
@@ -69,22 +73,20 @@ public class XReportPage extends JPanel {
 	private void generateXChart(String category) {
 		DefaultPieDataset dataset = new DefaultPieDataset();
 
-		// Execute query to retrieve data from the database
 		try (Statement stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery(
 				"SELECT MI.MenuItemID, MI.Name AS MenuItemName, COUNT(TE.MenuItemID) AS QuantitySold " +
 				"FROM MenuItems MI " +
 				"JOIN TransactionEntry TE ON MI.MenuItemID = TE.MenuItemID " +
 				"JOIN Transactions T ON TE.TransactionID = T.TransactionID " +
-				"WHERE DATE_PART('year', T.Date) = " + year + " " + // Filter by year
-				"AND DATE_PART('month', T.Date) = " + month + " " + // Filter by month
-				"AND DATE_PART('day', T.Date) = " + day + " " + // Filter by day
+				"WHERE DATE_PART('year', T.Date) = " + year + " " +
+				"AND DATE_PART('month', T.Date) = " + month + " " +
+				"AND DATE_PART('day', T.Date) = " + day + " " +
 				"AND DATE_PART('hour', T.Date) = " + hour + " " +
 				"AND MI.Type = '" + category + "' " +
 				"GROUP BY MI.MenuItemID, MI.Name " +
 				"ORDER BY QuantitySold DESC")) {
 
-			// Process the query results
 			while (rs.next()) {
 				String menuItemName = rs.getString("MenuItemName");
 				int quantitySold = rs.getInt("QuantitySold");
@@ -94,7 +96,6 @@ public class XReportPage extends JPanel {
 			e.printStackTrace();
 		}
 
-		// Create the pie chart
 		if (generatedChart == null) {
 			JFreeChart chart = ChartFactory.createPieChart(
 					category + " XReport", 
@@ -105,7 +106,6 @@ public class XReportPage extends JPanel {
 
 			generatedChart = new ChartPanel(chart);
 		} else {
-			// Otherwise, update the dataset associated with the existing chart
 			JFreeChart chart = generatedChart.getChart();
 			chart.setTitle(category + " XReport");
 			PiePlot plot = (PiePlot) chart.getPlot();
@@ -133,7 +133,6 @@ public class XReportPage extends JPanel {
  	 * Generates a sales report based on the given criteria.
  	 */
 	private void generateSalesReport() {
-		
 		try {
 			Statement statement = conn.createStatement();
 			ResultSet result = statement.executeQuery(
@@ -141,9 +140,9 @@ public class XReportPage extends JPanel {
 				"FROM MenuItems MI " +
 				"JOIN TransactionEntry TE ON MI.MenuItemID = TE.MenuItemID " +
 				"JOIN Transactions T ON TE.TransactionID = T.TransactionID " +
-				"WHERE DATE_PART('year', T.Date) = " + year + " " + // Filter by year
-				"AND DATE_PART('month', T.Date) = " + month + " " + // Filter by month
-				"AND DATE_PART('day', T.Date) = " + day + " " + // Filter by day
+				"WHERE DATE_PART('year', T.Date) = " + year + " " +
+				"AND DATE_PART('month', T.Date) = " + month + " " +
+				"AND DATE_PART('day', T.Date) = " + day + " " +
 				"AND DATE_PART('hour', T.Date) = " + hour + " " +
 				"GROUP BY MI.MenuItemID, MI.Name " +
 				"ORDER BY QuantitySold DESC");
@@ -186,8 +185,7 @@ public class XReportPage extends JPanel {
 	
 	} catch (SQLException e) {
 			e.printStackTrace();
-			// Handle SQL exception here, such as displaying an error message
-	}
+		}
 	}
 	
 	/**
@@ -196,18 +194,19 @@ public class XReportPage extends JPanel {
 	private void generateProductUsageReport() {
 		try {
 			Statement statement = conn.createStatement();
-			ResultSet result = statement.executeQuery("SELECT ii.Name AS InventoryItem, SUM(mii.Quantity) AS UsedQuantity " +
-																									"FROM Transactions t " +
-																									"JOIN TransactionEntry te ON t.TransactionID = te.TransactionID " +
-																									"JOIN MenuItems mi ON te.MenuItemID = mi.MenuItemID " +
-																									"JOIN MenuItemIngredients mii ON mi.MenuItemID = mii.MenuItemID " +
-																									"JOIN IngredientsInventory ii ON mii.IngredientID = ii.IngredientID " +
-																									"WHERE DATE_PART('year', T.Date) = " + year + " " + // Filter by year
-																									"AND DATE_PART('month', T.Date) = " + month + " " + // Filter by month
-																									"AND DATE_PART('day', T.Date) = " + day + " " + // Filter by day
-																									"AND DATE_PART('hour', T.Date) = " + hour + " " +
-																									"GROUP BY ii.Name " +
-                                                	"ORDER BY UsedQuantity DESC;");
+			ResultSet result = statement.executeQuery(
+				"SELECT ii.Name AS InventoryItem, SUM(mii.Quantity) AS UsedQuantity " +
+				"FROM Transactions t " +
+				"JOIN TransactionEntry te ON t.TransactionID = te.TransactionID " +
+				"JOIN MenuItems mi ON te.MenuItemID = mi.MenuItemID " +
+				"JOIN MenuItemIngredients mii ON mi.MenuItemID = mii.MenuItemID " +
+				"JOIN IngredientsInventory ii ON mii.IngredientID = ii.IngredientID " +
+				"WHERE DATE_PART('year', T.Date) = " + year + " " +
+				"AND DATE_PART('month', T.Date) = " + month + " " +
+				"AND DATE_PART('day', T.Date) = " + day + " " +
+				"AND DATE_PART('hour', T.Date) = " + hour + " " +
+				"GROUP BY ii.Name " +
+				"ORDER BY UsedQuantity DESC;");
 	
 			ResultSetMetaData metaData = result.getMetaData();
 			int columnCount = metaData.getColumnCount();
@@ -247,8 +246,7 @@ public class XReportPage extends JPanel {
 	
 	} catch (SQLException e) {
 			e.printStackTrace();
-			// Handle SQL exception here, such as displaying an error message
-	}
+		}
 	}
 
 	/**
@@ -265,10 +263,10 @@ public class XReportPage extends JPanel {
         "JOIN MenuItems mi1 ON te1.MenuItemID = mi1.MenuItemID " +
         "JOIN MenuItems mi2 ON te2.MenuItemID = mi2.MenuItemID " +
         "JOIN Transactions t ON te1.TransactionID = t.TransactionID " +
-        "WHERE DATE_PART('year', t.Date) = " + year + " " + // Filter by year
-        "AND DATE_PART('month', t.Date) = " + month + " " + // Filter by month
-        "AND DATE_PART('day', t.Date) = " + day + " " + // Filter by day
-        "AND DATE_PART('hour', t.Date) = " + hour + " " + // Filter by hour
+        "WHERE DATE_PART('year', t.Date) = " + year + " " +
+        "AND DATE_PART('month', t.Date) = " + month + " " +
+        "AND DATE_PART('day', t.Date) = " + day + " " +
+        "AND DATE_PART('hour', t.Date) = " + hour + " " +
         "GROUP BY mi1.Name, mi2.Name " +
         "ORDER BY Frequency DESC");
 	
@@ -310,8 +308,7 @@ public class XReportPage extends JPanel {
 	
 	} catch (SQLException e) {
 			e.printStackTrace();
-			// Handle SQL exception here, such as displaying an error message
-	}
+		}
 	}
 
 	/**
@@ -319,7 +316,8 @@ public class XReportPage extends JPanel {
 	 */
 	private void generateExcessReport() {
 		try {
-			String query = "WITH StockChanges AS (" +
+			String query = "" +
+			"WITH StockChanges AS (" +
 			"    SELECT" +
 			"        ii.IngredientID," +
 			"        ii.Name," +
@@ -406,7 +404,6 @@ public class XReportPage extends JPanel {
 	 * Initializes the date and hour for generating reports.
 	 */
 	private void initializeDate() {
-		// Create an array of JLabels and JTextFields for the date and hour inputs
 		JLabel dateLabel = new JLabel("Enter the date (YYYY-MM-DD):");
 		JTextField dateField = new JTextField();
 		JLabel hourLabel = new JLabel("Enter the hour (8-20):");
@@ -420,9 +417,7 @@ public class XReportPage extends JPanel {
 
 		int result = JOptionPane.showConfirmDialog(this, inputs, "Enter Date and Hour", JOptionPane.OK_CANCEL_OPTION);
 
-		// Check if the user clicked OK
 		if (result == JOptionPane.OK_OPTION) {
-				// Get the date and hour inputs from the text fields
 				String dateInput = dateField.getText();
 				String hourInput = hourField.getText();
 	
@@ -435,12 +430,9 @@ public class XReportPage extends JPanel {
 				startTimestamp = Timestamp.valueOf(startDateTime);
 				endTimestamp = Timestamp.valueOf(endDateTime);
 
-				// Validate and process the inputs
 				if (!dateInput.isEmpty() && !hourInput.isEmpty()) {
 						try {
-								// Convert hourInput to an integer
 								hour = Integer.parseInt(hourInput);
-
 								String[] parts = dateInput.split("-");
 
 								year = parts[0];
@@ -477,7 +469,6 @@ public class XReportPage extends JPanel {
 		centerPanel.setBorder(BorderFactory.createEmptyBorder(50, 130, 100, 50));
 		centerPanel.setBackground(Common.DARKCYAN);
 
-		// Creating three buttons vertically aligned on the left side
 		JPanel buttonPanel = new JPanel(new GridLayout(3, 1));
 		JButton button1 = new JButton("Entree XReport");
 		JButton button2 = new JButton("Drink XReport");
@@ -509,7 +500,6 @@ public class XReportPage extends JPanel {
 
 		chartPanel = new JPanel(new BorderLayout());
 		chartPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 100));
-		//chartPanel.add(generatedChart);
 
 		centerPanel.add(chartPanel, BorderLayout.CENTER);
 		centerPanel.add(buttonPanel, BorderLayout.WEST);

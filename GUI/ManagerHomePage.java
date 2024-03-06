@@ -12,6 +12,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
+ * Represents the manager's home page in a Point of Sale (POS) system. This page
+ * provides the manager with various options to navigate through the POS system,
+ * including viewing reports, managing menu items, and logging out.
+ * 
  * @author Segun Oluwole
  */
 public class ManagerHomePage extends JPanel {
@@ -20,16 +24,11 @@ public class ManagerHomePage extends JPanel {
     private JPanel headerPanel;
 
     /**
-     * This is the constructor for the ManagerHomePage object. It creates a
-     * ManagerHomePage
-     * object that can be used to navigate the Manager pages. The conn argument must
-     * be an already established
-     * SQL database connection, and the pos argument must be an already established
-     * object.
+     * Constructs a new ManagerHomePage with a specified database connection and a
+     * reference to the main POS system.
      * 
-     * @param conn, a sql Connection object that represents the connection to the
-     *              database
-     * @param ,     the POS object that acts as the main driver for the program
+     * @param conn the SQL Connection object for database operations
+     * @param pos  the POS system instance
      */
     public ManagerHomePage(Connection conn, POS pos) {
         this.conn = conn;
@@ -38,9 +37,8 @@ public class ManagerHomePage extends JPanel {
     }
 
     /**
-     * Creates all the Java Swing components and adds them to the Manager Home Page
-     * 
-     * @param none
+     * Initializes the user interface of the manager's home page, setting up the
+     * layout, background color, header, and navigation buttons.
      */
     private void initializeUI() {
         setLayout(new BorderLayout());
@@ -50,9 +48,8 @@ public class ManagerHomePage extends JPanel {
     }
 
     /**
-     * Calls the createHeaderPanel() function and adds the panel to the main JPanel
-     * 
-     * @param none
+     * Displays the header panel at the top of the manager's home page. The header
+     * includes navigation and utility buttons.
      */
     private void displayManagerHeader() {
         JPanel headerPanel = createHeaderPanel();
@@ -60,9 +57,11 @@ public class ManagerHomePage extends JPanel {
     }
 
     /**
-     * Creates the header panel that will be displayed across all manager pages
+     * Creates and returns a header panel for the manager's home page. The panel
+     * includes a back button, manager ID display, current date and time, and a log
+     * out button.
      * 
-     * @param none
+     * @return the created header panel
      */
     private JPanel createHeaderPanel() {
 
@@ -143,9 +142,10 @@ public class ManagerHomePage extends JPanel {
     }
 
     /**
-     * Displays buttons on Manager Home Page
-     * 
-     * @param none
+     * Adds and lays out the main navigation buttons on the manager's home page.
+     * These buttons allow the manager to navigate to different sections of the POS
+     * system, such as order history, inventory, menu item management, and report
+     * generation.
      */
     private void displayButtons() {
         JPanel buttonPanel = new JPanel(new GridBagLayout()); // Main panel with 2 columns
@@ -240,9 +240,9 @@ public class ManagerHomePage extends JPanel {
     }
 
     /**
-     * Refreshes header to update time
-     * 
-     * @param none
+     * Refreshes the header to update any dynamic content, such as the current time
+     * or manager ID. This method is useful for ensuring that the displayed
+     * information remains accurate over time.
      */
     public void refreshHeader() {
         // Remove the old header

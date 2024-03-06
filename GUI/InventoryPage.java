@@ -70,7 +70,7 @@ public class InventoryPage extends JPanel {
 
         // Create the body which will store tables and buttons
         JPanel bodyPanel = new JPanel(new GridBagLayout());
-        bodyPanel.setBackground(Color.lightGray);
+        bodyPanel.setBackground(Common.DARKCYAN);
         bodyPanel.setPreferredSize(new Dimension(Common.WIDTH * 15 / 16, Common.HEIGHT * 13 / 16));
         gbc = new GridBagConstraints();
         gbc.weightx = 1.0;
@@ -92,6 +92,7 @@ public class InventoryPage extends JPanel {
         inventoryTitle.setFont(new Font("Times New Roman", Font.PLAIN, 28));
         inventoryTitle.setOpaque(false);
         inventoryTitle.setEditable(false);
+        inventoryTitle.setForeground(Color.white);
 
         tableModel = new DefaultTableModel(new String[] { "Item ID", "Name", "Stock", "MaxStock", "Units" }, 0) {
             @Override
@@ -198,6 +199,7 @@ public class InventoryPage extends JPanel {
         suggestionsTitle.setFont(new Font("Times New Roman", Font.PLAIN, 28));
         suggestionsTitle.setOpaque(false);
         suggestionsTitle.setEditable(false);
+        suggestionsTitle.setForeground(Color.white);
         // > table
         suggestionsTableDisplay = new JTable(suggestionTable.tableModel);
         JScrollPane suggestionsTableScrollPane = new JScrollPane(suggestionsTableDisplay);

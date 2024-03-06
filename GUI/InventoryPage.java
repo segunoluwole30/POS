@@ -119,7 +119,7 @@ public class InventoryPage extends JPanel {
         JButton addButton = new JButton("Add New Row");
         addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                tableModel.addRow(new Object[] { "", "", "", "", "" }); // Adjust based on your data structure
+                inventoryTable.tableModel.addRow(new Object[] { "", "", "", "", "" }); // Adjust based on your data structure
             }
         });
 

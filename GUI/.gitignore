@@ -26,3 +26,4 @@ database.properties
 
 old/
 docs/
+ __pycache__/

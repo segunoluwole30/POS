@@ -48,6 +48,14 @@ public class InventoryPage extends JPanel {
         this.conn = conn;
         this.pos = pos;
         suggestionTable = new SmartTable(conn, suggestionQuery, true);
+
+        suggestionTable.tableModel = new DefaultTableModel(new String[]{"Item ID", "Name", "Stock", "MaxStock", "Units", "Restock Amount"}, 0){
+            @Override
+            public boolean isCellEditable(int row, int column){
+                return column == 5;
+            }
+        };
+
         suggestionTable.refreshTableData();
         initializeUI();
         refreshTableData(inventoryQuery);
@@ -140,7 +148,7 @@ public class InventoryPage extends JPanel {
         inventoryTable.getTableHeader().setFont(new Font("Times New Roman", Font.PLAIN, 16));
 
         JScrollPane InventoryScrollPane = new JScrollPane(inventoryTable);
-        InventoryScrollPane.setPreferredSize(new Dimension(InventoryScrollPane.getPreferredSize().width, Common.HEIGHT / 4));
+        InventoryScrollPane.setPreferredSize(new Dimension(Common.WIDTH / 2, Common.HEIGHT / 4));
 
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -200,7 +208,7 @@ public class InventoryPage extends JPanel {
 
         suggestionsTableDisplay = new JTable(suggestionTable.tableModel);
         JScrollPane suggestionsTableScrollPane = new JScrollPane(suggestionsTableDisplay);
-        suggestionsTableScrollPane.setPreferredSize(new Dimension(suggestionsTableScrollPane.getPreferredSize().width, Common.HEIGHT / 4));
+        suggestionsTableScrollPane.setPreferredSize(new Dimension(Common.WIDTH / 2, Common.HEIGHT / 4));
 
         JButton placeOrderButton = new JButton("Place Order");
         placeOrderButton.setBackground(Color.GREEN);
@@ -209,21 +217,38 @@ public class InventoryPage extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    String restockIDs = "";
-                    if (suggestionTable.tableModel.getRowCount() >= 1) {
-                        for (int i = 0; i < suggestionTable.tableModel.getRowCount() - 1; i++) {
-                            restockIDs += suggestionTable.tableModel.getValueAt(i, 0) + ", ";
+                    //String restockIDs = "";
+                    if (suggestionTable.tableModel.getRowCount() >= 1) {                        
+                        List<String> restockIDs = new ArrayList<>();
+                        List<Float> restockValues = new ArrayList<>();
+                        
+                        for(int i = 0; i < suggestionTable.tableModel.getRowCount(); i++){
+                            restockIDs.add(suggestionTable.tableModel.getValueAt(i, 0).toString());
+                            float restockValue = 0;
+                            float currentStock = Float.parseFloat(suggestionTable.tableModel.getValueAt(i, 2).toString());
+                            float maxStock = Float.parseFloat(suggestionTable.tableModel.getValueAt(i, 3).toString());
+                            if(suggestionTable.tableModel.getValueAt(i, 5) != null){
+                                restockValue = Float.parseFloat(suggestionTable.tableModel.getValueAt(i, 5).toString()) + currentStock;
+                            }
+                            if(restockValue > maxStock){
+                                restockValues.add(maxStock);
+                            }
+                            else{
+                                restockValues.add(restockValue);
+                            }
                         }
-                        restockIDs += suggestionTable.tableModel.getValueAt(suggestionTable.tableModel.getRowCount() - 1, 0);
 
-                        String restockQuery = "UPDATE ingredientsinventory SET stock = CASE WHEN ingredientid IN ("
-                                + restockIDs + ") THEN maxstock ELSE stock END WHERE ingredientid IN (" + restockIDs
-                                + ");";
-                        Statement stmt = conn.createStatement();
-                        stmt.executeUpdate(restockQuery);
+                        for(int i = 0; i < restockIDs.size(); i++){
+                            String restockQuery = "UPDATE ingredientsinventory SET stock = CASE WHEN ingredientid = " 
+                            + restockIDs.get(i) + "THEN " + restockValues.get(i) + "ELSE stock END";
+                            Statement stmt = conn.createStatement();
+                            stmt.executeUpdate(restockQuery);
+                        }
+
                         suggestionTable.refreshTableData();
                         refreshTableData(inventoryQuery);
-                    } else {
+                    } 
+                    else {
                         JOptionPane.showMessageDialog(null, "No items to restock.");
                     }
                 } catch (Exception ee) {

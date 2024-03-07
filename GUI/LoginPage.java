@@ -14,7 +14,7 @@ public class LoginPage extends JPanel {
     private POS pos;
 
     /**
-     * This is the contructor for the LoginPage object. It creates a LoginPage
+     * This is the constructor for the LoginPage object. It creates a LoginPage
      * object that can
      * is used to login to the POS system. The conn argument must be an already
      * established

@@ -25,5 +25,5 @@ hs_err_pid*
 database.properties
 
 old/
-docs/
+#docs/
  __pycache__/

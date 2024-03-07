@@ -4,6 +4,16 @@ import java.awt.*;
 import java.util.*;
 import java.awt.event.*;
 
+/**
+ * This class defines the Menu Page framework, which acts as the home page
+ * for the POS. MenuPage includes the basics of a POS homepage, from buttons
+ * to access every item on the menu, to a header navigation bar that displays
+ * the current user and the current total price of the order, to a panel that 
+ * holds a receipt of the current menu items in a transaction, to a manager mode
+ * button that is only accessible to users with the manager tag. 
+ * 
+ * @author Danny Rios Socorro
+ */
 public class MenuPage extends JPanel {
     private Connection conn;
     private POS pos;
@@ -24,6 +34,17 @@ public class MenuPage extends JPanel {
     private double transactionTotal;
     private boolean currentlyPaying;
 
+    /**
+     * This is the constructor for the MenuPage object. It creates a MenuPage object
+     * that displays the menu, split into different category tabs, a nav bar with different
+     * order and user data along with a manager access button, and a order tracking panel. 
+     * 
+     * The con argument must already be an established SQL database connection, and the 
+     * pos argument must be an previously established POS object. 
+     * 
+     * @param con , a SQL connection object that represents the connection to the database
+     * @param pos , the POS object that acts as the main driver for the program
+     */
     public MenuPage(Connection con, POS pos) {
         this.conn = con;
         this.pos = pos;
@@ -67,6 +88,11 @@ public class MenuPage extends JPanel {
         initializeUI();
     }
 
+    /**
+     * The root of the Java Swing UI implementation for Menu Page
+     * 
+     * @param none
+     */
     private void initializeUI() {
         setBackground(Common.MAROON);
         setLayout(new BorderLayout());
@@ -78,6 +104,11 @@ public class MenuPage extends JPanel {
         add(orderSummary, BorderLayout.EAST);
     }
 
+    /**
+     * Creates the Java Swing elements for the middle panel
+     * 
+     * @param none
+     */
     private void loadMiddlePanel() {
         middlePanel = new JPanel(new BorderLayout());
         middlePanel.setBackground(Common.MAROON);
@@ -94,6 +125,12 @@ public class MenuPage extends JPanel {
         add(middlePanel);
     }
 
+    /**
+     * Creates the Java Swing elements for the nav bar
+     * at the top of the page
+     * 
+     * @param none
+     */
     private void loadInfoPanel() {
         GridBagLayout infoLayout = new GridBagLayout();
         JPanel infoPanel = new JPanel(infoLayout);
@@ -157,6 +194,13 @@ public class MenuPage extends JPanel {
         middlePanel.add(infoPanel, BorderLayout.NORTH);
     }
 
+    /**
+     * Creates the UI elements for the side bar that accesses the 
+     * different categories of menu items and adds this side bar
+     * to the Menu Page panel
+     * 
+     * @param none
+     */
     private void loadNavbar() {
         navbar = new JPanel();
         navbar.setLayout(new GridLayout(4, 1));
@@ -189,6 +233,13 @@ public class MenuPage extends JPanel {
         add(navbar, BorderLayout.WEST);
     }
 
+    /**
+     * Creates the UI elements for the payment panel that allows
+     * the user to choose a payment option along with displaying the 
+     * current order, which is all added on top of the previous Menu Page
+     * 
+     * @param none
+     */
     private void loadPayPanel() {
         payPanel = new JPanel();
 
@@ -230,6 +281,14 @@ public class MenuPage extends JPanel {
         add(payPanel, BorderLayout.WEST);
     }
 
+    /**
+     * Creates the UI elements for the main item panel, which
+     * holds all the buttons for eveyr menu item, and adds it to
+     * the Menu Page
+     * 
+     * @param type , a string that determines the category of
+     *               the menu item
+     */
     private void setItemPanel(String type) {
         itemPanel.removeAll();
         itemPanel.revalidate();
@@ -257,6 +316,15 @@ public class MenuPage extends JPanel {
 
     }
 
+    /**
+     * Enters a new transaction into the database, queries
+     * the database to determine what ingredients need to be 
+     * updated in inventory, updates the stock in inventory, 
+     * and returns to the home Menu Page
+     * 
+     * @param none
+     * @throws SQLException , if an error occurs adding a transaction
+     */
     private void finalizeOrder() {
         try {
             Statement stmt = conn.createStatement();
@@ -287,6 +355,13 @@ public class MenuPage extends JPanel {
         pos.showMenuPage();
     }
 
+    /**
+     * Adds the price of the menu item to the transaction total
+     * and displays the item as a button for optional deletion
+     * 
+     * @param item , a string that holds the name of the menu item
+     * @param price , a double that holds the price of the menu item
+     */
     private void addToSummary(String item, double price) {
         transactionTotal += price;
         transactionTotal = round(transactionTotal);
@@ -295,6 +370,14 @@ public class MenuPage extends JPanel {
         transactionItems.add(item);
     }
 
+    /**
+     * Removes an item from the transaction by subtracting
+     * the price from the order total and the item from the list
+     * of items in the order
+     * 
+     * @param item , a string that holds the name of the menu item
+     * @param price , a double that holds the price of the menu item
+     */
     public void removeTransactionEntree(String item, double price) {
         transactionTotal -= price;
         transactionTotal = round(transactionTotal);
@@ -302,10 +385,22 @@ public class MenuPage extends JPanel {
         transactionItems.remove(item);
     }
 
+    /**
+     * Sets the payment type, selected by the user, for 
+     * the order
+     * 
+     * @param type , a string that holds the name of the payment type
+     */
     private void setPaymentType(String type) {
         paymentType = type;
     }
 
+    /**
+     * Implements the payment button, which either finalizes
+     * the order or leads to the payment option panel
+     * 
+     * @param none
+     */
     public void payButton() {
         if (currentlyPaying) {
             if (paymentType.equals("")) {
@@ -329,6 +424,13 @@ public class MenuPage extends JPanel {
         }
     }
 
+    /**
+     * Implements the cancel button, which either cancels
+     * the current order and returns to the home Menu Page, or
+     * logs the current user out of the POS
+     * 
+     * @param none
+     */
     public void cancelButton() {
         if (currentlyPaying) {
             remove(payPanel);
@@ -345,6 +447,14 @@ public class MenuPage extends JPanel {
         }
     }
 
+    /**
+     * Rounds a number to prevent very long decimals
+     * in key parts of this implementation
+     * 
+     * @param num , a double that holds the number being rounded
+     * @return , the rounded number with all unnecessary decimal 
+     *           digits removed
+     */
     public double round(double num) {
         return Math.round(num * 100) / 100.0;
     }

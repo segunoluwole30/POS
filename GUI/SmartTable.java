@@ -6,20 +6,32 @@ import javax.swing.table.DefaultTableModel;
 import java.util.List;
 import java.util.ArrayList;
 
+/**
+ * This class represents a customizable and interactive table component for displaying
+ * and manipulating database records. It supports functionalities such as insert, update,
+ * and delete operations directly through the UI.
+ */
 public class SmartTable extends JPanel {
 
-    // Data Members
     private Connection conn;
     public DefaultTableModel tableModel;
     public JTable table;
-    private List<Integer> ItemIDs = new ArrayList<>(); // store menu item id's for database operations
+    private List<Integer> ItemIDs = new ArrayList<>();
     private String Query = "";
+    private Boolean SoftMode;
 
-    // Constructor
-    public SmartTable(Connection conn, String Query) {
+    /**
+     * Constructs a new SmartTable instance.
+     *
+     * @param conn   the database connection
+     * @param Query  the SQL query to fetch data for the table
+     * @param IsSoft indicates whether the table is in soft mode (i.e., changes do not affect the database)
+     */
+    public SmartTable(Connection conn, String Query, Boolean IsSoft) {
         this.Query = Query;
         this.conn = conn;
-        this.tableModel = new DefaultTableModel(new String[] { "Item ID", "Name", "Stock", "MaxStock", "Units" }, 0) {
+        SoftMode = IsSoft;
+        this.tableModel = new DefaultTableModel(new String[]{"Item ID", "Name", "Stock", "MaxStock", "Units"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return true;
@@ -29,7 +41,6 @@ public class SmartTable extends JPanel {
         table = new JTable(tableModel);
         table.setModel(tableModel);
 
-        // Listen to cell edits
         tableModel.addTableModelListener(e -> {
             if (e.getType() == TableModelEvent.UPDATE) {
                 int row = e.getFirstRow();
@@ -37,23 +48,33 @@ public class SmartTable extends JPanel {
                 Object id = tableModel.getValueAt(row, 0);
 
                 if (id == null || id.toString().isEmpty()) {
-                    // This is a new row, handle the insert operation
                     String name = tableModel.getValueAt(row, 1).toString();
                     float stock = Float.parseFloat(tableModel.getValueAt(row, 2).toString());
                     float maxstock = Float.parseFloat(tableModel.getValueAt(row, 3).toString());
                     String units = tableModel.getValueAt(row, 4).toString();
-                    insertNewItem(name, stock, maxstock, units);
+
+                    if (!SoftMode)
+                        insertNewItem(name, stock, maxstock, units);
+
                     refreshTableData();
 
                 } else {
-                    // Existing row, handle the update operation
                     Object value = tableModel.getValueAt(row, column);
-                    updateMenuItemInDatabase(id, column, value);
+                    if (!SoftMode)
+                        updateMenuItemInDatabase(id, column, value);
                 }
             }
         });
     }
 
+    /**
+     * Inserts a new item into the database.
+     *
+     * @param name     the name of the new item
+     * @param stock    the stock quantity of the new item
+     * @param maxstock the maximum stock quantity of the new item
+     * @param units    the units of the new item
+     */
     public void insertNewItem(String name, float stock, float maxstock, String units) {
         String sql = "INSERT INTO IngredientsInventory (Name, Stock, MaxStock, Units) VALUES (?, ?, ?, ?)";
         try (PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -69,7 +90,7 @@ public class SmartTable extends JPanel {
 
             try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    ItemIDs.add(generatedKeys.getInt(1)); // Store the new MenuItemID
+                    ItemIDs.add(generatedKeys.getInt(1));
                 } else {
                     throw new SQLException("Creating item failed, no ID obtained.");
                 }
@@ -82,13 +103,16 @@ public class SmartTable extends JPanel {
         }
     }
 
+    /**
+     * Initiates the deletion process for the selected item in the table.
+     */
     public void deleteItem() {
         int selectedRow = table.getSelectedRow();
         if (selectedRow >= 0) {
             int confirmation = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this item?",
                     "Confirm Deletion", JOptionPane.YES_NO_OPTION);
             if (confirmation == JOptionPane.YES_OPTION) {
-                int DelID = ItemIDs.get(selectedRow); // Get the ID from the list
+                int DelID = ItemIDs.get(selectedRow);
                 deleteItemFromDatabase(DelID);
                 refreshTableData();
             }
@@ -97,6 +121,11 @@ public class SmartTable extends JPanel {
         }
     }
 
+    /**
+     * Deletes an item from the database based on its ID.
+     *
+     * @param itemId the ID of the item to be deleted
+     */
     public void deleteItemFromDatabase(Object itemId) {
         String sql = "DELETE FROM IngredientsInventory WHERE IngredientID = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -114,48 +143,36 @@ public class SmartTable extends JPanel {
         }
     }
 
+    /**
+     * Updates the details of an item in the database based on the user's modifications in the table.
+     *
+     * @param id     the ID of the item to be updated
+     * @param column the column index indicating which attribute to update
+     * @param value  the new value for the specified attribute
+     */
     public void updateMenuItemInDatabase(Object id, int column, Object value) {
         String columnName;
         String sql;
         switch (column) {
             case 1:
                 columnName = "Name";
-                sql = "UPDATE IngredientsInventory SET " + columnName + " = ? WHERE IngredientID = ?";
                 break;
             case 2:
                 columnName = "Stock";
-                // Explicitly casting the parameter to double precision in PostgreSQL
-                sql = "UPDATE IngredientsInventory SET " + columnName
-                        + " = CAST(? AS double precision) WHERE IngredientID = ?";
                 break;
             case 3:
                 columnName = "MaxStock";
-                sql = "UPDATE IngredientsInventory SET " + columnName
-                        + " = CAST(? AS double precision) WHERE IngredientID = ?";
                 break;
             case 4:
                 columnName = "Units";
-                sql = "UPDATE IngredientsInventory SET " + columnName + " = ? WHERE IngredientID = ?";
                 break;
-
             default:
                 throw new IllegalArgumentException("Invalid column index");
         }
+        sql = "UPDATE IngredientsInventory SET " + columnName + " = ? WHERE IngredientID = ?";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            if (column == 2) { // For "Stock" column
-                // Use setObject with explicit parsing for the Stock column
-                float priceValue = Float.parseFloat(value.toString());
-                pstmt.setObject(1, priceValue);
-
-            } else if (column == 3) { // For "MaxStock" column
-                // Use setObject with explicit parsing for the MaxStock column
-                float priceValue = Float.parseFloat(value.toString());
-                pstmt.setObject(1, priceValue);
-
-            } else {
-                pstmt.setObject(1, value); // For other columns
-            }
+            pstmt.setObject(1, value);
             pstmt.setInt(2, (Integer) id);
 
             int affectedRows = pstmt.executeUpdate();
@@ -173,6 +190,9 @@ public class SmartTable extends JPanel {
         }
     }
 
+    /**
+     * Refreshes the data displayed in the table according to the original or updated query.
+     */
     public void refreshTableData() {
         tableModel.setRowCount(0); // Clear existing data
         ItemIDs.clear();
@@ -186,7 +206,7 @@ public class SmartTable extends JPanel {
                 String units = rs.getString("Units");
 
                 ItemIDs.add(id);
-                tableModel.addRow(new Object[] { id, name, stock, maxstock, units });
+                tableModel.addRow(new Object[]{id, name, stock, maxstock, units});
             }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error fetching menu items: " + e.getMessage(), "Database Error",

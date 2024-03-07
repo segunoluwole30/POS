@@ -24,6 +24,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
+ * This class displays the Z Report page, which holds a collection of
+ * different reports for a user-defined date. These different reports
+ * include pie charts, sales, product usage, excess, and best product combos. 
+ * 
  * @author David Tenase
  */
 public class ZReportPage extends JPanel {

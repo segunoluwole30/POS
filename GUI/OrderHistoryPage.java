@@ -6,7 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-
+/**
+ * @author Alby Joseph
+ */
 public class OrderHistoryPage extends JPanel {
     private Connection conn;
     private POS pos;
@@ -15,12 +17,27 @@ public class OrderHistoryPage extends JPanel {
     private JPanel navbar;
     private JPanel centerPanel;
 
+    /**
+     * This is the constructor for the OrderHistoryPage object. It creates an
+     * OrderHistoryPage object that displays a list of all past orders in the POS.
+     * The conn argument must already be an established SQL database connection and
+     * the pos argument must be an established POS object. 
+     * 
+     * @param conn , a SQL connection object that represents the connection
+     *               to the database
+     * @param pos  , the POS object that acts as the main object and foreground of the program
+     */
     public OrderHistoryPage(Connection conn, POS pos) {
         this.conn = conn;
         this.pos = pos;
         setupUI();
     }
 
+    /**
+     * Assembles all the Java Swing components and implements them into the Order History Page
+     * 
+     * @param none
+     */
     private void setupUI() {
         // Boilerplate code to setup layout
         setLayout(new BorderLayout());
@@ -31,9 +48,10 @@ public class OrderHistoryPage extends JPanel {
 
         table = new JTable();
         loadHistory();
-        table.getColumnModel().getColumn(0).setWidth(50);
-        table.getColumnModel().getColumn(1).setWidth(50);
-        table.getColumnModel().getColumn(2).setWidth(50);
+        table.getColumnModel().getColumn(0).setMinWidth(150);
+        table.getColumnModel().getColumn(0).setMaxWidth(250);
+        table.getColumnModel().getColumn(1).setMaxWidth(60);
+        table.getColumnModel().getColumn(2).setMaxWidth(60);
 
         refresh = new JButton("Refresh Report");
         refresh.setFont(new Font("Arial", Font.BOLD, 20));
@@ -59,6 +77,11 @@ public class OrderHistoryPage extends JPanel {
         add(centerPanel, BorderLayout.CENTER);
     }
 
+    /**
+     * Reloads the navigation bar at the top of the page to update the time element
+     * 
+     * @param none
+     */
     public void refreshHeader() {
         remove(navbar);
         navbar = Utils.createHeaderPanel(pos);
@@ -67,6 +90,13 @@ public class OrderHistoryPage extends JPanel {
         repaint();
     }
 
+    /**
+     * Uses the global conn variable to execute a SQL statement that lists the last 500
+     * transactions along with every associated menu item. The transactions are then channeled
+     * into a JTable.
+     * 
+     * @param none
+     */
     private void loadHistory() {
         String sql = "SELECT t.Date, t.TransactionID, t.Total, string_agg(mi.Name, ', ') AS MenuItems " +
                 "FROM transactions t " +
@@ -74,7 +104,7 @@ public class OrderHistoryPage extends JPanel {
                 "JOIN MenuItems mi ON te.MenuItemID = mi.MenuItemID " +
                 "GROUP BY t.TransactionID " +
                 "ORDER BY t.Date DESC " + 
-                "LIMIT 200";
+                "LIMIT 500";
 
         try {
             Statement statement = conn.createStatement();

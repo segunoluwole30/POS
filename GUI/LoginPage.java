@@ -5,6 +5,22 @@ import java.awt.event.ActionEvent;
 import java.sql.*;
 
 /**
+ * LoginPage class provides a graphical user interface for user authentication
+ * in a Point of Sale (POS) system.
+ * It features a text field for entering an employee ID and a button to initiate
+ * the login process. Upon successful
+ * authentication, the user is granted access to the POS system's menu page;
+ * otherwise, an error message is displayed.
+ * The class requires a connection to a database to verify employee credentials
+ * against stored records.
+ * 
+ * This class is part of a larger POS application designed to streamline retail
+ * operations. It demonstrates basic
+ * authentication techniques and UI design using Swing components. The
+ * implementation includes handling of
+ * action events for login attempts and executing SQL queries against the
+ * provided database connection to verify user credentials.
+ * 
  * @author Segun Oluwole
  */
 public class LoginPage extends JPanel {

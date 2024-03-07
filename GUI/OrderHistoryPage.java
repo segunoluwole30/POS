@@ -8,8 +8,9 @@ import java.sql.Statement;
 
 /**
  * The class that displays the Order History Report page. This class manages
- * the report that lists the last 500 transactions sorted by date/time and implements
- * a button that refreshs the report to account for new transactions. 
+ * the report that lists the last 500 transactions sorted by date/time and
+ * implements
+ * a button that refreshs the report to account for new transactions.
  * 
  *
  * @author Alby Joseph
@@ -26,11 +27,12 @@ public class OrderHistoryPage extends JPanel {
      * This is the constructor for the OrderHistoryPage object. It creates an
      * OrderHistoryPage object that displays a list of all past orders in the POS.
      * The conn argument must already be an established SQL database connection and
-     * the pos argument must be an established POS object. 
+     * the pos argument must be an established POS object.
      * 
      * @param conn , a SQL connection object that represents the connection
-     *               to the database
-     * @param pos  , the POS object that acts as the main object and foreground of the program
+     *             to the database
+     * @param pos  , the POS object that acts as the main object and foreground of
+     *             the program
      */
     public OrderHistoryPage(Connection conn, POS pos) {
         this.conn = conn;
@@ -39,7 +41,8 @@ public class OrderHistoryPage extends JPanel {
     }
 
     /**
-     * Assembles all the Java Swing components and implements them into the Order History Page
+     * Assembles all the Java Swing components and implements them into the Order
+     * History Page
      * 
      * @param none
      */
@@ -96,8 +99,10 @@ public class OrderHistoryPage extends JPanel {
     }
 
     /**
-     * Uses the global conn variable to execute a SQL statement that lists the last 500
-     * transactions along with every associated menu item. The transactions are then channeled
+     * Uses the global conn variable to execute a SQL statement that lists the last
+     * 500
+     * transactions along with every associated menu item. The transactions are then
+     * channeled
      * into a JTable.
      * 
      * @param none
@@ -108,7 +113,7 @@ public class OrderHistoryPage extends JPanel {
                 "JOIN transactionentry te ON t.TransactionID = te.TransactionID " +
                 "JOIN MenuItems mi ON te.MenuItemID = mi.MenuItemID " +
                 "GROUP BY t.TransactionID " +
-                "ORDER BY t.Date DESC " + 
+                "ORDER BY t.Date DESC " +
                 "LIMIT 500";
 
         try {

@@ -26,7 +26,7 @@ import java.awt.event.ActionListener;
 /**
  * This class displays the ZZ Report page, which holds a collection of
  * different reports for a user-defined date range. These different reports
- * include pie charts, sales, product usage, excess, and best product combos. 
+ * include pie charts, sales, product usage, excess, and best product combos.
  * 
  * @author David Tenase
  */
@@ -39,7 +39,7 @@ public class ZZReportPage extends JPanel {
 	private JTable generatedTable;
 	private JPanel chartPanel;
 	private Map<String, Color[]> colorSchemes;
-	
+
 	private Timestamp startTimestamp;
 	private Timestamp endTimestamp;
 
@@ -54,20 +54,19 @@ public class ZZReportPage extends JPanel {
 	private boolean goBack = false;
 
 	/**
-   * Constructs a ZZReportPage object.
-   *
-   * @param conn The database connection.
-   * @param pos  The POS object.
-   */
+	 * Constructs a ZZReportPage object.
+	 *
+	 * @param conn The database connection.
+	 * @param pos  The POS object.
+	 */
 	public ZZReportPage(Connection conn, POS pos) {
 		this.conn = conn;
 		this.pos = pos;
 		initializeColorSchemes();
 		initializeDate();
-		if(goBack){
+		if (goBack) {
 			pos.showManagerHomePage();
-		}
-		else{
+		} else {
 			setupUI();
 		}
 	}
@@ -81,16 +80,19 @@ public class ZZReportPage extends JPanel {
 		DefaultPieDataset dataset = new DefaultPieDataset();
 
 		try (Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery(
-					"SELECT MI.MenuItemID, MI.Name AS MenuItemName, COUNT(TE.MenuItemID) AS QuantitySold " +
-					"FROM MenuItems MI " +
-					"JOIN TransactionEntry TE ON MI.MenuItemID = TE.MenuItemID " +
-					"JOIN Transactions T ON TE.TransactionID = T.TransactionID " +
-					"WHERE T.Date >= '" + start_year + "-" + start_month + "-" + start_day + "' " + // Start date condition
-					"AND T.Date <= '" + end_year + "-" + end_month + "-" + end_day + "' " + // End date condition
-					"AND MI.Type = '" + category + "' " +
-					"GROUP BY MI.MenuItemID, MI.Name " +
-					"ORDER BY QuantitySold DESC")) {
+				ResultSet rs = stmt.executeQuery(
+						"SELECT MI.MenuItemID, MI.Name AS MenuItemName, COUNT(TE.MenuItemID) AS QuantitySold " +
+								"FROM MenuItems MI " +
+								"JOIN TransactionEntry TE ON MI.MenuItemID = TE.MenuItemID " +
+								"JOIN Transactions T ON TE.TransactionID = T.TransactionID " +
+								"WHERE T.Date >= '" + start_year + "-" + start_month + "-" + start_day + "' " + // Start
+																												// date
+																												// condition
+								"AND T.Date <= '" + end_year + "-" + end_month + "-" + end_day + "' " + // End date
+																										// condition
+								"AND MI.Type = '" + category + "' " +
+								"GROUP BY MI.MenuItemID, MI.Name " +
+								"ORDER BY QuantitySold DESC")) {
 			while (rs.next()) {
 				String menuItemName = rs.getString("MenuItemName");
 				int quantitySold = rs.getInt("QuantitySold");
@@ -115,11 +117,11 @@ public class ZZReportPage extends JPanel {
 			PiePlot plot = (PiePlot) chart.getPlot();
 
 			Color[] colors = colorSchemes.get("purp");
-        if (colors != null) {
-            for (int i = 0; i < dataset.getItemCount(); i++) {
-                plot.setSectionPaint(dataset.getKey(i), colors[i % colors.length]);
-            }
-        }
+			if (colors != null) {
+				for (int i = 0; i < dataset.getItemCount(); i++) {
+					plot.setSectionPaint(dataset.getKey(i), colors[i % colors.length]);
+				}
+			}
 
 			plot.setDataset(dataset);
 			plot.setSimpleLabels(true);
@@ -139,56 +141,60 @@ public class ZZReportPage extends JPanel {
 	 * @param none
 	 */
 	private void generateSalesReport() {
-		
+
 		try {
 			Statement statement = conn.createStatement();
 			ResultSet result = statement.executeQuery(
-				"SELECT MI.MenuItemID, MI.Name AS MenuItemName, COUNT(TE.MenuItemID) AS QuantitySold " +
-				"FROM MenuItems MI " +
-				"JOIN TransactionEntry TE ON MI.MenuItemID = TE.MenuItemID " +
-				"JOIN Transactions T ON TE.TransactionID = T.TransactionID " +
-				"WHERE T.Date >= '" + start_year + "-" + start_month + "-" + start_day + "' " + // Start date condition
-				"AND T.Date <= '" + end_year + "-" + end_month + "-" + end_day + "' " + // End date condition
-				"GROUP BY MI.MenuItemID, MI.Name " +
-				"ORDER BY QuantitySold DESC");
-	
+					"SELECT MI.MenuItemID, MI.Name AS MenuItemName, COUNT(TE.MenuItemID) AS QuantitySold " +
+							"FROM MenuItems MI " +
+							"JOIN TransactionEntry TE ON MI.MenuItemID = TE.MenuItemID " +
+							"JOIN Transactions T ON TE.TransactionID = T.TransactionID " +
+							"WHERE T.Date >= '" + start_year + "-" + start_month + "-" + start_day + "' " + // Start
+																											// date
+																											// condition
+							"AND T.Date <= '" + end_year + "-" + end_month + "-" + end_day + "' " + // End date
+																									// condition
+							"GROUP BY MI.MenuItemID, MI.Name " +
+							"ORDER BY QuantitySold DESC");
+
 			ResultSetMetaData metaData = result.getMetaData();
 			int columnCount = metaData.getColumnCount();
-	
+
 			ArrayList<String[]> rows = new ArrayList<>();
-	
+
 			while (result.next()) {
-					String[] row = new String[columnCount];
-					for (int i = 1; i <= columnCount; i++) {
-							row[i - 1] = result.getString(i);
-					}
-					rows.add(row);
+				String[] row = new String[columnCount];
+				for (int i = 1; i <= columnCount; i++) {
+					row[i - 1] = result.getString(i);
+				}
+				rows.add(row);
 			}
-	
+
 			// Convert the list of rows to a 2D array
 			String[][] data = new String[rows.size()][];
 			for (int i = 0; i < rows.size(); i++) {
-					data[i] = rows.get(i);
+				data[i] = rows.get(i);
 			}
-	
+
 			String[] columnEntries = new String[columnCount];
 			for (int i = 0; i < columnCount; i++) {
-					columnEntries[i] = metaData.getColumnName(i + 1);
+				columnEntries[i] = metaData.getColumnName(i + 1);
 			}
-	
+
 			generatedTable = new JTable(data, columnEntries);
-	
+
 			JScrollPane salesReportScrollPane = new JScrollPane();
 			salesReportScrollPane.setViewportView(generatedTable);
-			salesReportScrollPane.setPreferredSize(new Dimension(salesReportScrollPane.getPreferredSize().width, Common.HEIGHT / 4));
-	
+			salesReportScrollPane
+					.setPreferredSize(new Dimension(salesReportScrollPane.getPreferredSize().width, Common.HEIGHT / 4));
+
 			chartPanel.removeAll();
 			chartPanel.add(salesReportScrollPane, BorderLayout.CENTER);
-	
+
 			revalidate();
 			repaint();
-	
-	} catch (SQLException e) {
+
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
@@ -202,54 +208,58 @@ public class ZZReportPage extends JPanel {
 		try {
 			Statement statement = conn.createStatement();
 			ResultSet result = statement.executeQuery(
-				"SELECT ii.Name AS InventoryItem, SUM(mii.Quantity) AS UsedQuantity " +
-				"FROM Transactions t " +
-				"JOIN TransactionEntry te ON t.TransactionID = te.TransactionID " +
-				"JOIN MenuItems mi ON te.MenuItemID = mi.MenuItemID " +
-				"JOIN MenuItemIngredients mii ON mi.MenuItemID = mii.MenuItemID " +
-				"JOIN IngredientsInventory ii ON mii.IngredientID = ii.IngredientID " +
-				"WHERE T.Date >= '" + start_year + "-" + start_month + "-" + start_day + "' " + // Start date condition
-				"AND T.Date <= '" + end_year + "-" + end_month + "-" + end_day + "' " + // End date condition
-				"GROUP BY ii.Name " +
-				"ORDER BY UsedQuantity DESC;");
-	
+					"SELECT ii.Name AS InventoryItem, SUM(mii.Quantity) AS UsedQuantity " +
+							"FROM Transactions t " +
+							"JOIN TransactionEntry te ON t.TransactionID = te.TransactionID " +
+							"JOIN MenuItems mi ON te.MenuItemID = mi.MenuItemID " +
+							"JOIN MenuItemIngredients mii ON mi.MenuItemID = mii.MenuItemID " +
+							"JOIN IngredientsInventory ii ON mii.IngredientID = ii.IngredientID " +
+							"WHERE T.Date >= '" + start_year + "-" + start_month + "-" + start_day + "' " + // Start
+																											// date
+																											// condition
+							"AND T.Date <= '" + end_year + "-" + end_month + "-" + end_day + "' " + // End date
+																									// condition
+							"GROUP BY ii.Name " +
+							"ORDER BY UsedQuantity DESC;");
+
 			ResultSetMetaData metaData = result.getMetaData();
 			int columnCount = metaData.getColumnCount();
-	
+
 			ArrayList<String[]> rows = new ArrayList<>();
-	
+
 			while (result.next()) {
-					String[] row = new String[columnCount];
-					for (int i = 1; i <= columnCount; i++) {
-							row[i - 1] = result.getString(i);
-					}
-					rows.add(row);
+				String[] row = new String[columnCount];
+				for (int i = 1; i <= columnCount; i++) {
+					row[i - 1] = result.getString(i);
+				}
+				rows.add(row);
 			}
-	
+
 			// Convert the list of rows to a 2D array
 			String[][] data = new String[rows.size()][];
 			for (int i = 0; i < rows.size(); i++) {
-					data[i] = rows.get(i);
+				data[i] = rows.get(i);
 			}
-	
+
 			String[] columnEntries = new String[columnCount];
 			for (int i = 0; i < columnCount; i++) {
-					columnEntries[i] = metaData.getColumnName(i + 1);
+				columnEntries[i] = metaData.getColumnName(i + 1);
 			}
-	
+
 			generatedTable = new JTable(data, columnEntries);
-	
+
 			JScrollPane salesReportScrollPane = new JScrollPane();
 			salesReportScrollPane.setViewportView(generatedTable);
-			salesReportScrollPane.setPreferredSize(new Dimension(salesReportScrollPane.getPreferredSize().width, Common.HEIGHT / 4));
-	
+			salesReportScrollPane
+					.setPreferredSize(new Dimension(salesReportScrollPane.getPreferredSize().width, Common.HEIGHT / 4));
+
 			chartPanel.removeAll();
 			chartPanel.add(salesReportScrollPane, BorderLayout.CENTER);
-	
+
 			revalidate();
 			repaint();
-	
-	} catch (SQLException e) {
+
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
@@ -263,54 +273,59 @@ public class ZZReportPage extends JPanel {
 		try {
 			Statement statement = conn.createStatement();
 			ResultSet result = statement.executeQuery(
-        "SELECT mi1.Name AS MenuItem1, mi2.Name AS MenuItem2, COUNT(*) AS Frequency " +
-        "FROM TransactionEntry te1 " +
-        "JOIN TransactionEntry te2 ON te1.TransactionID = te2.TransactionID AND te1.MenuItemID < te2.MenuItemID " +
-        "JOIN MenuItems mi1 ON te1.MenuItemID = mi1.MenuItemID " +
-        "JOIN MenuItems mi2 ON te2.MenuItemID = mi2.MenuItemID " +
-        "JOIN Transactions t ON te1.TransactionID = t.TransactionID " +
-				"WHERE T.Date >= '" + start_year + "-" + start_month + "-" + start_day + "' " + // Start date condition
-				"AND T.Date <= '" + end_year + "-" + end_month + "-" + end_day + "' " + // End date condition
-        "GROUP BY mi1.Name, mi2.Name " +
-        "ORDER BY Frequency DESC");
-	
+					"SELECT mi1.Name AS MenuItem1, mi2.Name AS MenuItem2, COUNT(*) AS Frequency " +
+							"FROM TransactionEntry te1 " +
+							"JOIN TransactionEntry te2 ON te1.TransactionID = te2.TransactionID AND te1.MenuItemID < te2.MenuItemID "
+							+
+							"JOIN MenuItems mi1 ON te1.MenuItemID = mi1.MenuItemID " +
+							"JOIN MenuItems mi2 ON te2.MenuItemID = mi2.MenuItemID " +
+							"JOIN Transactions t ON te1.TransactionID = t.TransactionID " +
+							"WHERE T.Date >= '" + start_year + "-" + start_month + "-" + start_day + "' " + // Start
+																											// date
+																											// condition
+							"AND T.Date <= '" + end_year + "-" + end_month + "-" + end_day + "' " + // End date
+																									// condition
+							"GROUP BY mi1.Name, mi2.Name " +
+							"ORDER BY Frequency DESC");
+
 			ResultSetMetaData metaData = result.getMetaData();
 			int columnCount = metaData.getColumnCount();
-	
+
 			ArrayList<String[]> rows = new ArrayList<>();
-	
+
 			while (result.next()) {
-					String[] row = new String[columnCount];
-					for (int i = 1; i <= columnCount; i++) {
-							row[i - 1] = result.getString(i);
-					}
-					rows.add(row);
+				String[] row = new String[columnCount];
+				for (int i = 1; i <= columnCount; i++) {
+					row[i - 1] = result.getString(i);
+				}
+				rows.add(row);
 			}
-	
+
 			// Convert the list of rows to a 2D array
 			String[][] data = new String[rows.size()][];
 			for (int i = 0; i < rows.size(); i++) {
-					data[i] = rows.get(i);
+				data[i] = rows.get(i);
 			}
-	
+
 			String[] columnEntries = new String[columnCount];
 			for (int i = 0; i < columnCount; i++) {
-					columnEntries[i] = metaData.getColumnName(i + 1);
+				columnEntries[i] = metaData.getColumnName(i + 1);
 			}
-	
+
 			generatedTable = new JTable(data, columnEntries);
-	
+
 			JScrollPane salesReportScrollPane = new JScrollPane();
 			salesReportScrollPane.setViewportView(generatedTable);
-			salesReportScrollPane.setPreferredSize(new Dimension(salesReportScrollPane.getPreferredSize().width, Common.HEIGHT / 4));
-	
+			salesReportScrollPane
+					.setPreferredSize(new Dimension(salesReportScrollPane.getPreferredSize().width, Common.HEIGHT / 4));
+
 			chartPanel.removeAll();
 			chartPanel.add(salesReportScrollPane, BorderLayout.CENTER);
-	
+
 			revalidate();
 			repaint();
-	
-	} catch (SQLException e) {
+
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
@@ -323,41 +338,41 @@ public class ZZReportPage extends JPanel {
 	private void generateExcessReport() {
 		try {
 			String query = "" +
-			"WITH StockChanges AS (" +
-			"    SELECT" +
-			"        ii.IngredientID," +
-			"        ii.Name," +
-			"        ii.MaxStock," +
-			"        ii.Stock AS StartingStock," +
-			"        COALESCE(SUM(mii.Quantity), 0) AS SoldQuantity," +
-			"        ii.MaxStock - COALESCE(SUM(mii.Quantity), 0) AS EndingStock" +
-			"    FROM" +
-			"        IngredientsInventory ii" +
-			"    LEFT JOIN" +
-			"        MenuItemIngredients mii ON ii.IngredientID = mii.IngredientID" +
-			"    LEFT JOIN" +
-			"        TransactionEntry te ON mii.MenuItemID = te.MenuItemID" +
-			"        AND te.TransactionID IN (" +
-			"            SELECT TransactionID" +
-			"            FROM Transactions" +
-			"            WHERE Date BETWEEN ? AND ?" +
-			"        )" +
-			"    GROUP BY" +
-			"        ii.IngredientID, ii.Name, ii.MaxStock, ii.Stock" +
-			")," +
-			"InventoryChanges AS (" +
-			"    SELECT" +
-			"        *," +
-			"        (SoldQuantity) / MaxStock AS StockChangePercentage" +
-			"    FROM" +
-			"        StockChanges" +
-			")" +
-			"SELECT" +
-			"    *" +
-			"FROM" +
-			"    InventoryChanges" +
-			" WHERE" +
-			"    StockChangePercentage < 0.1;";
+					"WITH StockChanges AS (" +
+					"    SELECT" +
+					"        ii.IngredientID," +
+					"        ii.Name," +
+					"        ii.MaxStock," +
+					"        ii.Stock AS StartingStock," +
+					"        COALESCE(SUM(mii.Quantity), 0) AS SoldQuantity," +
+					"        ii.MaxStock - COALESCE(SUM(mii.Quantity), 0) AS EndingStock" +
+					"    FROM" +
+					"        IngredientsInventory ii" +
+					"    LEFT JOIN" +
+					"        MenuItemIngredients mii ON ii.IngredientID = mii.IngredientID" +
+					"    LEFT JOIN" +
+					"        TransactionEntry te ON mii.MenuItemID = te.MenuItemID" +
+					"        AND te.TransactionID IN (" +
+					"            SELECT TransactionID" +
+					"            FROM Transactions" +
+					"            WHERE Date BETWEEN ? AND ?" +
+					"        )" +
+					"    GROUP BY" +
+					"        ii.IngredientID, ii.Name, ii.MaxStock, ii.Stock" +
+					")," +
+					"InventoryChanges AS (" +
+					"    SELECT" +
+					"        *," +
+					"        (SoldQuantity) / MaxStock AS StockChangePercentage" +
+					"    FROM" +
+					"        StockChanges" +
+					")" +
+					"SELECT" +
+					"    *" +
+					"FROM" +
+					"    InventoryChanges" +
+					" WHERE" +
+					"    StockChangePercentage < 0.1;";
 
 			PreparedStatement statement = conn.prepareStatement(query);
 			statement.setTimestamp(1, startTimestamp);
@@ -366,41 +381,42 @@ public class ZZReportPage extends JPanel {
 
 			ResultSetMetaData metaData = result.getMetaData();
 			int columnCount = metaData.getColumnCount();
-	
+
 			ArrayList<String[]> rows = new ArrayList<>();
-	
+
 			while (result.next()) {
-					String[] row = new String[columnCount];
-					for (int i = 1; i <= columnCount; i++) {
-							row[i - 1] = result.getString(i);
-					}
-					rows.add(row);
+				String[] row = new String[columnCount];
+				for (int i = 1; i <= columnCount; i++) {
+					row[i - 1] = result.getString(i);
+				}
+				rows.add(row);
 			}
-	
+
 			// Convert the list of rows to a 2D array
 			String[][] data = new String[rows.size()][];
 			for (int i = 0; i < rows.size(); i++) {
-					data[i] = rows.get(i);
+				data[i] = rows.get(i);
 			}
-	
+
 			String[] columnEntries = new String[columnCount];
 			for (int i = 0; i < columnCount; i++) {
-					columnEntries[i] = metaData.getColumnName(i + 1);
+				columnEntries[i] = metaData.getColumnName(i + 1);
 			}
-	
+
 			generatedTable = new JTable(data, columnEntries);
-	
+
 			JScrollPane salesReportScrollPane = new JScrollPane();
 			salesReportScrollPane.setViewportView(generatedTable);
-			salesReportScrollPane.setPreferredSize(new Dimension(salesReportScrollPane.getPreferredSize().width, Common.HEIGHT / 4));
-	
+			salesReportScrollPane
+					.setPreferredSize(new Dimension(salesReportScrollPane.getPreferredSize().width, Common.HEIGHT / 4));
+
 			chartPanel.removeAll();
 			chartPanel.add(salesReportScrollPane, BorderLayout.CENTER);
-	
+
 			revalidate();
 			repaint();
-	
-	} catch (SQLException e) {
+
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
@@ -410,59 +426,60 @@ public class ZZReportPage extends JPanel {
 	 * 
 	 * @param none
 	 */
-	private void initializeDate(){
-    // Create an array of JLabels and JTextFields for the date and hour inputs
-    JLabel start_dateLabel = new JLabel("Enter the start date (YYYY-MM-DD):");
-    JTextField start_dateField = new JTextField();
+	private void initializeDate() {
+		// Create an array of JLabels and JTextFields for the date and hour inputs
+		JLabel start_dateLabel = new JLabel("Enter the start date (YYYY-MM-DD):");
+		JTextField start_dateField = new JTextField();
 		JLabel end_dateLabel = new JLabel("Enter the end date (YYYY-MM-DD):");
-    JTextField end_dateField = new JTextField();
+		JTextField end_dateField = new JTextField();
 
-    JComponent[] inputs = new JComponent[] {
-        start_dateLabel, start_dateField,
+		JComponent[] inputs = new JComponent[] {
+				start_dateLabel, start_dateField,
 				end_dateLabel, end_dateField
-    };
+		};
 
-    int result = JOptionPane.showConfirmDialog(this, inputs, "Enter Date Range", JOptionPane.OK_CANCEL_OPTION);
-    if (result == JOptionPane.OK_OPTION) {
-        String s_dateInput = start_dateField.getText();
-				String e_dateInput = end_dateField.getText();
+		int result = JOptionPane.showConfirmDialog(this, inputs, "Enter Date Range", JOptionPane.OK_CANCEL_OPTION);
+		if (result == JOptionPane.OK_OPTION) {
+			String s_dateInput = start_dateField.getText();
+			String e_dateInput = end_dateField.getText();
 
-				String startTime = "08:00:00"; // Hardcoded start time
-				String endTime = "20:00:00"; // Hardcoded end time
-				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-				LocalDateTime startDateTime = LocalDateTime.parse(s_dateInput + " " + startTime, formatter);
-				LocalDateTime endDateTime = LocalDateTime.parse(e_dateInput + " " + endTime, formatter);
-				startTimestamp = Timestamp.valueOf(startDateTime);
-				endTimestamp = Timestamp.valueOf(endDateTime);
+			String startTime = "08:00:00"; // Hardcoded start time
+			String endTime = "20:00:00"; // Hardcoded end time
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+			LocalDateTime startDateTime = LocalDateTime.parse(s_dateInput + " " + startTime, formatter);
+			LocalDateTime endDateTime = LocalDateTime.parse(e_dateInput + " " + endTime, formatter);
+			startTimestamp = Timestamp.valueOf(startDateTime);
+			endTimestamp = Timestamp.valueOf(endDateTime);
 
-        if (!s_dateInput.isEmpty() || !e_dateInput.isEmpty()) {
-            try {
-								String[] parts = s_dateInput.split("-");
-								String[] e_parts = e_dateInput.split("-");
+			if (!s_dateInput.isEmpty() || !e_dateInput.isEmpty()) {
+				try {
+					String[] parts = s_dateInput.split("-");
+					String[] e_parts = e_dateInput.split("-");
 
-								start_year = parts[0];
-								start_month = parts[1];
-								start_day = parts[2];
+					start_year = parts[0];
+					start_month = parts[1];
+					start_day = parts[2];
 
-								end_year = e_parts[0];
-								end_month = e_parts[1];
-								end_day = e_parts[2];
-								
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "Invalid hour input. Please enter a valid integer between 8 and 20.", "Error", JOptionPane.ERROR_MESSAGE);
-                goBack = true;
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "Both date and hour inputs are required.", "Error", JOptionPane.ERROR_MESSAGE);
-            goBack = true;
-        }
-    }
-		else if(result == JOptionPane.CANCEL_OPTION){
+					end_year = e_parts[0];
+					end_month = e_parts[1];
+					end_day = e_parts[2];
+
+				} catch (NumberFormatException ex) {
+					JOptionPane.showMessageDialog(this,
+							"Invalid hour input. Please enter a valid integer between 8 and 20.", "Error",
+							JOptionPane.ERROR_MESSAGE);
+					goBack = true;
+				}
+			} else {
+				JOptionPane.showMessageDialog(this, "Both date and hour inputs are required.", "Error",
+						JOptionPane.ERROR_MESSAGE);
+				goBack = true;
+			}
+		} else if (result == JOptionPane.CANCEL_OPTION) {
 			goBack = true;
+		} else {
+			return;
 		}
-		else {
-        return;
-    }
 	}
 
 	/**
@@ -499,7 +516,7 @@ public class ZZReportPage extends JPanel {
 		button5.addActionListener(new ButtonListener("n/a", "product_usage"));
 		button6.addActionListener(new ButtonListener("n/a", "excess_report"));
 		button7.addActionListener(new ButtonListener("n/a", "sells_together"));
-		
+
 		buttonPanel.add(button1);
 		buttonPanel.add(button2);
 		buttonPanel.add(button3);
@@ -543,23 +560,23 @@ public class ZZReportPage extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (action == "pie_chart"){
+			if (action == "pie_chart") {
 				generateZZChart(category);
-			}
-			else if (action == "sales_report"){
-				//Given a time window, display the sales by item from the order history.
+			} else if (action == "sales_report") {
+				// Given a time window, display the sales by item from the order history.
 				generateSalesReport();
-			}
-			else if (action == "product_usage"){
-				//Given a time window, display a chart (table, graph, diagram) that depicts the amount of inventory used during that time period.
+			} else if (action == "product_usage") {
+				// Given a time window, display a chart (table, graph, diagram) that depicts the
+				// amount of inventory used during that time period.
 				generateProductUsageReport();
-			}
-			else if (action == "excess_report"){
-				//Given a timestamp, display the list of items that only sold less than 10% of their inventory between the timestamp and the current time, assuming no restocks have happened during the window.
+			} else if (action == "excess_report") {
+				// Given a timestamp, display the list of items that only sold less than 10% of
+				// their inventory between the timestamp and the current time, assuming no
+				// restocks have happened during the window.
 				generateExcessReport();
-			}
-			else if (action == "sells_together"){
-				//Given a time window, display a list of pairs of menu items that sell together often, popular or not, sorted by most frequent.
+			} else if (action == "sells_together") {
+				// Given a time window, display a list of pairs of menu items that sell together
+				// often, popular or not, sorted by most frequent.
 				generateBestPairsReport();
 			}
 		}
@@ -573,11 +590,11 @@ public class ZZReportPage extends JPanel {
 	private void initializeColorSchemes() {
 		colorSchemes = new HashMap<>();
 
-			// Define some preset color schemes
-			Color[] scheme1 = {Color.RED, Color.GREEN, Color.BLUE};
-			Color[] scheme2 = {Color.ORANGE, Color.YELLOW, Color.CYAN};
-			Color[] gradientBlueScheme = {new Color(0, 0, 255), new Color(0, 128, 255), new Color(0, 191, 255)};
-			Color[] smoothColorScheme = {
+		// Define some preset color schemes
+		Color[] scheme1 = { Color.RED, Color.GREEN, Color.BLUE };
+		Color[] scheme2 = { Color.ORANGE, Color.YELLOW, Color.CYAN };
+		Color[] gradientBlueScheme = { new Color(0, 0, 255), new Color(0, 128, 255), new Color(0, 191, 255) };
+		Color[] smoothColorScheme = {
 				new Color(204, 255, 204), // Lightest green
 				new Color(153, 255, 153),
 				new Color(102, 255, 102),
@@ -585,7 +602,7 @@ public class ZZReportPage extends JPanel {
 				new Color(0, 153, 0),
 				new Color(0, 102, 0),
 				new Color(0, 51, 0),
-				new Color(0, 51, 0),      // Darkest green
+				new Color(0, 51, 0), // Darkest green
 				new Color(0, 51, 0),
 				new Color(0, 51, 0)
 		};
@@ -594,7 +611,7 @@ public class ZZReportPage extends JPanel {
 		colorSchemes.put("Scheme 2", scheme2);
 		colorSchemes.put("gradientBlue", gradientBlueScheme);
 		colorSchemes.put("purp", smoothColorScheme);
-  }
+	}
 
 	/**
 	 * Refreshes the header panel of the ZZReportPage.

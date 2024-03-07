@@ -4,9 +4,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * The {@code OrderSummary} class represents the panel used to display the order summary
- * in a user interface. It allows users to manage their orders by adding, removing,
- * and finalizing items in the order. This panel is part of a larger application concerning
+ * The {@code OrderSummary} class represents the panel used to display the order
+ * summary
+ * in a user interface. It allows users to manage their orders by adding,
+ * removing,
+ * and finalizing items in the order. This panel is part of a larger application
+ * concerning
  * menu navigation and order processing.
  * 
  * @author Daniel Rios
@@ -23,7 +26,8 @@ public class OrderSummary extends JPanel {
     /**
      * Constructs a new {@code OrderSummary} panel.
      * 
-     * @param mp The parent {@code MenuPage} that this panel is a part of, used for callback methods.
+     * @param mp The parent {@code MenuPage} that this panel is a part of, used for
+     *           callback methods.
      */
     public OrderSummary(MenuPage mp) {
         setLayout(new BorderLayout());
@@ -31,7 +35,8 @@ public class OrderSummary extends JPanel {
 
         Font buttonFont = new Font("Arial", Font.BOLD, 20);
 
-        // Initializes the top button with functionality for logging out or canceling the order.
+        // Initializes the top button with functionality for logging out or canceling
+        // the order.
         topButton = new JButton("Logout");
         topButton.addActionListener(e -> parentPage.cancelButton());
         topButton.setFont(buttonFont);
@@ -52,7 +57,8 @@ public class OrderSummary extends JPanel {
     }
 
     /**
-     * Initializes and sets up the middle panel of the order summary, where items will be listed.
+     * Initializes and sets up the middle panel of the order summary, where items
+     * will be listed.
      */
     private void loadMiddlePanel() {
         middlePanel = new JPanel();
@@ -67,7 +73,7 @@ public class OrderSummary extends JPanel {
      * Each item button, when clicked, removes the associated item from the order.
      * 
      * @param itemName The name of the item to be added.
-     * @param price The price of the item to be added.
+     * @param price    The price of the item to be added.
      */
     public void addButton(String itemName, double price) {
         JButton b = new JButton(itemName + " $" + parentPage.round(price));
@@ -89,7 +95,8 @@ public class OrderSummary extends JPanel {
     }
 
     /**
-     * Updates the text of the top button, used for changing its function or label dynamically.
+     * Updates the text of the top button, used for changing its function or label
+     * dynamically.
      * 
      * @param label The new label to set for the top button.
      */

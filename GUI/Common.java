@@ -2,7 +2,7 @@ import java.awt.*;
 
 /**
  * Class to store common data for all files.
- * This inludes aggie colors and width/height 
+ * This inludes aggie colors and width/height
  * info for the window.
  * 
  * @author Daniel Rios
@@ -16,4 +16,3 @@ public class Common {
     public static final int WIDTH = 1600;
     public static final int HEIGHT = 900;
 }
-

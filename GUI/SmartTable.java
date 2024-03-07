@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
- * This class represents a customizable and interactive table component for displaying
- * and manipulating database records. It supports functionalities such as insert, update,
+ * This class represents a customizable and interactive table component for
+ * displaying
+ * and manipulating database records. It supports functionalities such as
+ * insert, update,
  * and delete operations directly through the UI.
  * 
  * @author Abhishek Bhattacharyya
@@ -29,13 +31,14 @@ public class SmartTable extends JPanel {
      *
      * @param conn   the database connection
      * @param Query  the SQL query to fetch data for the table
-     * @param IsSoft indicates whether the table is in soft mode (i.e., changes do not affect the database)
+     * @param IsSoft indicates whether the table is in soft mode (i.e., changes do
+     *               not affect the database)
      */
     public SmartTable(Connection conn, String Query, Boolean IsSoft) {
         this.Query = Query;
         this.conn = conn;
         SoftMode = IsSoft;
-        this.tableModel = new DefaultTableModel(new String[]{"Item ID", "Name", "Stock", "MaxStock", "Units"}, 0) {
+        this.tableModel = new DefaultTableModel(new String[] { "Item ID", "Name", "Stock", "MaxStock", "Units" }, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return true;
@@ -148,7 +151,8 @@ public class SmartTable extends JPanel {
     }
 
     /**
-     * Updates the details of an item in the database based on the user's modifications in the table.
+     * Updates the details of an item in the database based on the user's
+     * modifications in the table.
      *
      * @param id     the ID of the item to be updated
      * @param column the column index indicating which attribute to update
@@ -195,7 +199,8 @@ public class SmartTable extends JPanel {
     }
 
     /**
-     * Refreshes the data displayed in the table according to the original or updated query.
+     * Refreshes the data displayed in the table according to the original or
+     * updated query.
      */
     public void refreshTableData() {
         tableModel.setRowCount(0); // Clear existing data
@@ -210,7 +215,7 @@ public class SmartTable extends JPanel {
                 String units = rs.getString("Units");
 
                 ItemIDs.add(id);
-                tableModel.addRow(new Object[]{id, name, stock, maxstock, units});
+                tableModel.addRow(new Object[] { id, name, stock, maxstock, units });
             }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error fetching menu items: " + e.getMessage(), "Database Error",

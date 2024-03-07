@@ -12,7 +12,8 @@ import java.awt.event.ActionListener;
 
 /**
  * Represents the inventory page in the Point of Sale (POS) system.
- * It includes functionality to display, add, update, and delete inventory items,
+ * It includes functionality to display, add, update, and delete inventory
+ * items,
  * as well as suggest restocking for low-stock items.
  * 
  * @author Abhishek Bhattacharyya
@@ -38,20 +39,22 @@ public class InventoryPage extends JPanel {
     private SmartTable suggestionTable;
 
     /**
-     * Constructs the inventory page with references to the database connection and the main POS instance.
+     * Constructs the inventory page with references to the database connection and
+     * the main POS instance.
      * Initializes UI components and loads inventory data.
      *
      * @param conn Database connection
-     * @param pos Main POS instance
+     * @param pos  Main POS instance
      */
     public InventoryPage(Connection conn, POS pos) {
         this.conn = conn;
         this.pos = pos;
         suggestionTable = new SmartTable(conn, suggestionQuery, true);
 
-        suggestionTable.tableModel = new DefaultTableModel(new String[]{"Item ID", "Name", "Stock", "MaxStock", "Units", "Restock Amount"}, 0){
+        suggestionTable.tableModel = new DefaultTableModel(
+                new String[] { "Item ID", "Name", "Stock", "MaxStock", "Units", "Restock Amount" }, 0) {
             @Override
-            public boolean isCellEditable(int row, int column){
+            public boolean isCellEditable(int row, int column) {
                 return column == 5;
             }
         };
@@ -112,7 +115,7 @@ public class InventoryPage extends JPanel {
         inventoryTitle.setEditable(false);
         inventoryTitle.setForeground(Color.white);
 
-        tableModel = new DefaultTableModel(new String[]{"Item ID", "Name", "Stock", "MaxStock", "Units"}, 0) {
+        tableModel = new DefaultTableModel(new String[] { "Item ID", "Name", "Stock", "MaxStock", "Units" }, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return true;
@@ -167,7 +170,7 @@ public class InventoryPage extends JPanel {
         JButton addButton = new JButton("Add New Row");
         addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                tableModel.addRow(new Object[]{"", "", "", "", ""});
+                tableModel.addRow(new Object[] { "", "", "", "", "" });
                 suggestionTable.refreshTableData();
             }
         });
@@ -217,38 +220,38 @@ public class InventoryPage extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    //String restockIDs = "";
-                    if (suggestionTable.tableModel.getRowCount() >= 1) {                        
+                    // String restockIDs = "";
+                    if (suggestionTable.tableModel.getRowCount() >= 1) {
                         List<String> restockIDs = new ArrayList<>();
                         List<Float> restockValues = new ArrayList<>();
-                        
-                        for(int i = 0; i < suggestionTable.tableModel.getRowCount(); i++){
+
+                        for (int i = 0; i < suggestionTable.tableModel.getRowCount(); i++) {
                             restockIDs.add(suggestionTable.tableModel.getValueAt(i, 0).toString());
                             float restockValue = 0;
-                            float currentStock = Float.parseFloat(suggestionTable.tableModel.getValueAt(i, 2).toString());
+                            float currentStock = Float
+                                    .parseFloat(suggestionTable.tableModel.getValueAt(i, 2).toString());
                             float maxStock = Float.parseFloat(suggestionTable.tableModel.getValueAt(i, 3).toString());
-                            if(suggestionTable.tableModel.getValueAt(i, 5) != null){
-                                restockValue = Float.parseFloat(suggestionTable.tableModel.getValueAt(i, 5).toString()) + currentStock;
+                            if (suggestionTable.tableModel.getValueAt(i, 5) != null) {
+                                restockValue = Float.parseFloat(suggestionTable.tableModel.getValueAt(i, 5).toString())
+                                        + currentStock;
                             }
-                            if(restockValue > maxStock){
+                            if (restockValue > maxStock) {
                                 restockValues.add(maxStock);
-                            }
-                            else{
+                            } else {
                                 restockValues.add(restockValue);
                             }
                         }
 
-                        for(int i = 0; i < restockIDs.size(); i++){
-                            String restockQuery = "UPDATE ingredientsinventory SET stock = CASE WHEN ingredientid = " 
-                            + restockIDs.get(i) + "THEN " + restockValues.get(i) + "ELSE stock END";
+                        for (int i = 0; i < restockIDs.size(); i++) {
+                            String restockQuery = "UPDATE ingredientsinventory SET stock = CASE WHEN ingredientid = "
+                                    + restockIDs.get(i) + "THEN " + restockValues.get(i) + "ELSE stock END";
                             Statement stmt = conn.createStatement();
                             stmt.executeUpdate(restockQuery);
                         }
 
                         suggestionTable.refreshTableData();
                         refreshTableData(inventoryQuery);
-                    } 
-                    else {
+                    } else {
                         JOptionPane.showMessageDialog(null, "No items to restock.");
                     }
                 } catch (Exception ee) {
@@ -299,10 +302,10 @@ public class InventoryPage extends JPanel {
     /**
      * Inserts a new item into the inventory database.
      *
-     * @param name Item name
-     * @param stock Item stock quantity
+     * @param name     Item name
+     * @param stock    Item stock quantity
      * @param maxstock Maximum stock quantity for the item
-     * @param units Measurement units of the item
+     * @param units    Measurement units of the item
      */
     private void insertNewItem(String name, float stock, float maxstock, String units) {
         String sql = "INSERT INTO IngredientsInventory (Name, Stock, MaxStock, Units) VALUES (?, ?, ?, ?)";
@@ -450,7 +453,7 @@ public class InventoryPage extends JPanel {
                 String units = rs.getString("Units");
 
                 itemIDs.add(id);
-                tableModel.addRow(new Object[]{id, name, stock, maxstock, units});
+                tableModel.addRow(new Object[] { id, name, stock, maxstock, units });
             }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error fetching menu items: " + e.getMessage(), "Database Error",

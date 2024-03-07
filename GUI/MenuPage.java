@@ -8,9 +8,9 @@ import java.awt.event.*;
  * This class defines the Menu Page framework, which acts as the home page
  * for the POS. MenuPage includes the basics of a POS homepage, from buttons
  * to access every item on the menu, to a header navigation bar that displays
- * the current user and the current total price of the order, to a panel that 
+ * the current user and the current total price of the order, to a panel that
  * holds a receipt of the current menu items in a transaction, to a manager mode
- * button that is only accessible to users with the manager tag. 
+ * button that is only accessible to users with the manager tag.
  * 
  * @author Danny Rios Socorro
  */
@@ -36,13 +36,17 @@ public class MenuPage extends JPanel {
 
     /**
      * This is the constructor for the MenuPage object. It creates a MenuPage object
-     * that displays the menu, split into different category tabs, a nav bar with different
-     * order and user data along with a manager access button, and a order tracking panel. 
+     * that displays the menu, split into different category tabs, a nav bar with
+     * different
+     * order and user data along with a manager access button, and a order tracking
+     * panel.
      * 
-     * The con argument must already be an established SQL database connection, and the 
-     * pos argument must be an previously established POS object. 
+     * The con argument must already be an established SQL database connection, and
+     * the
+     * pos argument must be an previously established POS object.
      * 
-     * @param con , a SQL connection object that represents the connection to the database
+     * @param con , a SQL connection object that represents the connection to the
+     *            database
      * @param pos , the POS object that acts as the main driver for the program
      */
     public MenuPage(Connection con, POS pos) {
@@ -147,9 +151,9 @@ public class MenuPage extends JPanel {
                 System.out.println(currentRole);
                 if (currentRole.equals("manager")) {
                     pos.showManagerHomePage();
-                }
-                else {
-                    JOptionPane.showMessageDialog(null, "Cannot Access Manager Mode", "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Cannot Access Manager Mode", "Error",
+                            JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -195,7 +199,7 @@ public class MenuPage extends JPanel {
     }
 
     /**
-     * Creates the UI elements for the side bar that accesses the 
+     * Creates the UI elements for the side bar that accesses the
      * different categories of menu items and adds this side bar
      * to the Menu Page panel
      * 
@@ -235,7 +239,7 @@ public class MenuPage extends JPanel {
 
     /**
      * Creates the UI elements for the payment panel that allows
-     * the user to choose a payment option along with displaying the 
+     * the user to choose a payment option along with displaying the
      * current order, which is all added on top of the previous Menu Page
      * 
      * @param none
@@ -287,7 +291,7 @@ public class MenuPage extends JPanel {
      * the Menu Page
      * 
      * @param type , a string that determines the category of
-     *               the menu item
+     *             the menu item
      */
     private void setItemPanel(String type) {
         itemPanel.removeAll();
@@ -305,8 +309,7 @@ public class MenuPage extends JPanel {
             if (type == "Entree") {
                 b.setFont(new Font("Arial", Font.BOLD, 15));
                 b.setPreferredSize(new Dimension(250, 100));
-            }
-            else {
+            } else {
                 b.setFont(new Font("Arial", Font.BOLD, 15));
                 b.setPreferredSize(new Dimension(325, 125));
             }
@@ -318,8 +321,8 @@ public class MenuPage extends JPanel {
 
     /**
      * Enters a new transaction into the database, queries
-     * the database to determine what ingredients need to be 
-     * updated in inventory, updates the stock in inventory, 
+     * the database to determine what ingredients need to be
+     * updated in inventory, updates the stock in inventory,
      * and returns to the home Menu Page
      * 
      * @param none
@@ -330,20 +333,23 @@ public class MenuPage extends JPanel {
             Statement stmt = conn.createStatement();
             String finalOrderTotal = round(transactionTotal) + "";
             String timeStamp = "'" + Utils.getCurrentDate() + " " + Utils.getCurrentTime() + "'";
-            String statement = "INSERT INTO transactions VALUES (" + transactionID + ", " + Integer.parseInt(pos.getEmployeeID()) + ", " + Float.parseFloat(finalOrderTotal) + ", " + timeStamp + ");";
+            String statement = "INSERT INTO transactions VALUES (" + transactionID + ", "
+                    + Integer.parseInt(pos.getEmployeeID()) + ", " + Float.parseFloat(finalOrderTotal) + ", "
+                    + timeStamp + ");";
             stmt.executeUpdate(statement);
 
             for (int i = 0; i < transactionItems.size(); i++) {
                 int id = idMap.get(transactionItems.get(i));
                 stmt.executeUpdate("INSERT INTO transactionentry VALUES (" + id + "," + transactionID + ");");
 
-                statement = "SELECT ingredientid, quantity FROM menuitemingredients WHERE menuitemid = " + id; 
+                statement = "SELECT ingredientid, quantity FROM menuitemingredients WHERE menuitemid = " + id;
                 ResultSet result = stmt.executeQuery(statement);
                 while (result.next()) {
                     int ingredientId = result.getInt(1);
                     String quantity = result.getString(2);
                     Statement s = conn.createStatement();
-                    statement = "UPDATE ingredientsinventory SET stock = stock - " + quantity + " WHERE ingredientid = " + ingredientId;
+                    statement = "UPDATE ingredientsinventory SET stock = stock - " + quantity + " WHERE ingredientid = "
+                            + ingredientId;
                     s.executeUpdate(statement);
                 }
             }
@@ -359,7 +365,7 @@ public class MenuPage extends JPanel {
      * Adds the price of the menu item to the transaction total
      * and displays the item as a button for optional deletion
      * 
-     * @param item , a string that holds the name of the menu item
+     * @param item  , a string that holds the name of the menu item
      * @param price , a double that holds the price of the menu item
      */
     private void addToSummary(String item, double price) {
@@ -375,7 +381,7 @@ public class MenuPage extends JPanel {
      * the price from the order total and the item from the list
      * of items in the order
      * 
-     * @param item , a string that holds the name of the menu item
+     * @param item  , a string that holds the name of the menu item
      * @param price , a double that holds the price of the menu item
      */
     public void removeTransactionEntree(String item, double price) {
@@ -386,7 +392,7 @@ public class MenuPage extends JPanel {
     }
 
     /**
-     * Sets the payment type, selected by the user, for 
+     * Sets the payment type, selected by the user, for
      * the order
      * 
      * @param type , a string that holds the name of the payment type
@@ -405,15 +411,12 @@ public class MenuPage extends JPanel {
         if (currentlyPaying) {
             if (paymentType.equals("")) {
                 JOptionPane.showMessageDialog(null, "Select a Payent Type", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-            else if (transactionItems.size() == 0) {
+            } else if (transactionItems.size() == 0) {
                 JOptionPane.showMessageDialog(null, "Order Must Have Items", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-            else {
+            } else {
                 finalizeOrder();
             }
-        }
-        else {
+        } else {
             remove(middlePanel);
             remove(navbar);
             revalidate();
@@ -438,12 +441,11 @@ public class MenuPage extends JPanel {
             loadNavbar();
             loadMiddlePanel();
             orderSummary.refreshTopButton("Logout");
-            repaint();    
+            repaint();
             currentlyPaying = false;
             paymentType = "";
-        } 
-        else {
-            pos.showLoginPage();      
+        } else {
+            pos.showLoginPage();
         }
     }
 
@@ -452,8 +454,8 @@ public class MenuPage extends JPanel {
      * in key parts of this implementation
      * 
      * @param num , a double that holds the number being rounded
-     * @return , the rounded number with all unnecessary decimal 
-     *           digits removed
+     * @return , the rounded number with all unnecessary decimal
+     *         digits removed
      */
     public double round(double num) {
         return Math.round(num * 100) / 100.0;

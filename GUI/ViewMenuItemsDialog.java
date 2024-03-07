@@ -6,6 +6,17 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A dialog for viewing, adding, editing, and deleting menu items. This dialog
+ * allows users to manage
+ * menu items including their names, prices, and types, with functionalities to
+ * interact with
+ * a database for persistent storage of menu item data. All database access
+ * errors are handled internally,
+ * presenting user-friendly error messages as necessary.
+ * 
+ * @author Segun Oluwole
+ */
 public class ViewMenuItemsDialog extends JDialog {
     private JTable table;
     private JButton addButton, deleteButton, editIngredientsButton;
@@ -13,6 +24,13 @@ public class ViewMenuItemsDialog extends JDialog {
     private List<Integer> menuItemIds = new ArrayList<>(); // store menu item id's for database operations
     private Connection conn;
 
+    /**
+     * Constructs a ViewMenuItemsDialog which serves as a management interface for
+     * menu items.
+     *
+     * @param owner the Frame from which the dialog is displayed
+     * @param conn  the Connection object that represents the database connection
+     */
     public ViewMenuItemsDialog(Frame owner, Connection conn) {
         super(owner, "Menu Items", true);
         this.conn = conn;
@@ -21,6 +39,11 @@ public class ViewMenuItemsDialog extends JDialog {
         repaint();
     }
 
+    /**
+     * Initializes the user interface components and layouts for the dialog. It sets
+     * up the table model,
+     * buttons, and action listeners for interacting with menu items.
+     */
     private void initializeUI() {
         setLayout(new BorderLayout());
 
@@ -85,8 +108,13 @@ public class ViewMenuItemsDialog extends JDialog {
         setSize(500, 300);
     }
 
+    /**
+     * Prompts the user to input details for a new menu item and adds it to the
+     * database. Input validation
+     * is performed, and any errors during database operations are handled by
+     * displaying error messages.
+     */
     private void addMenuItem() {
-        // Prompt user for new item details
         String name = JOptionPane.showInputDialog(this, "Enter item name:");
         if (name == null || name.trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Item name is required.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -117,6 +145,15 @@ public class ViewMenuItemsDialog extends JDialog {
         refreshTableData();
     }
 
+    /**
+     * Inserts a new item into the database with the specified name, price, and
+     * type. Handles any database
+     * errors by displaying appropriate error messages to the user.
+     *
+     * @param name  the name of the new menu item
+     * @param price the price of the new menu item
+     * @param type  the type of the new menu item
+     */
     private void insertNewItem(String name, float price, String type) {
         String sql = "INSERT INTO MenuItems (Name, Price, Type) VALUES (?, ?, ?)";
         try (PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -144,6 +181,11 @@ public class ViewMenuItemsDialog extends JDialog {
         }
     }
 
+    /**
+     * Deletes the selected menu item from the database after confirming with the
+     * user. Handles any database
+     * errors by displaying appropriate error messages to the user.
+     */
     private void deleteMenuItem() {
         int selectedRow = table.getSelectedRow();
         if (selectedRow >= 0) {
@@ -159,6 +201,13 @@ public class ViewMenuItemsDialog extends JDialog {
         }
     }
 
+    /**
+     * Deletes a menu item from the database using its item ID. Handles any database
+     * errors by displaying
+     * appropriate error messages to the user.
+     *
+     * @param itemId the ID of the menu item to be deleted
+     */
     private void deleteItemFromDatabase(Object itemId) {
         // First, delete any associated ingredients from the MenuItemIngredients table
         String deleteAssociatedIngredientsSql = "DELETE FROM MenuItemIngredients WHERE MenuItemID = ?";
@@ -189,6 +238,15 @@ public class ViewMenuItemsDialog extends JDialog {
         }
     }
 
+    /**
+     * Updates a menu item in the database based on user edits. Handles any database
+     * errors by displaying
+     * appropriate error messages to the user.
+     *
+     * @param id     the ID of the menu item to update
+     * @param column the column index indicating which attribute to update
+     * @param value  the new value for the specified attribute
+     */
     private void updateMenuItemInDatabase(Object id, int column, Object value) {
         String columnName;
         String sql;
@@ -234,6 +292,11 @@ public class ViewMenuItemsDialog extends JDialog {
         }
     }
 
+    /**
+     * Opens a dialog for editing the ingredients of the selected menu item. Any
+     * errors during the operation
+     * are handled internally, ensuring a robust user experience.
+     */
     private void editIngredients() {
         int selectedRow = table.getSelectedRow();
         if (selectedRow != -1) {
@@ -247,6 +310,11 @@ public class ViewMenuItemsDialog extends JDialog {
         }
     }
 
+    /**
+     * Refreshes the table data by fetching updated menu items from the database and
+     * displaying them. Handles
+     * any database errors by displaying appropriate error messages to the user.
+     */
     public void refreshTableData() {
         tableModel.setRowCount(0); // Clear existing data
         menuItemIds.clear();

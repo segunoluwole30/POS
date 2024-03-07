@@ -7,20 +7,45 @@ import javax.swing.*;
 import java.util.Properties;
 import java.awt.*;
 
+/**
+ * The main frame for the Point of Sale (POS) application. This class manages
+ * the
+ * application's GUI and database connection, facilitating navigation between
+ * different pages of the application such as login, menu, manager home,
+ * reports,
+ * order history, and inventory management.
+ * 
+ * @author Segun Oluwole
+ * @author Daniel Rios
+ */
 public class POS extends JFrame {
     private String employeeID;
     private Connection conn;
     private JPanel cards;
     private CardLayout cardLayout;
 
+    /**
+     * Sets the employee ID for the current user.
+     * 
+     * @param employeeID The employee ID to set.
+     */
     public void setEmployeeID(String employeeID) {
         this.employeeID = employeeID;
     }
 
+    /**
+     * Gets the employee ID of the current user.
+     * 
+     * @return The employee ID.
+     */
     public String getEmployeeID() {
         return this.employeeID;
     }
 
+    /**
+     * Constructs a POS object, initializing the database connection and setting up
+     * the user interface.
+     */
     public POS() {
 
         inititializeDatabaseConnection();
@@ -28,6 +53,11 @@ public class POS extends JFrame {
 
     }
 
+    /**
+     * Initializes the connection to the database using properties specified in a
+     * configuration file. Alerts the user upon successful connection or exits the
+     * application on error.
+     */
     private void inititializeDatabaseConnection() {
         this.conn = null;
         Properties props = new Properties();
@@ -55,6 +85,10 @@ public class POS extends JFrame {
         }
     }
 
+    /**
+     * Sets up the user interface of the application, including initializing the
+     * CardLayout for managing different screens and displaying the login page.
+     */
     private void setupUI() {
         setTitle("Point of Sale");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -71,17 +105,26 @@ public class POS extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Displays the menu page within the application window.
+     */
     public void showMenuPage() {
         cards.add(new MenuPage(conn, this), "menu");
         cardLayout.show(cards, "menu");
     }
 
+    /**
+     * Displays the login page within the application window.
+     */
     public void showLoginPage() {
         LoginPage loginPage = new LoginPage(conn, this);
         cards.add(loginPage, "login");
         cardLayout.show(cards, "login");
     }
 
+    /**
+     * Displays the manager's home page within the application window.
+     */
     public void showManagerHomePage() {
         ManagerHomePage managerHomePage = new ManagerHomePage(conn, this);
         cards.add(managerHomePage, "managerHome");
@@ -89,6 +132,9 @@ public class POS extends JFrame {
         cardLayout.show(cards, "managerHome");
     }
 
+    /**
+     * Displays the X Report page within the application window.
+     */
     public void showXReportPage() {
         XReportPage xReportPage = new XReportPage(conn, this);
         cards.add(xReportPage, "XReport");
@@ -96,6 +142,9 @@ public class POS extends JFrame {
         cardLayout.show(cards, "XReport");
     }
 
+    /**
+     * Displays the Z Report page within the application window.
+     */
     public void showZReportPage() {
         ZReportPage zReportPage = new ZReportPage(conn, this);
         cards.add(zReportPage, "ZReport");
@@ -103,6 +152,9 @@ public class POS extends JFrame {
         cardLayout.show(cards, "ZReport");
     }
 
+    /**
+     * Displays the ZZ Report page within the application window.
+     */
     public void showZZReportPage() {
         ZZReportPage zzReportPage = new ZZReportPage(conn, this);
         cards.add(zzReportPage, "ZZReport");
@@ -110,20 +162,32 @@ public class POS extends JFrame {
         cardLayout.show(cards, "ZZReport");
     }
 
+    /**
+     * Displays the Order History page within the application window.
+     */
     public void showOrderHistoryPage() {
         OrderHistoryPage orderHistoryPage = new OrderHistoryPage(conn, this);
         cards.add(orderHistoryPage, "OrderHistory");
-        orderHistoryPage.refreshHeader(); // Now safe to call refreshHeader
+        orderHistoryPage.refreshHeader();
         cardLayout.show(cards, "OrderHistory");
     }
 
+    /**
+     * Displays the Inventory Page within the application window.
+     */
     public void showInventoryPage() {
         InventoryPage inventoryPage = new InventoryPage(conn, this);
         cards.add(inventoryPage, "Inventory");
-        inventoryPage.refreshHeader(); // Now safe to call refreshHeader
+        inventoryPage.refreshHeader();
         cardLayout.show(cards, "Inventory");
     }
 
+    /**
+     * The entry point of the application. Initializes the POS system within the
+     * event-dispatching thread.
+     * 
+     * @param args Command line arguments (not used).
+     */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {

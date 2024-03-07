@@ -6,6 +6,7 @@ import java.awt.*;
  * info for the window.
  * 
  * @author Daniel Rios
+ * @author Segun Oluwole
  * @author Abhishek Bhattacharyya
  */
 

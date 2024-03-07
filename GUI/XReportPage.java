@@ -26,6 +26,9 @@ import java.util.Map;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * @author David Tenase
+ */
 public class XReportPage extends JPanel {
 	private Connection conn;
 	private POS pos;
@@ -68,7 +71,7 @@ public class XReportPage extends JPanel {
 
 	/**
 	 * Generates a pie chart based on the given category.
-	 * @param category The category of items for which the report is generated.
+	 * @param category , The category of items for which the report is generated.
 	 */
 	private void generateXChart(String category) {
 		DefaultPieDataset dataset = new DefaultPieDataset();
@@ -130,8 +133,10 @@ public class XReportPage extends JPanel {
 	}
 
 	/**
- 	 * Generates a sales report based on the given criteria.
- 	 */
+	 * Generates a sales report based on the given criteria.
+	 * 
+	 * @param none
+	 */
 	private void generateSalesReport() {
 		try {
 			Statement statement = conn.createStatement();
@@ -190,6 +195,8 @@ public class XReportPage extends JPanel {
 	
 	/**
 	 * Generates a product usage report based on the given criteria.
+	 * 
+	 * @param none
 	 */
 	private void generateProductUsageReport() {
 		try {
@@ -251,6 +258,8 @@ public class XReportPage extends JPanel {
 
 	/**
 	 * Generates a report on best product combinations based on the given criteria.
+	 * 
+	 * @param none
 	 */
 	private void generateBestPairsReport() {
 		
@@ -313,6 +322,8 @@ public class XReportPage extends JPanel {
 
 	/**
 	 * Generates a report on excess inventory based on the given criteria.
+	 * 
+	 * @param none
 	 */
 	private void generateExcessReport() {
 		try {
@@ -402,6 +413,8 @@ public class XReportPage extends JPanel {
 
 	/**
 	 * Initializes the date and hour for generating reports.
+	 * 
+	 * @param none
 	 */
 	private void initializeDate() {
 		JLabel dateLabel = new JLabel("Enter the date (YYYY-MM-DD):");
@@ -458,6 +471,8 @@ public class XReportPage extends JPanel {
 
 	/**
 	 * Sets up the UI components for the report page.
+	 * 
+	 * @param none
 	 */
 	private void setupUI() {
 		// Boilerplate code to setup layout
@@ -511,6 +526,8 @@ public class XReportPage extends JPanel {
 
 	/**
  	 * ActionListener implementation for handling button clicks.
+	 * 
+	 * @param none
  	 */
 	private class ButtonListener implements ActionListener {
 		private String category;
@@ -558,6 +575,8 @@ public class XReportPage extends JPanel {
 
 	/**
 	 * Initializes color schemes for the charts.
+	 * 
+	 * @param none
 	 */
 	private void initializeColorSchemes() {
         colorSchemes = new HashMap<>();
@@ -587,6 +606,8 @@ public class XReportPage extends JPanel {
 
 	/**
 	 * Refreshes the header panel of the report page.
+	 * 
+	 * @param none
 	 */
 	public void refreshHeader() {
 		remove(navbar);

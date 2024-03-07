@@ -23,6 +23,9 @@ import java.util.Map;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * @author David Tenase
+ */
 public class ZZReportPage extends JPanel {
 	private Connection conn;
 	private POS pos;
@@ -128,6 +131,8 @@ public class ZZReportPage extends JPanel {
 
 	/**
 	 * Generates a sales report based on the specified time window.
+	 * 
+	 * @param none
 	 */
 	private void generateSalesReport() {
 		
@@ -186,6 +191,8 @@ public class ZZReportPage extends JPanel {
 
 	/**
 	 * Generates a sales report based on the specified time window.
+	 * 
+	 * @param none
 	 */
 	private void generateProductUsageReport() {
 		try {
@@ -245,6 +252,8 @@ public class ZZReportPage extends JPanel {
 
 	/**
 	 * Generates a report on the best pairs of products sold together frequently.
+	 * 
+	 * @param none
 	 */
 	private void generateBestPairsReport() {
 		try {
@@ -304,6 +313,8 @@ public class ZZReportPage extends JPanel {
 
 	/**
 	 * Generates an excess report based on the specified time window.
+	 * 
+	 * @param none
 	 */
 	private void generateExcessReport() {
 		try {
@@ -392,6 +403,8 @@ public class ZZReportPage extends JPanel {
 
 	/**
 	 * Initializes the date input fields and retrieves user input.
+	 * 
+	 * @param none
 	 */
 	private void initializeDate(){
     // Create an array of JLabels and JTextFields for the date and hour inputs
@@ -450,6 +463,8 @@ public class ZZReportPage extends JPanel {
 
 	/**
 	 * Sets up the user interface for the ZZReportPage.
+	 * 
+	 * @param none
 	 */
 	private void setupUI() {
 		// Boilerplate code to setup layout
@@ -504,6 +519,8 @@ public class ZZReportPage extends JPanel {
 
 	/**
 	 * ActionListener implementation for handling button clicks.
+	 * 
+	 * @param none
 	 */
 	private class ButtonListener implements ActionListener {
 		private String category;
@@ -546,6 +563,8 @@ public class ZZReportPage extends JPanel {
 
 	/**
 	 * Initializes color schemes for charts.
+	 * 
+	 * @param none
 	 */
 	private void initializeColorSchemes() {
 		colorSchemes = new HashMap<>();
@@ -575,6 +594,8 @@ public class ZZReportPage extends JPanel {
 
 	/**
 	 * Refreshes the header panel of the ZZReportPage.
+	 * 
+	 * @param none
 	 */
 	public void refreshHeader() {
 		remove(navbar);

@@ -14,6 +14,10 @@ import java.awt.event.ActionListener;
  * Represents the inventory page in the Point of Sale (POS) system.
  * It includes functionality to display, add, update, and delete inventory items,
  * as well as suggest restocking for low-stock items.
+ * 
+ * @author Abhishek Bhattacharyya
+ * @author Kaili Fogle
+ * 
  */
 public class InventoryPage extends JPanel {
 

@@ -10,6 +10,10 @@ import java.util.ArrayList;
  * This class represents a customizable and interactive table component for displaying
  * and manipulating database records. It supports functionalities such as insert, update,
  * and delete operations directly through the UI.
+ * 
+ * @author Abhishek Bhattacharyya
+ * @author Kaili Fogle
+ * 
  */
 public class SmartTable extends JPanel {
 

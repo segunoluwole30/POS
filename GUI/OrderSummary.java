@@ -9,8 +9,8 @@ import java.awt.event.ActionListener;
  * and finalizing items in the order. This panel is part of a larger application concerning
  * menu navigation and order processing.
  * 
- * @author Abhishek Bhattacharyya
  * @author Daniel Rios
+ * @author Abhishek Bhattacharyya
  * 
  */
 

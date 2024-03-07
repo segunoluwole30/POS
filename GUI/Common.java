@@ -5,7 +5,8 @@ import java.awt.*;
  * This inludes aggie colors and width/height 
  * info for the window.
  * 
- * @author 
+ * @author Daniel Rios
+ * @author Abhishek Bhattacharyya
  */
 
 public class Common {
